@@ -1,0 +1,787 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Burakcan Özay | SPA Portfolyo</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Rajdhani:wght@400;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <nav class="navbar" id="main-nav" style="display: none;">
+        <a href="#home" class="nav-brand">
+            <div class="led-indicator"></div>
+            SYS_CORE
+        </a>
+        <button class="hamburger"><i class="fas fa-bars"></i></button>
+        <ul class="nav-links">
+            <li><a href="#home" class="nav-link" data-target="home">Ana Sayfa</a></li>
+            <li><a href="#hakkimda" class="nav-link" data-target="hakkimda">Hakkımda</a></li>
+            <li><a href="#projeler" class="nav-link" data-target="projeler">Projeler</a></li>
+            <li><a href="#basarilar" class="nav-link" data-target="basarilar">Başarılar</a></li>
+            <li><a href="#cv" class="nav-link" data-target="cv">CV</a></li>
+            <li><a href="#sertifikalar" class="nav-link" data-target="sertifikalar">Sertifikalar</a></li>
+            <li><a href="#iletisim" class="nav-link" data-target="iletisim">İletişim</a></li>
+        </ul>
+    </nav>
+
+    <main id="app-container">
+        <!-- HOME VIEW -->
+        <div id="view-home" class="view active">
+            <div class="hero">
+                <div class="hero-bg-image"></div>
+                <div class="energy-overlay"></div>
+
+                <div class="hud-label top-left">POWER GRID ONLINE</div>
+                <div class="hud-label top-right">PORTFOLIO CORE v1.0</div>
+                <div class="hud-label bottom-left">PCB TRACE ACTIVE</div>
+                <div class="hud-label bottom-right">EEE STUDENT PROFILE</div>
+
+                <svg class="svg-circuit" viewBox="0 0 100 100" preserveAspectRatio="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                            <feGaussianBlur stdDeviation="1.5" result="blur" />
+                            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                        </filter>
+                    </defs>
+
+                    <!-- Cosmetic Traces -->
+                    <g class="trace-group cosmetic">
+                        <path class="circuit-path base" vector-effect="non-scaling-stroke"
+                            d="M 50 50 L 45 60 L 43 60" />
+                        <circle class="circuit-via" cx="45" cy="60" r="0.4" />
+                        <circle class="circuit-via" cx="43" cy="60" r="0.4" />
+                        <path class="circuit-path base" vector-effect="non-scaling-stroke"
+                            d="M 50 50 L 55 40 L 57 40 L 57 35" />
+                        <circle class="circuit-via" cx="55" cy="40" r="0.4" />
+                        <circle class="circuit-via" cx="57" cy="35" r="0.6" />
+                        <path class="circuit-path base" vector-effect="non-scaling-stroke"
+                            d="M 50 50 L 45 35 L 40 35 L 38 33" />
+                        <circle class="circuit-via" cx="45" cy="35" r="0.4" />
+                        <circle class="circuit-via" cx="38" cy="33" r="0.5" />
+                    </g>
+
+                    <!-- Top Left: Hakkımda -->
+                    <g class="trace-group" id="trace-hakkimda">
+                        <path class="circuit-path base" vector-effect="non-scaling-stroke"
+                            d="M 50 50 L 50 22 L 48 20 L 25 20" />
+                        <path class="circuit-path anim" vector-effect="non-scaling-stroke"
+                            d="M 50 50 L 50 22 L 48 20 L 25 20" />
+                        <circle class="circuit-via" cx="50" cy="22" r="0.6" />
+                        <circle class="circuit-via" cx="48" cy="20" r="0.6" />
+                        <circle class="circuit-pad" cx="25" cy="20" r="1.2" />
+                    </g>
+
+                    <!-- Top Right: Projeler -->
+                    <g class="trace-group" id="trace-projeler">
+                        <path class="circuit-path base" vector-effect="non-scaling-stroke"
+                            d="M 50 50 L 50 22 L 52 20 L 75 20" />
+                        <path class="circuit-path anim" vector-effect="non-scaling-stroke"
+                            d="M 50 50 L 50 22 L 52 20 L 75 20" />
+                        <circle class="circuit-via" cx="50" cy="22" r="0.6" />
+                        <circle class="circuit-via" cx="52" cy="20" r="0.6" />
+                        <circle class="circuit-pad" cx="75" cy="20" r="1.2" />
+                    </g>
+
+                    <!-- Mid Left: Başarılar -->
+                    <g class="trace-group" id="trace-basarilar">
+                        <path class="circuit-path base" vector-effect="non-scaling-stroke"
+                            d="M 50 50 L 40 50 L 38 48 L 17 48 L 15 50" />
+                        <path class="circuit-path anim" vector-effect="non-scaling-stroke"
+                            d="M 50 50 L 40 50 L 38 48 L 17 48 L 15 50" />
+                        <circle class="circuit-via" cx="40" cy="50" r="0.6" />
+                        <circle class="circuit-via" cx="38" cy="48" r="0.6" />
+                        <circle class="circuit-via" cx="17" cy="48" r="0.6" />
+                        <circle class="circuit-pad" cx="15" cy="50" r="1.2" />
+                    </g>
+
+                    <!-- Mid Right: CV -->
+                    <g class="trace-group" id="trace-cv">
+                        <path class="circuit-path base" vector-effect="non-scaling-stroke"
+                            d="M 50 50 L 60 50 L 62 48 L 83 48 L 85 50" />
+                        <path class="circuit-path anim" vector-effect="non-scaling-stroke"
+                            d="M 50 50 L 60 50 L 62 48 L 83 48 L 85 50" />
+                        <circle class="circuit-via" cx="60" cy="50" r="0.6" />
+                        <circle class="circuit-via" cx="62" cy="48" r="0.6" />
+                        <circle class="circuit-via" cx="83" cy="48" r="0.6" />
+                        <circle class="circuit-pad" cx="85" cy="50" r="1.2" />
+                    </g>
+
+                    <!-- Bottom Left: Sertifikalar -->
+                    <g class="trace-group" id="trace-sertifikalar">
+                        <path class="circuit-path base" vector-effect="non-scaling-stroke"
+                            d="M 50 50 L 50 78 L 48 80 L 25 80" />
+                        <path class="circuit-path anim" vector-effect="non-scaling-stroke"
+                            d="M 50 50 L 50 78 L 48 80 L 25 80" />
+                        <circle class="circuit-via" cx="50" cy="78" r="0.6" />
+                        <circle class="circuit-via" cx="48" cy="80" r="0.6" />
+                        <circle class="circuit-pad" cx="25" cy="80" r="1.2" />
+                    </g>
+
+                    <!-- Bottom Right: İletişim -->
+                    <g class="trace-group" id="trace-iletisim">
+                        <path class="circuit-path base" vector-effect="non-scaling-stroke"
+                            d="M 50 50 L 50 78 L 52 80 L 75 80" />
+                        <path class="circuit-path anim" vector-effect="non-scaling-stroke"
+                            d="M 50 50 L 50 78 L 52 80 L 75 80" />
+                        <circle class="circuit-via" cx="50" cy="78" r="0.6" />
+                        <circle class="circuit-via" cx="52" cy="80" r="0.6" />
+                        <circle class="circuit-pad" cx="75" cy="80" r="1.2" />
+                    </g>
+                </svg>
+
+                <div class="central-chip">
+                    <div class="chip-pins top"></div>
+                    <div class="chip-pins bottom"></div>
+                    <div class="chip-pins left"></div>
+                    <div class="chip-pins right"></div>
+
+                    <div class="chip-content">
+                        <h1>Burakcan Özay</h1>
+                        <h2><i class="fas fa-terminal"></i> ELEKTRİK ELEKTRONİK MÜH.</h2>
+                        <div class="chip-status">
+                            <div class="status-row"><span>SYSTEM STATUS:</span> <span
+                                    class="status-val success">ONLINE</span></div>
+                            <div class="status-row"><span>VOLTAGE:</span> <span class="status-val">5.0V DC</span></div>
+                            <div class="status-row"><span>SIGNAL:</span> <span class="status-val">STABLE</span></div>
+                            <div class="status-row"><span>MODE:</span> <span
+                                    class="status-val highlight">PORTFOLIO</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="desktop-nodes">
+                    <a href="#hakkimda" class="hero-node" style="top: 20%; left: 25%;" data-target="trace-hakkimda">
+                        <div class="node-led"></div>
+                        <i class="fas fa-user-astronaut hero-node-icon"></i>
+                        <span class="hero-node-title">[01] Hakkımda</span>
+                        <span class="hero-node-subtitle">OPEN MODULE</span>
+                    </a>
+                    <a href="#projeler" class="hero-node" style="top: 20%; left: 75%;" data-target="trace-projeler">
+                        <div class="node-led"></div>
+                        <i class="fas fa-microchip hero-node-icon"></i>
+                        <span class="hero-node-title">[02] Projeler</span>
+                        <span class="hero-node-subtitle">OPEN MODULE</span>
+                    </a>
+                    <a href="#basarilar" class="hero-node" style="top: 50%; left: 15%;" data-target="trace-basarilar">
+                        <div class="node-led"></div>
+                        <i class="fas fa-trophy hero-node-icon"></i>
+                        <span class="hero-node-title">[03] Başarılar</span>
+                        <span class="hero-node-subtitle">OPEN MODULE</span>
+                    </a>
+                    <a href="#cv" class="hero-node" style="top: 50%; left: 85%;" data-target="trace-cv">
+                        <div class="node-led"></div>
+                        <i class="fas fa-file-waveform hero-node-icon"></i>
+                        <span class="hero-node-title">[04] CV / Eğitim</span>
+                        <span class="hero-node-subtitle">OPEN MODULE</span>
+                    </a>
+                    <a href="#sertifikalar" class="hero-node" style="top: 80%; left: 25%;"
+                        data-target="trace-sertifikalar">
+                        <div class="node-led"></div>
+                        <i class="fas fa-certificate hero-node-icon"></i>
+                        <span class="hero-node-title">[05] Sertifikalar</span>
+                        <span class="hero-node-subtitle">OPEN MODULE</span>
+                    </a>
+                    <a href="#iletisim" class="hero-node" style="top: 80%; left: 75%;" data-target="trace-iletisim">
+                        <div class="node-led"></div>
+                        <i class="fas fa-satellite-dish hero-node-icon"></i>
+                        <span class="hero-node-title">[06] İletişim</span>
+                        <span class="hero-node-subtitle">OPEN MODULE</span>
+                    </a>
+                </div>
+
+                <div class="hero-nodes-mobile">
+                    <a href="#hakkimda" class="hero-node">
+                        <div class="node-led"></div><i class="fas fa-user-astronaut hero-node-icon"></i> <span
+                            class="hero-node-title">[01] Hakkımda</span>
+                    </a>
+                    <a href="#projeler" class="hero-node">
+                        <div class="node-led"></div><i class="fas fa-microchip hero-node-icon"></i> <span
+                            class="hero-node-title">[02] Projeler</span>
+                    </a>
+                    <a href="#basarilar" class="hero-node">
+                        <div class="node-led"></div><i class="fas fa-trophy hero-node-icon"></i> <span
+                            class="hero-node-title">[03] Başarılar</span>
+                    </a>
+                    <a href="#cv" class="hero-node">
+                        <div class="node-led"></div><i class="fas fa-file-waveform hero-node-icon"></i> <span
+                            class="hero-node-title">[04] CV / Eğitim</span>
+                    </a>
+                    <a href="#sertifikalar" class="hero-node">
+                        <div class="node-led"></div><i class="fas fa-certificate hero-node-icon"></i> <span
+                            class="hero-node-title">[05] Sertifikalar</span>
+                    </a>
+                    <a href="#iletisim" class="hero-node">
+                        <div class="node-led"></div><i class="fas fa-satellite-dish hero-node-icon"></i> <span
+                            class="hero-node-title">[06] İletişim</span>
+                    </a>
+                </div>
+
+                <a href="#admin" class="sys-admin-link" title="SYS_ADMIN (CTRL+SHIFT+A)"><i class="fas fa-terminal"></i>
+                    <span>sys_admin</span></a>
+            </div>
+        </div>
+
+        <!-- HAKKIMDA VIEW -->
+        <div id="view-hakkimda" class="view">
+            <div class="about-bg-image"></div>
+            <div class="container">
+                <div class="page-header">
+                    <h1 class="page-title">Hakkımda</h1>
+                    <div class="terminal-text">init_module('about_me.sys');</div>
+                </div>
+                <div class="card">
+                    <h3><i class="fas fa-user-astronaut"></i> Burakcan Özay</h3>
+                    <p id="hakkimda-content" style="font-size: 1.2rem; margin-top: 1rem; line-height: 1.8;">
+                        Yükleniyor...
+                    </p>
+                </div>
+
+                <div class="scope-system" style="margin-top: 3rem;">
+                    <div class="scope-screen-container">
+                        <div class="scope-screen">
+                            <canvas id="oscilloscope-canvas"></canvas>
+                            <div class="scope-measurements">
+                                <span id="scope-frequency-label">Freq: 10 Hz</span>
+                                <span id="scope-amplitude-label">Amp: 1.0x</span>
+                                <span id="scope-vpp-label">Vpp: 2.0 V</span>
+                                <span id="scope-time-label">Time/Div: 1 ms</span>
+                                <span id="scope-volt-label">Volt/Div: 1 V</span>
+                                <span id="scope-coupling-label">Coupling: DC</span>
+                                <span id="scope-trigger-label">Trigger: Auto</span>
+                            </div>
+                            <div class="scope-watermark">SYS_CORE OSCILLOSCOPE</div>
+                        </div>
+                    </div>
+
+                    <div class="scope-controls">
+                        <div class="scope-controls-grid">
+                            <div class="scope-control">
+                                <label><i class="fas fa-wave-square"></i> Sinyal Tipi</label>
+                                <select id="scope-waveform">
+                                    <option value="sine">Sinüs</option>
+                                    <option value="square">Kare</option>
+                                    <option value="triangle">Üçgen</option>
+                                    <option value="sawtooth">Testere Dişi</option>
+                                    <option value="noise">Gürültü</option>
+                                    <option value="pulse">Pulse / Kalp</option>
+                                    <option value="clock">Digital Clock</option>
+                                    <option value="random">Rastgele Parazit</option>
+                                </select>
+                            </div>
+
+                            <div class="scope-control">
+                                <label><i class="fas fa-bezier-curve"></i> Kanal Seçimi</label>
+                                <select id="scope-channel">
+                                    <option value="ch1">CH1 (Cyan)</option>
+                                    <option value="ch2">CH2 (Yeşil)</option>
+                                    <option value="dual" selected>Dual Mode</option>
+                                </select>
+                            </div>
+
+                            <div class="scope-control">
+                                <label><i class="fas fa-clock"></i> Time/Div</label>
+                                <select id="scope-time-div">
+                                    <option value="0.5">0.5 ms/div</option>
+                                    <option value="1" selected>1 ms/div</option>
+                                    <option value="2">2 ms/div</option>
+                                    <option value="5">5 ms/div</option>
+                                    <option value="10">10 ms/div</option>
+                                </select>
+                            </div>
+
+                            <div class="scope-control">
+                                <label><i class="fas fa-arrows-alt-v"></i> Volt/Div</label>
+                                <select id="scope-volt-div">
+                                    <option value="0.5">0.5 V/div</option>
+                                    <option value="1" selected>1 V/div</option>
+                                    <option value="2">2 V/div</option>
+                                    <option value="5">5 V/div</option>
+                                </select>
+                            </div>
+
+                            <div class="scope-control">
+                                <label><i class="fas fa-bolt"></i> Trigger Mode</label>
+                                <select id="scope-trigger">
+                                    <option value="auto">Auto</option>
+                                    <option value="normal">Normal</option>
+                                    <option value="single">Single</option>
+                                </select>
+                            </div>
+
+                            <div class="scope-control">
+                                <label><i class="fas fa-link"></i> Coupling</label>
+                                <select id="scope-coupling">
+                                    <option value="dc">DC</option>
+                                    <option value="ac">AC</option>
+                                    <option value="gnd">GND</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="scope-sliders">
+                            <div class="scope-control range-control">
+                                <div class="range-header">
+                                    <label>Frekans (Frequency)</label>
+                                    <span id="scope-frequency-value">10 Hz</span>
+                                </div>
+                                <input type="range" id="scope-frequency" min="1" max="100" value="10">
+                            </div>
+
+                            <div class="scope-control range-control">
+                                <div class="range-header">
+                                    <label>Genlik (Amplitude)</label>
+                                    <span id="scope-amplitude-value">1.0x</span>
+                                </div>
+                                <input type="range" id="scope-amplitude" min="0.2" max="2.0" step="0.1" value="1.0">
+                            </div>
+
+                            <div class="scope-control range-control">
+                                <div class="range-header">
+                                    <label>Offset</label>
+                                    <span id="scope-offset-value">0.0</span>
+                                </div>
+                                <input type="range" id="scope-offset" min="-1.0" max="1.0" step="0.1" value="0.0">
+                            </div>
+                        </div>
+
+                        <div class="scope-buttons">
+                            <button id="scope-run-stop" class="scope-btn btn-active"><i class="fas fa-play"></i>
+                                Run</button>
+                            <button id="scope-reset" class="scope-btn"><i class="fas fa-undo"></i> Reset</button>
+                            <button id="scope-grid-toggle" class="scope-btn btn-active"><i
+                                    class="fas fa-border-all"></i> Grid</button>
+                            <button id="scope-glow-toggle" class="scope-btn btn-active"><i class="fas fa-lightbulb"></i>
+                                Glow</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PROJELER VIEW -->
+        <div id="view-projeler" class="view">
+            <div class="projects-bg-image"></div>
+            <div class="container">
+                <div class="page-header">
+                    <h1 class="page-title">Projeler</h1>
+                    <div class="terminal-text">exec ./load_projects.sh</div>
+                </div>
+                <div class="grid-container" id="projeler-grid"></div>
+            </div>
+        </div>
+
+        <!-- BASARILAR VIEW -->
+        <div id="view-basarilar" class="view">
+            <div class="achievements-bg-image"></div>
+            <div class="container">
+                <div class="page-header">
+                    <h1 class="page-title">Başarılar</h1>
+                    <div class="terminal-text">cat awards.log</div>
+                </div>
+                <div class="grid-container" id="basarilar-grid"></div>
+            </div>
+        </div>
+
+        <!-- CV VIEW -->
+        <div id="view-cv" class="view cv-page">
+            <div class="cv-bg-image"></div>
+            <div class="cv-bg-effects">
+                <div class="cv-circuit-line line-1"></div>
+                <div class="cv-circuit-line line-2"></div>
+                <div class="cv-circuit-line line-3"></div>
+            </div>
+
+            <!-- 1. CV HERO -->
+            <section class="cv-hero cv-reveal">
+                <div class="cv-hero-content">
+                    <div class="cv-avatar-container">
+                        <div class="cv-avatar">
+                            <i class="fas fa-user-astronaut"></i>
+                        </div>
+                        <div class="cv-avatar-chip">MCU-CORE</div>
+                    </div>
+                    <div class="cv-hero-text">
+                        <h1 class="cv-name" id="cv-hero-name">Burakcan Özay</h1>
+                        <h2 class="cv-title-tag" id="cv-hero-title"><i class="fas fa-microchip"></i> Elektrik Elektronik
+                            Mühendisliği Öğrencisi</h2>
+                        <p class="cv-desc" id="cv-hero-desc">Yükleniyor...</p>
+                        <div class="cv-hero-buttons">
+                            <a href="#" class="btn btn-primary" id="btn-cv-download" target="_blank"><i
+                                    class="fas fa-file-download"></i> CV İndir</a>
+                            <a href="#iletisim" class="btn"><i class="fas fa-paper-plane"></i> İletişime Geç</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="container">
+                <div class="cv-grid">
+                    <!-- LEFT COLUMN -->
+                    <div class="cv-col-left">
+                        <!-- 2. Kişisel Bilgiler -->
+                        <section class="cv-section cv-card cv-reveal">
+                            <div class="cv-card-led"></div>
+                            <h3 class="cv-section-title"><i class="fas fa-id-card-clip"></i> Kişisel Bilgiler</h3>
+                            <div class="cv-kisisel-list" id="cv-kisisel-content"></div>
+                        </section>
+
+                        <!-- 4. Teknik Yetenekler -->
+                        <section class="cv-section cv-card cv-reveal">
+                            <div class="cv-card-led"
+                                style="background: var(--theme-color); box-shadow: 0 0 8px var(--theme-color);"></div>
+                            <h3 class="cv-section-title"><i class="fas fa-wave-square"></i> Teknik Yetenekler</h3>
+                            <div class="cv-skills-list" id="cv-skills-content"></div>
+                        </section>
+
+                        <!-- 8. Diller -->
+                        <section class="cv-section cv-card cv-reveal">
+                            <div class="cv-card-led"></div>
+                            <h3 class="cv-section-title"><i class="fas fa-language"></i> Diller</h3>
+                            <div class="cv-diller-list" id="cv-diller-content"></div>
+                        </section>
+
+                        <!-- 9. İlgi Alanları -->
+                        <section class="cv-section cv-card cv-reveal">
+                            <div class="cv-card-led"
+                                style="background: var(--theme-color); box-shadow: 0 0 8px var(--theme-color);"></div>
+                            <h3 class="cv-section-title"><i class="fas fa-compass"></i> İlgi Alanları</h3>
+                            <div class="cv-tags" id="cv-ilgi-content"></div>
+                        </section>
+                    </div>
+
+                    <!-- RIGHT COLUMN -->
+                    <div class="cv-col-right">
+                        <!-- 3. Eğitim Bilgileri (Dynamically loaded from appData.cv) -->
+                        <section class="cv-section cv-card cv-reveal">
+                            <div class="cv-card-led" style="background: gold; box-shadow: 0 0 8px gold;"></div>
+                            <h3 class="cv-section-title"><i class="fas fa-graduation-cap"></i> Eğitim Bilgileri</h3>
+                            <div class="cv-timeline-vertical" id="cv-egitim-content"></div>
+                        </section>
+
+                        <!-- 5. Proje Deneyimleri (Dynamically loaded from appData.projeler) -->
+                        <section class="cv-section cv-card cv-reveal">
+                            <div class="cv-card-led"></div>
+                            <h3 class="cv-section-title"><i class="fas fa-folder-open"></i> Proje Deneyimleri</h3>
+                            <div class="cv-projeler-list" id="cv-projeler-content"></div>
+                        </section>
+
+                        <!-- 6. Deneyim / Çalışmalar (Dynamically loaded from data.js) -->
+                        <section class="cv-section cv-card cv-reveal">
+                            <div class="cv-card-led"
+                                style="background: var(--theme-color); box-shadow: 0 0 8px var(--theme-color);"></div>
+                            <h3 class="cv-section-title"><i class="fas fa-briefcase"></i> Deneyim &amp; Çalışmalar</h3>
+                            <div class="cv-deneyim-list" id="cv-deneyim-content"></div>
+                        </section>
+
+                        <!-- 7. Sertifikalar (Dynamically loaded from appData.sertifikalar) -->
+                        <section class="cv-section cv-card cv-reveal">
+                            <div class="cv-card-led" style="background: gold; box-shadow: 0 0 8px gold;"></div>
+                            <h3 class="cv-section-title"><i class="fas fa-certificate"></i> Sertifikalar</h3>
+                            <div class="cv-sertifikalar-list" id="cv-sertifikalar-content"></div>
+                        </section>
+
+                        <!-- 10. CV Notları (Dynamically loaded from data.js) -->
+                        <section class="cv-section cv-card cv-reveal">
+                            <div class="cv-card-led" style="background: #ff3366; box-shadow: 0 0 8px #ff3366;"></div>
+                            <h3 class="cv-section-title"><i class="fas fa-terminal"></i> CV Sistem Notları</h3>
+                            <div class="cv-notlar-box" id="cv-notlar-content"></div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SERTIFIKALAR VIEW -->
+        <div id="view-sertifikalar" class="view">
+            <div class="certificates-bg-image"></div>
+            <div class="container">
+                <div class="page-header">
+                    <h1 class="page-title">Sertifikalar</h1>
+                    <div class="terminal-text">grep 'CERT' sys_auth.log</div>
+                </div>
+                <div class="grid-container" id="sertifikalar-grid"></div>
+            </div>
+        </div>
+
+        <!-- ILETISIM VIEW -->
+        <div id="view-iletisim" class="view">
+            <div class="contact-bg-image"></div>
+            <div class="container">
+                <div class="page-header">
+                    <h1 class="page-title">İletişim</h1>
+                    <div class="terminal-text">ping user@burakcanozay.sys</div>
+                </div>
+                <div class="grid-container">
+                    <div class="card">
+                        <h3><i class="fas fa-address-card"></i> Bağlantı Bilgileri</h3>
+                        <p style="margin-bottom:10px;"><i class="fas fa-envelope"></i> <strong>Email:</strong>
+                            burakcanozay@example.com</p>
+                        <p style="margin-bottom:10px;"><i class="fas fa-map-marker-alt"></i> <strong>Konum:</strong>
+                            Türkiye
+                        </p>
+                        <p style="margin-bottom:10px;"><i class="fab fa-linkedin"></i> <a href="#"
+                                class="theme-text">linkedin.com/in/burakcanozay</a></p>
+                        <p style="margin-bottom:10px;"><i class="fab fa-github"></i> <a href="#"
+                                class="theme-text">github.com/burakcanozay</a></p>
+                    </div>
+                    <div class="form-container" style="margin: 0; max-width: 100%;">
+                        <h3 class="theme-text" style="margin-bottom: 1.5rem;"><i class="fas fa-satellite-dish"></i>
+                            Sinyal
+                            Gönder</h3>
+                        <form id="iletisim-form">
+                            <div class="form-group"><input type="text" id="contact-name" class="form-control"
+                                    placeholder="Adınız Soyadınız" required></div>
+                            <div class="form-group"><input type="email" id="contact-email" class="form-control"
+                                    placeholder="Email Adresiniz" required></div>
+                            <div class="form-group"><input type="text" id="contact-subject" class="form-control"
+                                    placeholder="Konu" required></div>
+                            <div class="form-group"><textarea id="contact-message" class="form-control"
+                                    placeholder="Mesajınız" minlength="10" required></textarea></div>
+                            <button type="submit" class="btn btn-primary">Gönder</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ADMIN LOGIN VIEW -->
+        <div id="view-admin-login" class="view container"
+            style="display: flex; justify-content: center; align-items: center; min-height: 80vh;">
+            <div class="form-container" style="width: 400px; text-align: center;">
+                <div class="led-indicator"
+                    style="background: red; box-shadow: 0 0 10px red; margin: 0 auto 1rem auto; width: 15px; height: 15px;">
+                </div>
+                <h2 style="color: red; margin-bottom: 2rem; font-family: var(--font-mono);">RESTRICTED AREA</h2>
+                <form id="admin-login-form">
+                    <div class="form-group" style="margin-bottom: 1rem;">
+                        <input type="email" id="admin-email" class="form-control" placeholder="Admin Email" required
+                            style="text-align: center; font-family: var(--font-mono); font-size: 1.2rem; letter-spacing: normal;">
+                    </div>
+                    <div class="form-group">
+                        <input type="password" id="admin-password" class="form-control" placeholder="Access Key"
+                            required
+                            style="text-align: center; font-family: var(--font-mono); font-size: 1.2rem; letter-spacing: normal;">
+                    </div>
+                    <button type="submit" class="btn-cyber-auth"><i class="fas fa-key"></i> AUTHENTICATE</button>
+                </form>
+                <p id="login-error" style="color: red; display: none; margin-top: 1rem; font-family: var(--font-mono);">
+                    ACCESS DENIED</p>
+            </div>
+        </div>
+
+        <!-- ADMIN DASHBOARD VIEW -->
+        <div id="view-admin" class="view container">
+            <div class="page-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1 class="page-title" style="color: #ff3366;"><i class="fas fa-user-shield"></i> Kontrol Merkezi
+                    </h1>
+                    <div class="terminal-text" style="color: #ff3366; border-color: #ff3366;">sudo su - admin</div>
+                </div>
+                <button id="logout-btn" class="btn"><i class="fas fa-sign-out-alt"></i> Çıkış</button>
+            </div>
+
+            <div class="admin-tabs">
+                <button class="admin-tab active" data-target="panel-hakkimda">Hakkımda</button>
+                <button class="admin-tab" data-target="panel-projeler">Projeler</button>
+                <button class="admin-tab" data-target="panel-basarilar">Başarılar</button>
+                <button class="admin-tab" data-target="panel-cv">CV & Eğitim</button>
+                <button class="admin-tab" data-target="panel-sertifikalar">Sertifikalar</button>
+                <button class="admin-tab" data-target="panel-ayarlar">Tema Ayarları</button>
+                <button class="admin-tab" data-target="panel-mesajlar">Mesaj Kutusu <span id="msg-badge"
+                        class="message-badge" style="display:none;"></span></button>
+            </div>
+
+            <!-- Panels will be managed dynamically by js -->
+            <div id="panel-hakkimda" class="admin-panel active">
+                <div class="form-container" style="max-width: 100%;">
+                    <h3 class="theme-text" style="margin-bottom: 1rem;"><i class="fas fa-edit"></i> Hakkımda Düzenle
+                    </h3>
+                    <form id="form-hakkimda">
+                        <textarea id="hakkimda-text" class="form-control"
+                            style="min-height: 200px; margin-bottom:1rem;"></textarea>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Kaydet</button>
+                    </form>
+                </div>
+            </div>
+
+            <div id="panel-projeler" class="admin-panel">
+                <div class="grid-container">
+                    <div class="form-container" style="margin: 0; max-width: 100%;">
+                        <h3 class="theme-text" style="margin-bottom: 1rem;"><i class="fas fa-plus"></i> Yeni Proje</h3>
+                        <form id="form-projeler">
+                            <input type="hidden" id="proje-id">
+                            <input type="text" id="proje-title" class="form-control" placeholder="Proje Adı" required
+                                style="margin-bottom:1rem;">
+                            <textarea id="proje-desc" class="form-control" placeholder="Açıklama" required
+                                style="min-height: 100px; margin-bottom:1rem;"></textarea>
+                            <input type="text" id="proje-tech" class="form-control"
+                                placeholder="Teknolojiler (Virgülle ayırın)" style="margin-bottom:1rem;">
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Kaydet</button>
+                            <button type="button" id="proje-cancel" class="btn"
+                                style="display:none; margin-left: 10px;">İptal</button>
+                        </form>
+                    </div>
+                    <div class="card item-list"
+                        style="margin-top: 0; border: none; background: transparent; padding: 0;">
+                        <div id="list-projeler"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="panel-basarilar" class="admin-panel">
+                <div class="grid-container">
+                    <div class="form-container" style="margin: 0; max-width: 100%;">
+                        <h3 class="theme-text" style="margin-bottom: 1rem;"><i class="fas fa-plus"></i> Yeni Başarı</h3>
+                        <form id="form-basarilar">
+                            <input type="hidden" id="basari-id">
+                            <input type="text" id="basari-title" class="form-control" placeholder="Başarı Başlığı"
+                                required style="margin-bottom:1rem;">
+                            <textarea id="basari-desc" class="form-control" placeholder="Açıklama" required
+                                style="min-height: 100px; margin-bottom:1rem;"></textarea>
+                            <input type="text" id="basari-year" class="form-control" placeholder="Yıl" required
+                                style="margin-bottom:1rem;">
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Kaydet</button>
+                            <button type="button" id="basari-cancel" class="btn"
+                                style="display:none; margin-left: 10px;">İptal</button>
+                        </form>
+                    </div>
+                    <div class="card item-list"
+                        style="margin-top: 0; border: none; background: transparent; padding: 0;">
+                        <div id="list-basarilar"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="panel-cv" class="admin-panel">
+                <div class="grid-container">
+                    <div class="form-container" style="margin: 0; max-width: 100%;">
+                        <h3 class="theme-text" style="margin-bottom: 1rem;"><i class="fas fa-plus"></i> CV Deneyimi Ekle
+                        </h3>
+                        <form id="form-cv">
+                            <input type="hidden" id="cv-id">
+                            <input type="text" id="cv-title" class="form-control" placeholder="Başlık" required
+                                style="margin-bottom:1rem;">
+                            <textarea id="cv-desc" class="form-control" placeholder="Kurum / Açıklama" required
+                                style="min-height: 100px; margin-bottom:1rem;"></textarea>
+                            <input type="text" id="cv-date" class="form-control" placeholder="Tarih" required
+                                style="margin-bottom:1rem;">
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Kaydet</button>
+                            <button type="button" id="cv-cancel" class="btn"
+                                style="display:none; margin-left: 10px;">İptal</button>
+                        </form>
+                    </div>
+                    <div class="card item-list"
+                        style="margin-top: 0; border: none; background: transparent; padding: 0;">
+                        <div id="list-cv"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="panel-sertifikalar" class="admin-panel">
+                <div class="grid-container">
+                    <div class="form-container" style="margin: 0; max-width: 100%;">
+                        <h3 class="theme-text" style="margin-bottom: 1rem;"><i class="fas fa-plus"></i> Yeni Sertifika
+                        </h3>
+                        <form id="form-sertifikalar">
+                            <input type="hidden" id="sertifika-id">
+                            <input type="text" id="sertifika-title" class="form-control" placeholder="Sertifika Adı"
+                                required style="margin-bottom:1rem;">
+                            <input type="text" id="sertifika-issuer" class="form-control" placeholder="Veren Kurum"
+                                required style="margin-bottom:1rem;">
+                            <input type="text" id="sertifika-date" class="form-control" placeholder="Tarih" required
+                                style="margin-bottom:1rem;">
+                            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Kaydet</button>
+                            <button type="button" id="sertifika-cancel" class="btn"
+                                style="display:none; margin-left: 10px;">İptal</button>
+                        </form>
+                    </div>
+                    <div class="card item-list"
+                        style="margin-top: 0; border: none; background: transparent; padding: 0;">
+                        <div id="list-sertifikalar"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="panel-mesajlar" class="admin-panel">
+                <div class="form-container" style="max-width: 100%;">
+                    <h3 class="theme-text" style="margin-bottom: 1rem;"><i class="fas fa-envelope-open-text"></i> Gelen
+                        Sinyaller</h3>
+                    <div id="admin-messages-list" class="message-inbox"></div>
+                </div>
+            </div>
+
+            <div id="panel-ayarlar" class="admin-panel">
+                <div class="form-container" style="max-width: 100%;">
+                    <h3 class="theme-text" style="margin-bottom: 2rem;"><i class="fas fa-palette"></i> Gelişmiş Tema
+                        Ayarları</h3>
+
+                    <div class="theme-grid">
+                        <div class="theme-card">
+                            <span class="theme-label">Arka Plan</span>
+                            <input type="color" id="color-bg-color" data-var="--bg-color" value="#050a0f">
+                        </div>
+                        <div class="theme-card">
+                            <span class="theme-label">Panel Arka Planı</span>
+                            <input type="color" id="color-panel-bg" data-var="--panel-bg" value="#0b131e">
+                        </div>
+                        <div class="theme-card">
+                            <span class="theme-label">Kart Arka Planı</span>
+                            <input type="color" id="color-card-bg" data-var="--card-bg" value="#0b131e">
+                        </div>
+                        <div class="theme-card">
+                            <span class="theme-label">Ana Neon</span>
+                            <input type="color" id="color-theme-color" data-var="--theme-color" value="#00f3ff">
+                        </div>
+                        <div class="theme-card">
+                            <span class="theme-label">LED Rengi</span>
+                            <input type="color" id="color-neon-green" data-var="--neon-green" value="#00ff66">
+                        </div>
+                        <div class="theme-card">
+                            <span class="theme-label">Ana Yazı</span>
+                            <input type="color" id="color-text-primary" data-var="--text-primary" value="#e2e8f0">
+                        </div>
+                        <div class="theme-card">
+                            <span class="theme-label">İkincil Yazı</span>
+                            <input type="color" id="color-text-secondary" data-var="--text-secondary" value="#94a3b8">
+                        </div>
+                        <div class="theme-card">
+                            <span class="theme-label">Admin Kırmızı</span>
+                            <input type="color" id="color-danger-color" data-var="--danger-color" value="#ff3366">
+                        </div>
+                        <div class="theme-card">
+                            <span class="theme-label">Kenarlık Rengi</span>
+                            <input type="color" id="color-border-color" data-var="--border-color" value="#ffffff">
+                        </div>
+                        <div class="theme-card">
+                            <span class="theme-label">Devre Yolu Rengi</span>
+                            <input type="color" id="color-circuit-color" data-var="--circuit-color" value="#00f3ff">
+                        </div>
+                    </div>
+
+                    <div class="theme-actions-row" style="margin-top: 2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <button id="btn-save-theme" class="btn btn-primary"><i class="fas fa-save"></i> Renkleri
+                            Kaydet</button>
+                        <button id="btn-revert-theme" class="btn"><i class="fas fa-undo"></i> Son Kaydedilen Renklere
+                            Dön</button>
+                        <button id="btn-default-theme" class="btn btn-danger"><i class="fas fa-trash-can"></i>
+                            Varsayılan Temaya Dön</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <div id="toast-container"></div>
+    <script src="js/data.js"></script>
+    <script type="module" src="js/app.js"></script>
+</body>
+
+</html>
