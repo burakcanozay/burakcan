@@ -4,22 +4,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Burakcan Özay | SPA Portfolyo</title>
+
+    <!-- ═══════════════════════════════════════════════════════
+         TEMEL SEO META ETİKETLERİ
+         ═══════════════════════════════════════════════════════ -->
+    <title>Burakcan Özay | Elektrik Elektronik Mühendisliği Portfolyosu</title>
+    <meta name="description"
+        content="Burakcan Özay'ın elektrik elektronik mühendisliği odaklı kişisel portfolyo sitesi. Projeler, başarılar, CV, sertifikalar ve iletişim bilgileri.">
+    <meta name="keywords"
+        content="Burakcan Özay, elektrik elektronik mühendisliği, portfolyo, CV, mühendislik projeleri, Arduino, Proteus, gömülü sistemler, devre tasarımı, elektronik">
+    <meta name="author" content="Burakcan Özay">
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="Turkish">
+    <meta name="theme-color" content="#050a0f">
+
+    <!-- ═══════════════════════════════════════════════════════
+         CANONICAL URL
+         ⚠️ PLACEHOLDER — Firebase Hosting veya GitHub Pages
+         adresin belli olunca aşağıdaki URL'yi güncelle.
+         GitHub Pages örneği: https://burakcan190757.github.io/burakcan-portfolio/
+         Firebase Hosting örneği: https://burakcanozay.web.app/
+         ═══════════════════════════════════════════════════════ -->
+    <link rel="canonical" href="https://burakcan190757.github.io/burakcan-portfolio/">
+
+    <!-- ═══════════════════════════════════════════════════════
+         OPEN GRAPH — Sosyal Medya Paylaşım Kartı
+         (Facebook, LinkedIn, WhatsApp, Discord vb.)
+         ⚠️ og:url — Canonical URL ile aynı olmalı, güncelle.
+         ═══════════════════════════════════════════════════════ -->
+    <meta property="og:title" content="Burakcan Özay | Elektrik Elektronik Mühendisliği Portfolyosu">
+    <meta property="og:description"
+        content="Elektrik elektronik mühendisliği projelerimi, başarılarımı, CV bilgilerimi ve sertifikalarımı içeren kişisel portfolyo sitem.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://burakcan190757.github.io/burakcan-portfolio/">
+    <meta property="og:image" content="assets/og-image.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Burakcan Özay Portfolyo — Elektrik Elektronik Mühendisliği">
+    <meta property="og:locale" content="tr_TR">
+    <meta property="og:site_name" content="Burakcan Özay Portfolio">
+
+    <!-- ═══════════════════════════════════════════════════════
+         TWITTER / X CARD
+         ⚠️ twitter:site — Twitter kullanıcı adın varsa @handle ekle.
+         ═══════════════════════════════════════════════════════ -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Burakcan Özay | Elektrik Elektronik Mühendisliği">
+    <meta name="twitter:description"
+        content="Projelerimi, başarılarımı, CV bilgilerimi ve sertifikalarımı içeren kişisel mühendislik portfolyom.">
+    <meta name="twitter:image" content="assets/og-image.png">
+    <meta name="twitter:image:alt" content="Burakcan Özay Portfolyo">
+    <!-- <meta name="twitter:site" content="@kullanici_adin"> -->
+
+    <!-- ═══════════════════════════════════════════════════════
+         FAVİCON
+         ═══════════════════════════════════════════════════════ -->
+    <link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon/favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/favicon/apple-touch-icon.png">
+    <link rel="manifest" href="assets/favicon/site.webmanifest">
+
+    <!-- ═══════════════════════════════════════════════════════
+         FONTS & ICONS
+         ═══════════════════════════════════════════════════════ -->
     <link
         href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;600&family=Rajdhani:wght@400;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
+
+    <!-- ═══════════════════════════════════════════════════════
+         JSON-LD STRUCTURED DATA — Schema.org Person
+         ⚠️ url, sameAs alanlarını gerçek adresinle güncelle.
+         ═══════════════════════════════════════════════════════ -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Burakcan Özay",
+      "jobTitle": "Elektrik Elektronik Mühendisliği Öğrencisi",
+      "url": "https://burakcan190757.github.io/burakcan-portfolio/",
+      "image": "assets/og-image.png",
+      "description": "Elektrik elektronik mühendisliği alanında projeler geliştiren, Arduino, Proteus ve gömülü sistemler konusunda deneyimli öğrenci mühendis.",
+      "sameAs": [
+        "https://github.com/burakcan190757",
+        "https://www.linkedin.com/in/burakcanozay"
+      ],
+      "knowsAbout": [
+        "Elektrik Elektronik Mühendisliği",
+        "Arduino",
+        "Proteus",
+        "Gömülü Sistemler",
+        "Devre Tasarımı",
+        "PCB Tasarımı",
+        "HTML",
+        "CSS",
+        "JavaScript",
+        "Firebase"
+      ]
+    }
+    </script>
 </head>
 
 <body>
+    <div id="preloader" class="preloader" aria-live="polite">
+        <div class="preloader-core">
+            <div class="preloader-header">
+                <div class="preloader-led" aria-hidden="true"></div>
+                <h1 class="glitch-text" data-text="BOOTING SYS_CORE...">BOOTING SYS_CORE...</h1>
+            </div>
+            <div class="preloader-terminal">
+                <p><span class="status-indicator waiting" id="status-1">[ WAIT ]</span> initializing portfolio core...
+                </p>
+                <p><span class="status-indicator waiting" id="status-2">[ WAIT ]</span> loading circuit modules...</p>
+                <p><span class="status-indicator waiting" id="status-3">[ WAIT ]</span> connecting Firebase/Auth...</p>
+                <p><span class="status-indicator waiting" id="status-4">[ WAIT ]</span> checking system signals...</p>
+                <p><span class="status-indicator waiting" id="status-5">[ WAIT ]</span> SYS_CORE ready</p>
+            </div>
+            <div class="preloader-progress-info">
+                <span class="progress-label">SYSTEM INITIALIZATION</span>
+                <span class="progress-percent" id="preloader-percentage">0%</span>
+            </div>
+            <div class="preloader-bar">
+                <span id="preloader-bar-fill"></span>
+            </div>
+            <div class="preloader-hud">
+                <span class="hud-item">V_CORE: <span id="preloader-volt">5.00V</span></span>
+                <span class="hud-item">TEMP: <span id="preloader-temp">35°C</span></span>
+                <span class="hud-item">CLOCK: 16.0MHz</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mobile Drawer Overlay -->
+    <div class="drawer-overlay" id="drawer-overlay" aria-hidden="true"></div>
+
     <nav class="navbar" id="main-nav" style="display: none;">
         <a href="#home" class="nav-brand">
-            <div class="led-indicator"></div>
+            <div class="led-indicator" aria-hidden="true"></div>
             SYS_CORE
         </a>
-        <button class="hamburger"><i class="fas fa-bars"></i></button>
-        <ul class="nav-links">
+        <button class="hamburger" aria-label="Menüyü aç veya kapat" aria-expanded="false" aria-controls="nav-links">
+            <i class="fas fa-bars" aria-hidden="true"></i>
+        </button>
+        <ul class="nav-links" id="nav-links">
             <li><a href="#home" class="nav-link" data-target="home">Ana Sayfa</a></li>
             <li><a href="#hakkimda" class="nav-link" data-target="hakkimda">Hakkımda</a></li>
             <li><a href="#projeler" class="nav-link" data-target="projeler">Projeler</a></li>
@@ -34,16 +163,16 @@
         <!-- HOME VIEW -->
         <div id="view-home" class="view active">
             <div class="hero">
-                <div class="hero-bg-image"></div>
-                <div class="energy-overlay"></div>
+                <div class="hero-bg-image" aria-hidden="true"></div>
+                <div class="energy-overlay" aria-hidden="true"></div>
 
-                <div class="hud-label top-left">POWER GRID ONLINE</div>
-                <div class="hud-label top-right">PORTFOLIO CORE v1.0</div>
-                <div class="hud-label bottom-left">PCB TRACE ACTIVE</div>
-                <div class="hud-label bottom-right">EEE STUDENT PROFILE</div>
+                <div class="hud-label top-left" aria-hidden="true">POWER GRID ONLINE</div>
+                <div class="hud-label top-right" aria-hidden="true">PORTFOLIO CORE v1.0</div>
+                <div class="hud-label bottom-left" aria-hidden="true">PCB TRACE ACTIVE</div>
+                <div class="hud-label bottom-right" aria-hidden="true">EEE STUDENT PROFILE</div>
 
-                <svg class="svg-circuit" viewBox="0 0 100 100" preserveAspectRatio="none"
-                    xmlns="http://www.w3.org/2000/svg">
+                <svg class="svg-circuit" aria-hidden="true" focusable="false" viewBox="0 0 100 100"
+                    preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
                     <defs>
                         <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
                             <feGaussianBlur stdDeviation="1.5" result="blur" />
@@ -137,14 +266,14 @@
                 </svg>
 
                 <div class="central-chip">
-                    <div class="chip-pins top"></div>
-                    <div class="chip-pins bottom"></div>
-                    <div class="chip-pins left"></div>
-                    <div class="chip-pins right"></div>
+                    <div class="chip-pins top" aria-hidden="true"></div>
+                    <div class="chip-pins bottom" aria-hidden="true"></div>
+                    <div class="chip-pins left" aria-hidden="true"></div>
+                    <div class="chip-pins right" aria-hidden="true"></div>
 
                     <div class="chip-content">
                         <h1>Burakcan Özay</h1>
-                        <h2><i class="fas fa-terminal"></i> ELEKTRİK ELEKTRONİK MÜH.</h2>
+                        <h2><i class="fas fa-terminal" aria-hidden="true"></i> ELEKTRİK ELEKTRONİK MÜH.</h2>
                         <div class="chip-status">
                             <div class="status-row"><span>SYSTEM STATUS:</span> <span
                                     class="status-val success">ONLINE</span></div>
@@ -156,88 +285,62 @@
                     </div>
                 </div>
 
-                <div class="desktop-nodes">
-                    <a href="#hakkimda" class="hero-node" style="top: 20%; left: 25%;" data-target="trace-hakkimda">
-                        <div class="node-led"></div>
-                        <i class="fas fa-user-astronaut hero-node-icon"></i>
+                <div class="hero-nodes">
+                    <a href="#hakkimda" class="hero-node" data-target="trace-hakkimda"
+                        aria-label="Hakkımda modülünü aç">
+                        <div class="node-led" aria-hidden="true"></div>
+                        <i class="fas fa-user-astronaut hero-node-icon" aria-hidden="true"></i>
                         <span class="hero-node-title">[01] Hakkımda</span>
-                        <span class="hero-node-subtitle">OPEN MODULE</span>
+                        <span class="hero-node-subtitle" aria-hidden="true">OPEN MODULE</span>
                     </a>
-                    <a href="#projeler" class="hero-node" style="top: 20%; left: 75%;" data-target="trace-projeler">
-                        <div class="node-led"></div>
-                        <i class="fas fa-microchip hero-node-icon"></i>
+                    <a href="#projeler" class="hero-node" data-target="trace-projeler"
+                        aria-label="Projeler modülünü aç">
+                        <div class="node-led" aria-hidden="true"></div>
+                        <i class="fas fa-microchip hero-node-icon" aria-hidden="true"></i>
                         <span class="hero-node-title">[02] Projeler</span>
-                        <span class="hero-node-subtitle">OPEN MODULE</span>
+                        <span class="hero-node-subtitle" aria-hidden="true">OPEN MODULE</span>
                     </a>
-                    <a href="#basarilar" class="hero-node" style="top: 50%; left: 15%;" data-target="trace-basarilar">
-                        <div class="node-led"></div>
-                        <i class="fas fa-trophy hero-node-icon"></i>
+                    <a href="#basarilar" class="hero-node" data-target="trace-basarilar"
+                        aria-label="Başarılar modülünü aç">
+                        <div class="node-led" aria-hidden="true"></div>
+                        <i class="fas fa-trophy hero-node-icon" aria-hidden="true"></i>
                         <span class="hero-node-title">[03] Başarılar</span>
-                        <span class="hero-node-subtitle">OPEN MODULE</span>
+                        <span class="hero-node-subtitle" aria-hidden="true">OPEN MODULE</span>
                     </a>
-                    <a href="#cv" class="hero-node" style="top: 50%; left: 85%;" data-target="trace-cv">
-                        <div class="node-led"></div>
-                        <i class="fas fa-file-waveform hero-node-icon"></i>
+                    <a href="#cv" class="hero-node" data-target="trace-cv" aria-label="Özgeçmiş ve Eğitim modülünü aç">
+                        <div class="node-led" aria-hidden="true"></div>
+                        <i class="fas fa-file-waveform hero-node-icon" aria-hidden="true"></i>
                         <span class="hero-node-title">[04] CV / Eğitim</span>
-                        <span class="hero-node-subtitle">OPEN MODULE</span>
+                        <span class="hero-node-subtitle" aria-hidden="true">OPEN MODULE</span>
                     </a>
-                    <a href="#sertifikalar" class="hero-node" style="top: 80%; left: 25%;"
-                        data-target="trace-sertifikalar">
-                        <div class="node-led"></div>
-                        <i class="fas fa-certificate hero-node-icon"></i>
+                    <a href="#sertifikalar" class="hero-node" data-target="trace-sertifikalar"
+                        aria-label="Sertifikalar modülünü aç">
+                        <div class="node-led" aria-hidden="true"></div>
+                        <i class="fas fa-certificate hero-node-icon" aria-hidden="true"></i>
                         <span class="hero-node-title">[05] Sertifikalar</span>
-                        <span class="hero-node-subtitle">OPEN MODULE</span>
+                        <span class="hero-node-subtitle" aria-hidden="true">OPEN MODULE</span>
                     </a>
-                    <a href="#iletisim" class="hero-node" style="top: 80%; left: 75%;" data-target="trace-iletisim">
-                        <div class="node-led"></div>
-                        <i class="fas fa-satellite-dish hero-node-icon"></i>
+                    <a href="#iletisim" class="hero-node" data-target="trace-iletisim"
+                        aria-label="İletişim modülünü aç">
+                        <div class="node-led" aria-hidden="true"></div>
+                        <i class="fas fa-satellite-dish hero-node-icon" aria-hidden="true"></i>
                         <span class="hero-node-title">[06] İletişim</span>
-                        <span class="hero-node-subtitle">OPEN MODULE</span>
+                        <span class="hero-node-subtitle" aria-hidden="true">OPEN MODULE</span>
                     </a>
                 </div>
-
-                <div class="hero-nodes-mobile">
-                    <a href="#hakkimda" class="hero-node">
-                        <div class="node-led"></div><i class="fas fa-user-astronaut hero-node-icon"></i> <span
-                            class="hero-node-title">[01] Hakkımda</span>
-                    </a>
-                    <a href="#projeler" class="hero-node">
-                        <div class="node-led"></div><i class="fas fa-microchip hero-node-icon"></i> <span
-                            class="hero-node-title">[02] Projeler</span>
-                    </a>
-                    <a href="#basarilar" class="hero-node">
-                        <div class="node-led"></div><i class="fas fa-trophy hero-node-icon"></i> <span
-                            class="hero-node-title">[03] Başarılar</span>
-                    </a>
-                    <a href="#cv" class="hero-node">
-                        <div class="node-led"></div><i class="fas fa-file-waveform hero-node-icon"></i> <span
-                            class="hero-node-title">[04] CV / Eğitim</span>
-                    </a>
-                    <a href="#sertifikalar" class="hero-node">
-                        <div class="node-led"></div><i class="fas fa-certificate hero-node-icon"></i> <span
-                            class="hero-node-title">[05] Sertifikalar</span>
-                    </a>
-                    <a href="#iletisim" class="hero-node">
-                        <div class="node-led"></div><i class="fas fa-satellite-dish hero-node-icon"></i> <span
-                            class="hero-node-title">[06] İletişim</span>
-                    </a>
-                </div>
-
-                <a href="#admin" class="sys-admin-link" title="SYS_ADMIN (CTRL+SHIFT+A)"><i class="fas fa-terminal"></i>
-                    <span>sys_admin</span></a>
             </div>
         </div>
 
         <!-- HAKKIMDA VIEW -->
         <div id="view-hakkimda" class="view">
-            <div class="about-bg-image"></div>
+            <div class="about-bg-image" aria-hidden="true"></div>
             <div class="container">
                 <div class="page-header">
                     <h1 class="page-title">Hakkımda</h1>
-                    <div class="terminal-text">init_module('about_me.sys');</div>
+                    <div class="terminal-text" aria-hidden="true">init_module('about_me.sys');</div>
                 </div>
                 <div class="card">
-                    <h3><i class="fas fa-user-astronaut"></i> Burakcan Özay</h3>
+                    <h3><i class="fas fa-user-astronaut" aria-hidden="true"></i> Burakcan Özay</h3>
                     <p id="hakkimda-content" style="font-size: 1.2rem; margin-top: 1rem; line-height: 1.8;">
                         Yükleniyor...
                     </p>
@@ -246,7 +349,8 @@
                 <div class="scope-system" style="margin-top: 3rem;">
                     <div class="scope-screen-container">
                         <div class="scope-screen">
-                            <canvas id="oscilloscope-canvas"></canvas>
+                            <canvas id="oscilloscope-canvas" role="img"
+                                aria-label="Ayarlanabilir osiloskop sinyal ekranı"></canvas>
                             <div class="scope-measurements">
                                 <span id="scope-frequency-label">Freq: 10 Hz</span>
                                 <span id="scope-amplitude-label">Amp: 1.0x</span>
@@ -263,7 +367,8 @@
                     <div class="scope-controls">
                         <div class="scope-controls-grid">
                             <div class="scope-control">
-                                <label><i class="fas fa-wave-square"></i> Sinyal Tipi</label>
+                                <label for="scope-waveform"><i class="fas fa-wave-square" aria-hidden="true"></i> Sinyal
+                                    Tipi</label>
                                 <select id="scope-waveform">
                                     <option value="sine">Sinüs</option>
                                     <option value="square">Kare</option>
@@ -277,7 +382,8 @@
                             </div>
 
                             <div class="scope-control">
-                                <label><i class="fas fa-bezier-curve"></i> Kanal Seçimi</label>
+                                <label for="scope-channel"><i class="fas fa-bezier-curve" aria-hidden="true"></i> Kanal
+                                    Seçimi</label>
                                 <select id="scope-channel">
                                     <option value="ch1">CH1 (Cyan)</option>
                                     <option value="ch2">CH2 (Yeşil)</option>
@@ -286,7 +392,8 @@
                             </div>
 
                             <div class="scope-control">
-                                <label><i class="fas fa-clock"></i> Time/Div</label>
+                                <label for="scope-time-div"><i class="fas fa-clock" aria-hidden="true"></i>
+                                    Time/Div</label>
                                 <select id="scope-time-div">
                                     <option value="0.5">0.5 ms/div</option>
                                     <option value="1" selected>1 ms/div</option>
@@ -297,7 +404,8 @@
                             </div>
 
                             <div class="scope-control">
-                                <label><i class="fas fa-arrows-alt-v"></i> Volt/Div</label>
+                                <label for="scope-volt-div"><i class="fas fa-arrows-alt-v" aria-hidden="true"></i>
+                                    Volt/Div</label>
                                 <select id="scope-volt-div">
                                     <option value="0.5">0.5 V/div</option>
                                     <option value="1" selected>1 V/div</option>
@@ -307,7 +415,8 @@
                             </div>
 
                             <div class="scope-control">
-                                <label><i class="fas fa-bolt"></i> Trigger Mode</label>
+                                <label for="scope-trigger"><i class="fas fa-bolt" aria-hidden="true"></i> Trigger
+                                    Mode</label>
                                 <select id="scope-trigger">
                                     <option value="auto">Auto</option>
                                     <option value="normal">Normal</option>
@@ -316,7 +425,8 @@
                             </div>
 
                             <div class="scope-control">
-                                <label><i class="fas fa-link"></i> Coupling</label>
+                                <label for="scope-coupling"><i class="fas fa-link" aria-hidden="true"></i>
+                                    Coupling</label>
                                 <select id="scope-coupling">
                                     <option value="dc">DC</option>
                                     <option value="ac">AC</option>
@@ -328,7 +438,7 @@
                         <div class="scope-sliders">
                             <div class="scope-control range-control">
                                 <div class="range-header">
-                                    <label>Frekans (Frequency)</label>
+                                    <label for="scope-frequency">Frekans (Frequency)</label>
                                     <span id="scope-frequency-value">10 Hz</span>
                                 </div>
                                 <input type="range" id="scope-frequency" min="1" max="100" value="10">
@@ -336,7 +446,7 @@
 
                             <div class="scope-control range-control">
                                 <div class="range-header">
-                                    <label>Genlik (Amplitude)</label>
+                                    <label for="scope-amplitude">Genlik (Amplitude)</label>
                                     <span id="scope-amplitude-value">1.0x</span>
                                 </div>
                                 <input type="range" id="scope-amplitude" min="0.2" max="2.0" step="0.1" value="1.0">
@@ -344,7 +454,7 @@
 
                             <div class="scope-control range-control">
                                 <div class="range-header">
-                                    <label>Offset</label>
+                                    <label for="scope-offset">Offset</label>
                                     <span id="scope-offset-value">0.0</span>
                                 </div>
                                 <input type="range" id="scope-offset" min="-1.0" max="1.0" step="0.1" value="0.0">
@@ -352,12 +462,18 @@
                         </div>
 
                         <div class="scope-buttons">
-                            <button id="scope-run-stop" class="scope-btn btn-active"><i class="fas fa-play"></i>
+                            <button id="scope-run-stop" class="scope-btn btn-active"
+                                aria-label="Sinyal akışını başlat veya durdur"><i class="fas fa-play"
+                                    aria-hidden="true"></i>
                                 Run</button>
-                            <button id="scope-reset" class="scope-btn"><i class="fas fa-undo"></i> Reset</button>
-                            <button id="scope-grid-toggle" class="scope-btn btn-active"><i
-                                    class="fas fa-border-all"></i> Grid</button>
-                            <button id="scope-glow-toggle" class="scope-btn btn-active"><i class="fas fa-lightbulb"></i>
+                            <button id="scope-reset" class="scope-btn" aria-label="Osiloskop ayarlarını sıfırla"><i
+                                    class="fas fa-undo" aria-hidden="true"></i> Reset</button>
+                            <button id="scope-grid-toggle" class="scope-btn btn-active"
+                                aria-label="Kılavuz çizgilerini göster veya gizle"><i class="fas fa-border-all"
+                                    aria-hidden="true"></i> Grid</button>
+                            <button id="scope-glow-toggle" class="scope-btn btn-active"
+                                aria-label="Neon ışıma efektini aç veya kapat"><i class="fas fa-lightbulb"
+                                    aria-hidden="true"></i>
                                 Glow</button>
                         </div>
                     </div>
@@ -367,11 +483,11 @@
 
         <!-- PROJELER VIEW -->
         <div id="view-projeler" class="view">
-            <div class="projects-bg-image"></div>
+            <div class="projects-bg-image" aria-hidden="true"></div>
             <div class="container">
                 <div class="page-header">
                     <h1 class="page-title">Projeler</h1>
-                    <div class="terminal-text">exec ./load_projects.sh</div>
+                    <div class="terminal-text" aria-hidden="true">exec ./load_projects.sh</div>
                 </div>
                 <div class="grid-container" id="projeler-grid"></div>
             </div>
@@ -379,11 +495,11 @@
 
         <!-- BASARILAR VIEW -->
         <div id="view-basarilar" class="view">
-            <div class="achievements-bg-image"></div>
+            <div class="achievements-bg-image" aria-hidden="true"></div>
             <div class="container">
                 <div class="page-header">
                     <h1 class="page-title">Başarılar</h1>
-                    <div class="terminal-text">cat awards.log</div>
+                    <div class="terminal-text" aria-hidden="true">cat awards.log</div>
                 </div>
                 <div class="grid-container" id="basarilar-grid"></div>
             </div>
@@ -391,8 +507,8 @@
 
         <!-- CV VIEW -->
         <div id="view-cv" class="view cv-page">
-            <div class="cv-bg-image"></div>
-            <div class="cv-bg-effects">
+            <div class="cv-bg-image" aria-hidden="true"></div>
+            <div class="cv-bg-effects" aria-hidden="true">
                 <div class="cv-circuit-line line-1"></div>
                 <div class="cv-circuit-line line-2"></div>
                 <div class="cv-circuit-line line-3"></div>
@@ -403,19 +519,21 @@
                 <div class="cv-hero-content">
                     <div class="cv-avatar-container">
                         <div class="cv-avatar">
-                            <i class="fas fa-user-astronaut"></i>
+                            <i class="fas fa-user-astronaut" aria-hidden="true"></i>
                         </div>
-                        <div class="cv-avatar-chip">MCU-CORE</div>
+                        <div class="cv-avatar-chip" aria-hidden="true">MCU-CORE</div>
                     </div>
                     <div class="cv-hero-text">
                         <h1 class="cv-name" id="cv-hero-name">Burakcan Özay</h1>
-                        <h2 class="cv-title-tag" id="cv-hero-title"><i class="fas fa-microchip"></i> Elektrik Elektronik
+                        <h2 class="cv-title-tag" id="cv-hero-title"><i class="fas fa-microchip" aria-hidden="true"></i>
+                            Elektrik Elektronik
                             Mühendisliği Öğrencisi</h2>
                         <p class="cv-desc" id="cv-hero-desc">Yükleniyor...</p>
                         <div class="cv-hero-buttons">
                             <a href="#" class="btn btn-primary" id="btn-cv-download" target="_blank"><i
-                                    class="fas fa-file-download"></i> CV İndir</a>
-                            <a href="#iletisim" class="btn"><i class="fas fa-paper-plane"></i> İletişime Geç</a>
+                                    class="fas fa-file-download" aria-hidden="true"></i> CV İndir</a>
+                            <a href="#iletisim" class="btn"><i class="fas fa-paper-plane" aria-hidden="true"></i>
+                                İletişime Geç</a>
                         </div>
                     </div>
                 </div>
@@ -427,31 +545,34 @@
                     <div class="cv-col-left">
                         <!-- 2. Kişisel Bilgiler -->
                         <section class="cv-section cv-card cv-reveal">
-                            <div class="cv-card-led"></div>
-                            <h3 class="cv-section-title"><i class="fas fa-id-card-clip"></i> Kişisel Bilgiler</h3>
+                            <div class="cv-card-led" aria-hidden="true"></div>
+                            <h3 class="cv-section-title"><i class="fas fa-id-card-clip" aria-hidden="true"></i> Kişisel
+                                Bilgiler</h3>
                             <div class="cv-kisisel-list" id="cv-kisisel-content"></div>
                         </section>
 
                         <!-- 4. Teknik Yetenekler -->
                         <section class="cv-section cv-card cv-reveal">
-                            <div class="cv-card-led"
+                            <div class="cv-card-led" aria-hidden="true"
                                 style="background: var(--theme-color); box-shadow: 0 0 8px var(--theme-color);"></div>
-                            <h3 class="cv-section-title"><i class="fas fa-wave-square"></i> Teknik Yetenekler</h3>
+                            <h3 class="cv-section-title"><i class="fas fa-wave-square" aria-hidden="true"></i> Teknik
+                                Yetenekler</h3>
                             <div class="cv-skills-list" id="cv-skills-content"></div>
                         </section>
 
                         <!-- 8. Diller -->
                         <section class="cv-section cv-card cv-reveal">
-                            <div class="cv-card-led"></div>
-                            <h3 class="cv-section-title"><i class="fas fa-language"></i> Diller</h3>
+                            <div class="cv-card-led" aria-hidden="true"></div>
+                            <h3 class="cv-section-title"><i class="fas fa-language" aria-hidden="true"></i> Diller</h3>
                             <div class="cv-diller-list" id="cv-diller-content"></div>
                         </section>
 
                         <!-- 9. İlgi Alanları -->
                         <section class="cv-section cv-card cv-reveal">
-                            <div class="cv-card-led"
+                            <div class="cv-card-led" aria-hidden="true"
                                 style="background: var(--theme-color); box-shadow: 0 0 8px var(--theme-color);"></div>
-                            <h3 class="cv-section-title"><i class="fas fa-compass"></i> İlgi Alanları</h3>
+                            <h3 class="cv-section-title"><i class="fas fa-compass" aria-hidden="true"></i> İlgi Alanları
+                            </h3>
                             <div class="cv-tags" id="cv-ilgi-content"></div>
                         </section>
                     </div>
@@ -460,37 +581,45 @@
                     <div class="cv-col-right">
                         <!-- 3. Eğitim Bilgileri (Dynamically loaded from appData.cv) -->
                         <section class="cv-section cv-card cv-reveal">
-                            <div class="cv-card-led" style="background: gold; box-shadow: 0 0 8px gold;"></div>
-                            <h3 class="cv-section-title"><i class="fas fa-graduation-cap"></i> Eğitim Bilgileri</h3>
+                            <div class="cv-card-led" aria-hidden="true"
+                                style="background: gold; box-shadow: 0 0 8px gold;"></div>
+                            <h3 class="cv-section-title"><i class="fas fa-graduation-cap" aria-hidden="true"></i> Eğitim
+                                Bilgileri</h3>
                             <div class="cv-timeline-vertical" id="cv-egitim-content"></div>
                         </section>
 
                         <!-- 5. Proje Deneyimleri (Dynamically loaded from appData.projeler) -->
                         <section class="cv-section cv-card cv-reveal">
-                            <div class="cv-card-led"></div>
-                            <h3 class="cv-section-title"><i class="fas fa-folder-open"></i> Proje Deneyimleri</h3>
+                            <div class="cv-card-led" aria-hidden="true"></div>
+                            <h3 class="cv-section-title"><i class="fas fa-folder-open" aria-hidden="true"></i> Proje
+                                Deneyimleri</h3>
                             <div class="cv-projeler-list" id="cv-projeler-content"></div>
                         </section>
 
                         <!-- 6. Deneyim / Çalışmalar (Dynamically loaded from data.js) -->
                         <section class="cv-section cv-card cv-reveal">
-                            <div class="cv-card-led"
+                            <div class="cv-card-led" aria-hidden="true"
                                 style="background: var(--theme-color); box-shadow: 0 0 8px var(--theme-color);"></div>
-                            <h3 class="cv-section-title"><i class="fas fa-briefcase"></i> Deneyim &amp; Çalışmalar</h3>
+                            <h3 class="cv-section-title"><i class="fas fa-briefcase" aria-hidden="true"></i> Deneyim
+                                &amp; Çalışmalar</h3>
                             <div class="cv-deneyim-list" id="cv-deneyim-content"></div>
                         </section>
 
                         <!-- 7. Sertifikalar (Dynamically loaded from appData.sertifikalar) -->
                         <section class="cv-section cv-card cv-reveal">
-                            <div class="cv-card-led" style="background: gold; box-shadow: 0 0 8px gold;"></div>
-                            <h3 class="cv-section-title"><i class="fas fa-certificate"></i> Sertifikalar</h3>
+                            <div class="cv-card-led" aria-hidden="true"
+                                style="background: gold; box-shadow: 0 0 8px gold;"></div>
+                            <h3 class="cv-section-title"><i class="fas fa-certificate" aria-hidden="true"></i>
+                                Sertifikalar</h3>
                             <div class="cv-sertifikalar-list" id="cv-sertifikalar-content"></div>
                         </section>
 
                         <!-- 10. CV Notları (Dynamically loaded from data.js) -->
                         <section class="cv-section cv-card cv-reveal">
-                            <div class="cv-card-led" style="background: #ff3366; box-shadow: 0 0 8px #ff3366;"></div>
-                            <h3 class="cv-section-title"><i class="fas fa-terminal"></i> CV Sistem Notları</h3>
+                            <div class="cv-card-led" aria-hidden="true"
+                                style="background: #ff3366; box-shadow: 0 0 8px #ff3366;"></div>
+                            <h3 class="cv-section-title"><i class="fas fa-terminal" aria-hidden="true"></i> CV Sistem
+                                Notları</h3>
                             <div class="cv-notlar-box" id="cv-notlar-content"></div>
                         </section>
                     </div>
@@ -500,11 +629,11 @@
 
         <!-- SERTIFIKALAR VIEW -->
         <div id="view-sertifikalar" class="view">
-            <div class="certificates-bg-image"></div>
+            <div class="certificates-bg-image" aria-hidden="true"></div>
             <div class="container">
                 <div class="page-header">
                     <h1 class="page-title">Sertifikalar</h1>
-                    <div class="terminal-text">grep 'CERT' sys_auth.log</div>
+                    <div class="terminal-text" aria-hidden="true">grep 'CERT' sys_auth.log</div>
                 </div>
                 <div class="grid-container" id="sertifikalar-grid"></div>
             </div>
@@ -512,39 +641,54 @@
 
         <!-- ILETISIM VIEW -->
         <div id="view-iletisim" class="view">
-            <div class="contact-bg-image"></div>
+            <div class="contact-bg-image" aria-hidden="true"></div>
             <div class="container">
                 <div class="page-header">
                     <h1 class="page-title">İletişim</h1>
-                    <div class="terminal-text">ping user@burakcanozay.sys</div>
+                    <div class="terminal-text" aria-hidden="true">ping user@burakcanozay.sys</div>
                 </div>
                 <div class="grid-container">
                     <div class="card">
-                        <h3><i class="fas fa-address-card"></i> Bağlantı Bilgileri</h3>
-                        <p style="margin-bottom:10px;"><i class="fas fa-envelope"></i> <strong>Email:</strong>
+                        <h3><i class="fas fa-address-card" aria-hidden="true"></i> Bağlantı Bilgileri</h3>
+                        <p style="margin-bottom:10px;"><i class="fas fa-envelope" aria-hidden="true"></i>
+                            <strong>Email:</strong>
                             burakcanozay@example.com</p>
-                        <p style="margin-bottom:10px;"><i class="fas fa-map-marker-alt"></i> <strong>Konum:</strong>
+                        <p style="margin-bottom:10px;"><i class="fas fa-map-marker-alt" aria-hidden="true"></i>
+                            <strong>Konum:</strong>
                             Türkiye
                         </p>
-                        <p style="margin-bottom:10px;"><i class="fab fa-linkedin"></i> <a href="#"
+                        <p style="margin-bottom:10px;"><i class="fab fa-linkedin" aria-hidden="true"></i> <a href="#"
                                 class="theme-text">linkedin.com/in/burakcanozay</a></p>
-                        <p style="margin-bottom:10px;"><i class="fab fa-github"></i> <a href="#"
+                        <p style="margin-bottom:10px;"><i class="fab fa-github" aria-hidden="true"></i> <a href="#"
                                 class="theme-text">github.com/burakcanozay</a></p>
                     </div>
                     <div class="form-container" style="margin: 0; max-width: 100%;">
-                        <h3 class="theme-text" style="margin-bottom: 1.5rem;"><i class="fas fa-satellite-dish"></i>
+                        <h3 class="theme-text" style="margin-bottom: 1.5rem;"><i class="fas fa-satellite-dish"
+                                aria-hidden="true"></i>
                             Sinyal
                             Gönder</h3>
                         <form id="iletisim-form">
-                            <div class="form-group"><input type="text" id="contact-name" class="form-control"
-                                    placeholder="Adınız Soyadınız" required></div>
-                            <div class="form-group"><input type="email" id="contact-email" class="form-control"
-                                    placeholder="Email Adresiniz" required></div>
-                            <div class="form-group"><input type="text" id="contact-subject" class="form-control"
-                                    placeholder="Konu" required></div>
-                            <div class="form-group"><textarea id="contact-message" class="form-control"
-                                    placeholder="Mesajınız" minlength="10" required></textarea></div>
-                            <button type="submit" class="btn btn-primary">Gönder</button>
+                            <div class="form-group">
+                                <label for="contact-name">Ad Soyad</label>
+                                <input type="text" id="contact-name" class="form-control" placeholder="Adınız Soyadınız"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-email">Email</label>
+                                <input type="email" id="contact-email" class="form-control"
+                                    placeholder="Email Adresiniz" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-subject">Konu</label>
+                                <input type="text" id="contact-subject" class="form-control" placeholder="Mesaj Konusu"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label for="contact-message">Mesaj</label>
+                                <textarea id="contact-message" class="form-control" placeholder="Mesajınız"
+                                    minlength="10" required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary" aria-label="Mesajı Gönder">Gönder</button>
                         </form>
                     </div>
                 </div>
@@ -554,25 +698,46 @@
         <!-- ADMIN LOGIN VIEW -->
         <div id="view-admin-login" class="view container"
             style="display: flex; justify-content: center; align-items: center; min-height: 80vh;">
-            <div class="form-container" style="width: 400px; text-align: center;">
-                <div class="led-indicator"
+            <div class="form-container" style="width: 420px; text-align: center;">
+                <div class="led-indicator" aria-hidden="true"
                     style="background: red; box-shadow: 0 0 10px red; margin: 0 auto 1rem auto; width: 15px; height: 15px;">
                 </div>
-                <h2 style="color: red; margin-bottom: 2rem; font-family: var(--font-mono);">RESTRICTED AREA</h2>
-                <form id="admin-login-form">
-                    <div class="form-group" style="margin-bottom: 1rem;">
-                        <input type="email" id="admin-email" class="form-control" placeholder="Admin Email" required
+                <h2 style="color: red; margin-bottom: 0.5rem; font-family: var(--font-mono);">RESTRICTED AREA</h2>
+                <p style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 1.8rem; font-family: var(--font-mono); line-height: 1.5; border: 1px solid rgba(255,51,102,0.25); border-radius: 4px; padding: 0.6rem 0.8rem; background: rgba(255,51,102,0.05);">
+                    <i class="fas fa-shield-halved" aria-hidden="true" style="color:#ff3366; margin-right: 4px;"></i>
+                    Bu alan yalnızca yetkili admin kullanımı içindir.<br>
+                    Giriş <strong style="color: var(--theme-color);">Firebase Authentication</strong> ile doğrulanır.
+                    Yetkisiz erişim girişimleri kaydedilir.
+                </p>
+                <form id="admin-login-form" autocomplete="off">
+                    <div class="form-group" style="margin-bottom: 1rem; text-align: left;">
+                        <label for="admin-email">Admin Email</label>
+                        <input type="email" id="admin-email" class="form-control" placeholder="Admin Email"
+                            autocomplete="off" required
                             style="text-align: center; font-family: var(--font-mono); font-size: 1.2rem; letter-spacing: normal;">
                     </div>
-                    <div class="form-group">
+                    <div class="form-group" style="text-align: left;">
+                        <label for="admin-password">Admin Şifre</label>
                         <input type="password" id="admin-password" class="form-control" placeholder="Access Key"
-                            required
+                            autocomplete="new-password" required
                             style="text-align: center; font-family: var(--font-mono); font-size: 1.2rem; letter-spacing: normal;">
                     </div>
-                    <button type="submit" class="btn-cyber-auth"><i class="fas fa-key"></i> AUTHENTICATE</button>
+                    <button type="submit" class="btn-cyber-auth" aria-label="Sistem yetkilendirmesini başlat"><i
+                            class="fas fa-key" aria-hidden="true"></i> AUTHENTICATE</button>
                 </form>
-                <p id="login-error" style="color: red; display: none; margin-top: 1rem; font-family: var(--font-mono);">
+                <p id="login-error" style="color: red; display: none; margin-top: 1rem; font-family: var(--font-mono);"
+                    role="alert">
                     ACCESS DENIED</p>
+
+                <!-- Ana Sayfaya Dönüş -->
+                <div style="margin-top: 1.8rem; padding-top: 1.2rem; border-top: 1px solid rgba(0,243,255,0.1);">
+                    <a href="#home" class="btn" id="btn-back-to-home"
+                        aria-label="Ana sayfaya geri dön"
+                        style="display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--font-mono); font-size: 0.85rem; letter-spacing: 0.05em; opacity: 0.75; transition: opacity 0.2s, box-shadow 0.2s;">
+                        <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                        SYS_HOME'A DÖN
+                    </a>
+                </div>
             </div>
         </div>
 
@@ -580,11 +745,14 @@
         <div id="view-admin" class="view container">
             <div class="page-header" style="display: flex; justify-content: space-between; align-items: center;">
                 <div>
-                    <h1 class="page-title" style="color: #ff3366;"><i class="fas fa-user-shield"></i> Kontrol Merkezi
+                    <h1 class="page-title" style="color: #ff3366;"><i class="fas fa-user-shield" aria-hidden="true"></i>
+                        Kontrol Merkezi
                     </h1>
-                    <div class="terminal-text" style="color: #ff3366; border-color: #ff3366;">sudo su - admin</div>
+                    <div class="terminal-text" aria-hidden="true" style="color: #ff3366; border-color: #ff3366;">sudo su
+                        - admin</div>
                 </div>
-                <button id="logout-btn" class="btn"><i class="fas fa-sign-out-alt"></i> Çıkış</button>
+                <button id="logout-btn" class="btn" aria-label="Admin panelinden güvenli çıkış yap"><i
+                        class="fas fa-sign-out-alt" aria-hidden="true"></i> Çıkış</button>
             </div>
 
             <div class="admin-tabs">
@@ -594,19 +762,22 @@
                 <button class="admin-tab" data-target="panel-cv">CV & Eğitim</button>
                 <button class="admin-tab" data-target="panel-sertifikalar">Sertifikalar</button>
                 <button class="admin-tab" data-target="panel-ayarlar">Tema Ayarları</button>
-                <button class="admin-tab" data-target="panel-mesajlar">Mesaj Kutusu <span id="msg-badge"
-                        class="message-badge" style="display:none;"></span></button>
+                <button class="admin-tab" data-target="panel-mesajlar" aria-label="Mesaj Kutusu">Mesaj Kutusu <span
+                        id="msg-badge" class="message-badge" style="display:none;"></span></button>
             </div>
 
             <!-- Panels will be managed dynamically by js -->
             <div id="panel-hakkimda" class="admin-panel active">
                 <div class="form-container" style="max-width: 100%;">
-                    <h3 class="theme-text" style="margin-bottom: 1rem;"><i class="fas fa-edit"></i> Hakkımda Düzenle
+                    <h3 class="theme-text" style="margin-bottom: 1rem;"><i class="fas fa-edit" aria-hidden="true"></i>
+                        Hakkımda Düzenle
                     </h3>
                     <form id="form-hakkimda">
+                        <label for="hakkimda-text">Hakkımda Metni</label>
                         <textarea id="hakkimda-text" class="form-control"
                             style="min-height: 200px; margin-bottom:1rem;"></textarea>
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Kaydet</button>
+                        <button type="submit" class="btn btn-primary" aria-label="Hakkımda içeriğini kaydet"><i
+                                class="fas fa-save" aria-hidden="true"></i> Kaydet</button>
                     </form>
                 </div>
             </div>
@@ -614,17 +785,31 @@
             <div id="panel-projeler" class="admin-panel">
                 <div class="grid-container">
                     <div class="form-container" style="margin: 0; max-width: 100%;">
-                        <h3 class="theme-text" style="margin-bottom: 1rem;"><i class="fas fa-plus"></i> Yeni Proje</h3>
+                        <h3 class="theme-text" style="margin-bottom: 1rem;"><i class="fas fa-plus"
+                                aria-hidden="true"></i> Yeni Proje</h3>
                         <form id="form-projeler">
                             <input type="hidden" id="proje-id">
-                            <input type="text" id="proje-title" class="form-control" placeholder="Proje Adı" required
-                                style="margin-bottom:1rem;">
-                            <textarea id="proje-desc" class="form-control" placeholder="Açıklama" required
-                                style="min-height: 100px; margin-bottom:1rem;"></textarea>
-                            <input type="text" id="proje-tech" class="form-control"
-                                placeholder="Teknolojiler (Virgülle ayırın)" style="margin-bottom:1rem;">
-                            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Kaydet</button>
-                            <button type="button" id="proje-cancel" class="btn"
+                            <div class="form-edit-status" id="proje-edit-status" style="display:none;"
+                                aria-live="polite"><i class="fas fa-pen-to-square" aria-hidden="true"></i> Düzenleme
+                                modu aktif</div>
+                            <div class="form-group">
+                                <label for="proje-title">Proje Adı</label>
+                                <input type="text" id="proje-title" class="form-control" placeholder="Proje Adı"
+                                    required style="margin-bottom:1rem;">
+                            </div>
+                            <div class="form-group">
+                                <label for="proje-desc">Açıklama</label>
+                                <textarea id="proje-desc" class="form-control" placeholder="Açıklama" required
+                                    style="min-height: 100px; margin-bottom:1rem;"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="proje-tech">Teknolojiler (Virgülle ayırın)</label>
+                                <input type="text" id="proje-tech" class="form-control"
+                                    placeholder="Teknolojiler (Virgülle ayırın)" style="margin-bottom:1rem;">
+                            </div>
+                            <button type="submit" id="proje-submit-btn" class="btn btn-primary"
+                                aria-label="Proje kaydet"><i class="fas fa-save" aria-hidden="true"></i> Kaydet</button>
+                            <button type="button" id="proje-cancel" class="btn" aria-label="Düzenlemeyi iptal et"
                                 style="display:none; margin-left: 10px;">İptal</button>
                         </form>
                     </div>
@@ -638,17 +823,32 @@
             <div id="panel-basarilar" class="admin-panel">
                 <div class="grid-container">
                     <div class="form-container" style="margin: 0; max-width: 100%;">
-                        <h3 class="theme-text" style="margin-bottom: 1rem;"><i class="fas fa-plus"></i> Yeni Başarı</h3>
+                        <h3 class="theme-text" style="margin-bottom: 1rem;"><i class="fas fa-plus"
+                                aria-hidden="true"></i> Yeni Başarı</h3>
                         <form id="form-basarilar">
                             <input type="hidden" id="basari-id">
-                            <input type="text" id="basari-title" class="form-control" placeholder="Başarı Başlığı"
-                                required style="margin-bottom:1rem;">
-                            <textarea id="basari-desc" class="form-control" placeholder="Açıklama" required
-                                style="min-height: 100px; margin-bottom:1rem;"></textarea>
-                            <input type="text" id="basari-year" class="form-control" placeholder="Yıl" required
-                                style="margin-bottom:1rem;">
-                            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Kaydet</button>
-                            <button type="button" id="basari-cancel" class="btn"
+                            <div class="form-edit-status" id="basari-edit-status" style="display:none;"
+                                aria-live="polite"><i class="fas fa-pen-to-square" aria-hidden="true"></i> Düzenleme
+                                modu aktif</div>
+                            <div class="form-group">
+                                <label for="basari-title">Başarı Başlığı</label>
+                                <input type="text" id="basari-title" class="form-control" placeholder="Başarı Başlığı"
+                                    required style="margin-bottom:1rem;">
+                            </div>
+                            <div class="form-group">
+                                <label for="basari-desc">Açıklama</label>
+                                <textarea id="basari-desc" class="form-control" placeholder="Açıklama" required
+                                    style="min-height: 100px; margin-bottom:1rem;"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="basari-year">Yıl</label>
+                                <input type="text" id="basari-year" class="form-control" placeholder="Yıl" required
+                                    style="margin-bottom:1rem;">
+                            </div>
+                            <button type="submit" id="basari-submit-btn" class="btn btn-primary"
+                                aria-label="Başarıyı kaydet"><i class="fas fa-save" aria-hidden="true"></i>
+                                Kaydet</button>
+                            <button type="button" id="basari-cancel" class="btn" aria-label="Düzenlemeyi iptal et"
                                 style="display:none; margin-left: 10px;">İptal</button>
                         </form>
                     </div>
@@ -662,18 +862,32 @@
             <div id="panel-cv" class="admin-panel">
                 <div class="grid-container">
                     <div class="form-container" style="margin: 0; max-width: 100%;">
-                        <h3 class="theme-text" style="margin-bottom: 1rem;"><i class="fas fa-plus"></i> CV Deneyimi Ekle
+                        <h3 class="theme-text" style="margin-bottom: 1rem;"><i class="fas fa-plus"
+                                aria-hidden="true"></i> CV Deneyimi Ekle
                         </h3>
                         <form id="form-cv">
                             <input type="hidden" id="cv-id">
-                            <input type="text" id="cv-title" class="form-control" placeholder="Başlık" required
-                                style="margin-bottom:1rem;">
-                            <textarea id="cv-desc" class="form-control" placeholder="Kurum / Açıklama" required
-                                style="min-height: 100px; margin-bottom:1rem;"></textarea>
-                            <input type="text" id="cv-date" class="form-control" placeholder="Tarih" required
-                                style="margin-bottom:1rem;">
-                            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Kaydet</button>
-                            <button type="button" id="cv-cancel" class="btn"
+                            <div class="form-edit-status" id="cv-edit-status" style="display:none;" aria-live="polite">
+                                <i class="fas fa-pen-to-square" aria-hidden="true"></i> Düzenleme modu aktif</div>
+                            <div class="form-group">
+                                <label for="cv-title">Başlık</label>
+                                <input type="text" id="cv-title" class="form-control" placeholder="Başlık" required
+                                    style="margin-bottom:1rem;">
+                            </div>
+                            <div class="form-group">
+                                <label for="cv-desc">Kurum / Açıklama</label>
+                                <textarea id="cv-desc" class="form-control" placeholder="Kurum / Açıklama" required
+                                    style="min-height: 100px; margin-bottom:1rem;"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label for="cv-date">Tarih</label>
+                                <input type="text" id="cv-date" class="form-control" placeholder="Tarih" required
+                                    style="margin-bottom:1rem;">
+                            </div>
+                            <button type="submit" id="cv-submit-btn" class="btn btn-primary"
+                                aria-label="CV girdisini kaydet"><i class="fas fa-save" aria-hidden="true"></i>
+                                Kaydet</button>
+                            <button type="button" id="cv-cancel" class="btn" aria-label="Düzenlemeyi iptal et"
                                 style="display:none; margin-left: 10px;">İptal</button>
                         </form>
                     </div>
@@ -687,18 +901,33 @@
             <div id="panel-sertifikalar" class="admin-panel">
                 <div class="grid-container">
                     <div class="form-container" style="margin: 0; max-width: 100%;">
-                        <h3 class="theme-text" style="margin-bottom: 1rem;"><i class="fas fa-plus"></i> Yeni Sertifika
+                        <h3 class="theme-text" style="margin-bottom: 1rem;"><i class="fas fa-plus"
+                                aria-hidden="true"></i> Yeni Sertifika
                         </h3>
                         <form id="form-sertifikalar">
                             <input type="hidden" id="sertifika-id">
-                            <input type="text" id="sertifika-title" class="form-control" placeholder="Sertifika Adı"
-                                required style="margin-bottom:1rem;">
-                            <input type="text" id="sertifika-issuer" class="form-control" placeholder="Veren Kurum"
-                                required style="margin-bottom:1rem;">
-                            <input type="text" id="sertifika-date" class="form-control" placeholder="Tarih" required
-                                style="margin-bottom:1rem;">
-                            <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Kaydet</button>
-                            <button type="button" id="sertifika-cancel" class="btn"
+                            <div class="form-edit-status" id="sertifika-edit-status" style="display:none;"
+                                aria-live="polite"><i class="fas fa-pen-to-square" aria-hidden="true"></i> Düzenleme
+                                modu aktif</div>
+                            <div class="form-group">
+                                <label for="sertifika-title">Sertifika Adı</label>
+                                <input type="text" id="sertifika-title" class="form-control" placeholder="Sertifika Adı"
+                                    required style="margin-bottom:1rem;">
+                            </div>
+                            <div class="form-group">
+                                <label for="sertifika-issuer">Veren Kurum</label>
+                                <input type="text" id="sertifika-issuer" class="form-control" placeholder="Veren Kurum"
+                                    required style="margin-bottom:1rem;">
+                            </div>
+                            <div class="form-group">
+                                <label for="sertifika-date">Tarih</label>
+                                <input type="text" id="sertifika-date" class="form-control" placeholder="Tarih" required
+                                    style="margin-bottom:1rem;">
+                            </div>
+                            <button type="submit" id="sertifika-submit-btn" class="btn btn-primary"
+                                aria-label="Sertifikayı kaydet"><i class="fas fa-save" aria-hidden="true"></i>
+                                Kaydet</button>
+                            <button type="button" id="sertifika-cancel" class="btn" aria-label="Düzenlemeyi iptal et"
                                 style="display:none; margin-left: 10px;">İptal</button>
                         </form>
                     </div>
@@ -711,7 +940,8 @@
 
             <div id="panel-mesajlar" class="admin-panel">
                 <div class="form-container" style="max-width: 100%;">
-                    <h3 class="theme-text" style="margin-bottom: 1rem;"><i class="fas fa-envelope-open-text"></i> Gelen
+                    <h3 class="theme-text" style="margin-bottom: 1rem;"><i class="fas fa-envelope-open-text"
+                            aria-hidden="true"></i> Gelen
                         Sinyaller</h3>
                     <div id="admin-messages-list" class="message-inbox"></div>
                 </div>
@@ -719,58 +949,64 @@
 
             <div id="panel-ayarlar" class="admin-panel">
                 <div class="form-container" style="max-width: 100%;">
-                    <h3 class="theme-text" style="margin-bottom: 2rem;"><i class="fas fa-palette"></i> Gelişmiş Tema
+                    <h3 class="theme-text" style="margin-bottom: 2rem;"><i class="fas fa-palette"
+                            aria-hidden="true"></i> Gelişmiş Tema
                         Ayarları</h3>
 
                     <div class="theme-grid">
                         <div class="theme-card">
-                            <span class="theme-label">Arka Plan</span>
+                            <label for="color-bg-color" class="theme-label">Arka Plan</label>
                             <input type="color" id="color-bg-color" data-var="--bg-color" value="#050a0f">
                         </div>
                         <div class="theme-card">
-                            <span class="theme-label">Panel Arka Planı</span>
+                            <label for="color-panel-bg" class="theme-label">Panel Arka Planı</label>
                             <input type="color" id="color-panel-bg" data-var="--panel-bg" value="#0b131e">
                         </div>
                         <div class="theme-card">
-                            <span class="theme-label">Kart Arka Planı</span>
+                            <label for="color-card-bg" class="theme-label">Kart Arka Planı</label>
                             <input type="color" id="color-card-bg" data-var="--card-bg" value="#0b131e">
                         </div>
                         <div class="theme-card">
-                            <span class="theme-label">Ana Neon</span>
+                            <label for="color-theme-color" class="theme-label">Ana Neon</label>
                             <input type="color" id="color-theme-color" data-var="--theme-color" value="#00f3ff">
                         </div>
                         <div class="theme-card">
-                            <span class="theme-label">LED Rengi</span>
+                            <label for="color-neon-green" class="theme-label">LED Rengi</label>
                             <input type="color" id="color-neon-green" data-var="--neon-green" value="#00ff66">
                         </div>
                         <div class="theme-card">
-                            <span class="theme-label">Ana Yazı</span>
+                            <label for="color-text-primary" class="theme-label">Ana Yazı</label>
                             <input type="color" id="color-text-primary" data-var="--text-primary" value="#e2e8f0">
                         </div>
                         <div class="theme-card">
-                            <span class="theme-label">İkincil Yazı</span>
+                            <label for="color-text-secondary" class="theme-label">İkincil Yazı</label>
                             <input type="color" id="color-text-secondary" data-var="--text-secondary" value="#94a3b8">
                         </div>
                         <div class="theme-card">
-                            <span class="theme-label">Admin Kırmızı</span>
+                            <label for="color-danger-color" class="theme-label">Admin Kırmızı</label>
                             <input type="color" id="color-danger-color" data-var="--danger-color" value="#ff3366">
                         </div>
                         <div class="theme-card">
-                            <span class="theme-label">Kenarlık Rengi</span>
+                            <label for="color-border-color" class="theme-label">Kenarlık Rengi</label>
                             <input type="color" id="color-border-color" data-var="--border-color" value="#ffffff">
                         </div>
                         <div class="theme-card">
-                            <span class="theme-label">Devre Yolu Rengi</span>
+                            <label for="color-circuit-color" class="theme-label">Devre Yolu Rengi</label>
                             <input type="color" id="color-circuit-color" data-var="--circuit-color" value="#00f3ff">
                         </div>
                     </div>
 
                     <div class="theme-actions-row" style="margin-top: 2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
-                        <button id="btn-save-theme" class="btn btn-primary"><i class="fas fa-save"></i> Renkleri
+                        <button id="btn-save-theme" class="btn btn-primary"
+                            aria-label="Renk teması değişikliklerini kaydet"><i class="fas fa-save"
+                                aria-hidden="true"></i> Renkleri
                             Kaydet</button>
-                        <button id="btn-revert-theme" class="btn"><i class="fas fa-undo"></i> Son Kaydedilen Renklere
+                        <button id="btn-revert-theme" class="btn" aria-label="Kaydedilen son renk temasına geri dön"><i
+                                class="fas fa-undo" aria-hidden="true"></i> Son Kaydedilen Renklere
                             Dön</button>
-                        <button id="btn-default-theme" class="btn btn-danger"><i class="fas fa-trash-can"></i>
+                        <button id="btn-default-theme" class="btn btn-danger"
+                            aria-label="Sistem varsayılan renk temasına geri dön"><i class="fas fa-trash-can"
+                                aria-hidden="true"></i>
                             Varsayılan Temaya Dön</button>
                     </div>
                 </div>
@@ -779,7 +1015,23 @@
         </div>
     </main>
 
-    <div id="toast-container"></div>
+    <!-- CYBER CONFIRM MODAL -->
+    <div id="confirm-modal-overlay" class="confirm-modal-overlay" style="display:none;" role="dialog" aria-modal="true"
+        aria-labelledby="confirm-modal-title" aria-describedby="confirm-modal-text">
+        <div class="confirm-modal">
+            <div class="confirm-modal-icon" aria-hidden="true"><i class="fas fa-triangle-exclamation"></i></div>
+            <div class="confirm-modal-title" id="confirm-modal-title">SİLME ONAYI</div>
+            <div class="confirm-modal-text" id="confirm-modal-text">Bu kaydı silmek istediğine emin misin?</div>
+            <div class="confirm-modal-actions">
+                <button id="confirm-modal-cancel" class="confirm-btn-cancel" aria-label="Silme işleminden vazgeç"><i
+                        class="fas fa-xmark" aria-hidden="true"></i> Vazgeç</button>
+                <button id="confirm-modal-confirm" class="confirm-btn-danger" aria-label="Kaydı kalıcı olarak sil"><i
+                        class="fas fa-trash" aria-hidden="true"></i> Sil</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="toast-container" class="toast-container" aria-live="polite" aria-atomic="true"></div>
     <script src="js/data.js"></script>
     <script type="module" src="js/app.js"></script>
 </body>
