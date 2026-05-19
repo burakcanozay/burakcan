@@ -1,0 +1,21 @@
+{
+  "name": "Burakcan Özay Portfolio",
+  "short_name": "BÖ Portfolio",
+  "description": "Elektrik-elektronik mühendisliği odaklı kişisel portfolyo ve dijital CV.",
+  "icons": [
+    {
+      "src": "favicon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "favicon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#050a0f",
+  "background_color": "#050a0f",
+  "display": "standalone",
+  "start_url": "/"
+}
