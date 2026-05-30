@@ -17,6 +17,10 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
 // Firebase Configuration
+const ADMIN_ENABLED = false;
+if (!ADMIN_ENABLED) {
+    document.documentElement.classList.add("admin-disabled");
+}
 const firebaseConfig = {
     apiKey: "AIzaSyAmDAEtdDeUrv1bx5j3pRzqGIPvm4DhDK0",
     authDomain: "burakcanozay.firebaseapp.com",
@@ -272,6 +276,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     let isAdminLoggedIn = false;
+    let authReady = false;
+    let currentUser = null;
+
+    // Temporary states for new CV sections (Skills, Languages, Interests)
+    let tempSkills = [];
+    let tempLanguages = [];
+    let tempInterests = [];
 
     // ─────────────────────────────────────────────────────────────────────
     // ADMIN GÜVENLİK NOTU:
@@ -290,32 +301,47 @@ document.addEventListener('DOMContentLoaded', async () => {
         return user && user.email === ADMIN_EMAIL;
     }
 
+    function canAccessAdmin() {
+        return authReady && isAdmin(currentUser);
+    }
+
     // Firebase Auth State Listener
     if (auth) {
         onAuthStateChanged(auth, (user) => {
+            currentUser = user;
+            authReady = true;
+
             if (isAdmin(user)) {
-                // Geçerli admin girişi
                 isAdminLoggedIn = true;
-                if (window.location.hash === '#admin-login') {
-                    window.location.hash = '#admin';
+                window.updateMessageBadge?.().catch(console.error);
+
+                if (window.location.hash === "#admin-login") {
+                    window.location.hash = "#admin";
                 }
             } else {
-                // Admin değil veya giriş yapılmamış
                 isAdminLoggedIn = false;
-                if (window.location.hash === '#admin') {
-                    window.location.hash = '#admin-login';
+                const badge = document.getElementById("msg-badge");
+                if (badge) {
+                    badge.style.display = "none";
+                    badge.textContent = "";
                 }
-                // Firebase'de başka bir kullanıcı oturum açmışsa hemen kapat
+
                 if (user && !isAdmin(user)) {
                     signOut(auth)
                         .then(() => {
-                            showToast('Bu hesap admin yetkisine sahip değil.', 'error');
-                            window.location.hash = '#admin-login';
+                            showToast("Bu hesap admin yetkisine sahip değil.", "error");
+                            window.location.hash = "#admin-login";
                         })
                         .catch(console.error);
+                    return;
+                }
+
+                if (window.location.hash === "#admin") {
+                    window.location.hash = "#admin-login";
                 }
             }
-            handleRoute(); // Auth durumu değiştiğinde görünümü güncelle
+
+            handleRoute();
         });
     } else {
         console.warn("Firebase Auth henüz yapılandırılmadı. Lütfen app.js başındaki firebaseConfig ayarlarını doldurun.");
@@ -979,9 +1005,37 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function renderBasarilar() {
         const grid = document.getElementById('basarilar-grid');
-        clearEl(grid);
         if (!grid) return;
-        (appData.basarilar || []).forEach(b => {
+        clearEl(grid);
+        
+        const basarilarList = appData.basarilar || [];
+        
+        if (basarilarList.length === 0) {
+            const emptyCard = createEl('div', { className: 'empty-basarilar' });
+            
+            const led = createEl('div', { className: 'empty-basarilar-led' });
+            
+            const icon = createEl('i', {
+                className: 'fas fa-trophy empty-basarilar-icon',
+                attrs: { 'aria-hidden': 'true' }
+            });
+            
+            const title = createEl('h3', { 
+                className: 'empty-basarilar-title',
+                text: 'SYSTEM_LOG // NO_RECORD' 
+            });
+            
+            const desc = createEl('p', { 
+                className: 'empty-basarilar-desc',
+                text: 'Sistem veritabanında henüz kayıtlı bir başarı veya ödül kaydı bulunamadı.' 
+            });
+            
+            emptyCard.append(led, icon, title, desc);
+            grid.appendChild(emptyCard);
+            return;
+        }
+
+        basarilarList.forEach(b => {
             const card = createEl('div', { className: 'card' });
 
             const h3 = createEl('h3');
@@ -1025,8 +1079,42 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    // ── Single source for detailed CV: Firestore appData.detailedCV takes priority ──
+    function ensureDetailedCV() {
+        if (!appData.detailedCV) {
+            try {
+                appData.detailedCV = structuredClone(window.DetailedCVData);
+            } catch (e) {
+                appData.detailedCV = JSON.parse(JSON.stringify(window.DetailedCVData));
+            }
+        }
+        if (!Array.isArray(appData.detailedCV.egitim)) {
+            appData.detailedCV.egitim = [
+                {
+                    okul: 'Karadeniz Teknik Üniversitesi',
+                    bolum: 'Elektrik Elektronik Mühendisliği',
+                    derece: 'Lisans',
+                    tarih: '2023 - Günümüz',
+                    aciklama: 'Elektrik-elektronik mühendisliği alanında lisans eğitimi.'
+                }
+            ];
+        }
+        appData.detailedCV.yetenekler ||= [];
+        appData.detailedCV.diller ||= [];
+        appData.detailedCV.ilgiAlanlari ||= [];
+    }
+
+    function ensureDetailedCVData() {
+        ensureDetailedCV();
+        return appData.detailedCV;
+    }
+
+    function getDetailedCVData() {
+        return appData.detailedCV || window.DetailedCVData;
+    }
+
     function renderCV() {
-        const cvData = window.DetailedCVData;
+        const cvData = getDetailedCVData();
         if (!cvData) return;
 
         // 1. CV Hero Header details
@@ -1048,7 +1136,13 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const btnDownload = document.getElementById('btn-cv-download');
         if (btnDownload) {
-            btnDownload.href = safeUrl(cvData.hero.downloadUrl || '#');
+            const dlUrl = cvData.hero.downloadUrl;
+            if (dlUrl && dlUrl !== '#') {
+                btnDownload.href = safeUrl(dlUrl);
+            } else {
+                btnDownload.href = 'burakcan_ozay_cv.pdf';
+            }
+            btnDownload.setAttribute('download', '');
         }
 
         // Avatar logic (if avatar is provided, render it)
@@ -1100,11 +1194,27 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
 
-        // 3. Eğitim Bilgileri (Dynamically from appData.cv, satisfying admin panel integration)
+        // 3. Eğitim Bilgileri — önce detailedCV.egitim, fallback olarak appData.cv
         const egitimContent = document.getElementById('cv-egitim-content');
         if (egitimContent) {
             clearEl(egitimContent);
-            if (appData.cv && appData.cv.length > 0) {
+            const egitimListesi = (cvData.egitim && cvData.egitim.length > 0) ? cvData.egitim : null;
+            if (egitimListesi) {
+                egitimListesi.forEach((c, idx) => {
+                    const activeClass = idx === 0 ? 'cv-timeline-vertical-item active' : 'cv-timeline-vertical-item';
+                    const item = createEl('div', { className: activeClass });
+
+                    const dateDiv = createEl('div', { className: 'cv-timeline-date' });
+                    const icon = createEl('i', { className: 'fas fa-calendar-alt', attrs: { 'aria-hidden': 'true' } });
+                    dateDiv.append(icon, ' ', document.createTextNode(safeText(c.tarih || c.date || '')));
+
+                    const titleDiv = createEl('div', { className: 'cv-timeline-title', text: safeText(c.okul || c.title || '') });
+                    const descDiv = createEl('div', { className: 'cv-timeline-desc', text: safeText(c.aciklama || c.bolum || c.desc || '') });
+
+                    item.append(dateDiv, titleDiv, descDiv);
+                    egitimContent.appendChild(item);
+                });
+            } else if (appData.cv && appData.cv.length > 0) {
                 appData.cv.forEach((c, idx) => {
                     const activeClass = idx === 0 ? 'cv-timeline-vertical-item active' : 'cv-timeline-vertical-item';
                     const item = createEl('div', { className: activeClass });
@@ -1129,7 +1239,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const skillsContent = document.getElementById('cv-skills-content');
         if (skillsContent) {
             clearEl(skillsContent);
-            cvData.yetenekler.forEach(s => {
+            const skillsList = cvData.yetenekler || [];
+            skillsList.forEach(s => {
                 const skill = createEl('div', { className: 'cv-skill' });
 
                 const header = createEl('div', { className: 'cv-skill-header' });
@@ -1236,7 +1347,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const dillerContent = document.getElementById('cv-diller-content');
         if (dillerContent) {
             clearEl(dillerContent);
-            cvData.diller.forEach(d => {
+            const languagesList = cvData.diller || [];
+            languagesList.forEach(d => {
                 const item = createEl('div', { className: 'cv-dil-item' });
 
                 const info = createEl('div', { className: 'cv-dil-info' });
@@ -1260,7 +1372,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const ilgiContent = document.getElementById('cv-ilgi-content');
         if (ilgiContent) {
             clearEl(ilgiContent);
-            cvData.ilgiAlanlari.forEach(tag => {
+            const interestsList = cvData.ilgiAlanlari || [];
+            interestsList.forEach(tag => {
                 ilgiContent.appendChild(createEl('span', { className: 'cv-tag', text: tag }));
             });
         }
@@ -1304,17 +1417,155 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderSertifikalar();
     }
 
+    function renderAuthLoading() {
+        views.forEach(v => {
+            v.classList.remove('active', 'fade-in');
+            v.style.display = 'none';
+        });
+
+        const adminView = document.getElementById("view-admin");
+        if (!adminView) return;
+
+        adminView.style.display = 'block';
+        adminView.classList.add('active', 'fade-in');
+
+        // Find or create the loading panel
+        let loadingPanel = document.getElementById("admin-auth-loading");
+        if (!loadingPanel) {
+            loadingPanel = createEl("div", {
+                className: "container auth-loading-panel",
+                attrs: { id: "admin-auth-loading" }
+            });
+            const title = createEl("h2", { text: "AUTH CHECK..." });
+            const desc = createEl("p", { text: "Admin yetkisi doğrulanıyor. Lütfen bekle." });
+            loadingPanel.append(title, desc);
+            adminView.appendChild(loadingPanel);
+        }
+
+        // Hide all other children of adminView
+        Array.from(adminView.children).forEach(child => {
+            if (child.id === "admin-auth-loading") {
+                child.style.display = "block";
+            } else {
+                // Keep track of original display if not already stored
+                if (!child.dataset.origDisplay) {
+                    child.dataset.origDisplay = child.style.display || "block";
+                }
+                child.style.display = "none";
+            }
+        });
+    }
+
+    function renderAdmin() {
+        if (!authReady || !isAdmin(currentUser)) {
+            window.location.hash = '#admin-login';
+            return;
+        }
+
+        views.forEach(v => {
+            v.classList.remove('active', 'fade-in');
+            v.style.display = 'none';
+        });
+
+        const adminView = document.getElementById("view-admin");
+        if (adminView) {
+            adminView.style.display = 'block';
+            
+            // Hide loading panel if it exists
+            const loadingPanel = document.getElementById("admin-auth-loading");
+            if (loadingPanel) {
+                loadingPanel.style.display = "none";
+            }
+
+            // Restore all other children of adminView
+            Array.from(adminView.children).forEach(child => {
+                if (child.id !== "admin-auth-loading") {
+                    child.style.display = child.dataset.origDisplay || "";
+                }
+            });
+
+            void adminView.offsetWidth;
+            adminView.classList.add('active', 'fade-in');
+        }
+        
+        stopOscilloscope();
+        nav.style.display = 'none';
+        
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        
+        initAdmin();
+        
+        window.scrollTo(0, 0);
+    }
+
+    function renderAdminLogin() {
+        views.forEach(v => {
+            v.classList.remove('active', 'fade-in');
+            v.style.display = 'none';
+        });
+
+        const loginView = document.getElementById("view-admin-login");
+        if (loginView) {
+            loginView.style.display = 'flex';
+            const emailInput    = document.getElementById('admin-email');
+            const passwordInput = document.getElementById('admin-password');
+            const errorMsg      = document.getElementById('login-error');
+            if (emailInput)    emailInput.value = '';
+            if (passwordInput) passwordInput.value = '';
+            if (errorMsg)      errorMsg.style.display = 'none';
+
+            void loginView.offsetWidth;
+            loginView.classList.add('active', 'fade-in');
+        }
+        
+        stopOscilloscope();
+        nav.style.display = 'none';
+        
+        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+        
+        renderAll();
+        
+        window.scrollTo(0, 0);
+    }
+
     // ROUTING
     function handleRoute() {
         let hash = window.location.hash.substring(1) || 'home';
 
-        // ── Admin Route Koruması ──────────────────────────────────────────
-        // #admin sayfasına yetkisiz erişim girişimini engelle.
-        // Gerçek güvenlik Firestore Security Rules ile sağlanmalıdır;
-        // bu kontrol yalnızca ek bir frontend katmanıdır.
-        if (hash === 'admin' && !isAdminLoggedIn) {
-            window.location.hash = '#admin-login';
-            showToast('Admin paneli için giriş yapmalısın.', 'warning');
+        if (!ADMIN_ENABLED && (hash === "admin" || hash === "admin-login")) {
+            window.location.hash = "#home";
+            showToast("Admin paneli geçici olarak kapalı.", "info");
+            return;
+        }
+
+        if (hash === "admin") {
+            if (!authReady) {
+                renderAuthLoading();
+                return;
+            }
+
+            if (!isAdmin(currentUser)) {
+                window.location.hash = "#admin-login";
+                showToast("Admin paneli için giriş yapmalısın.", "warning");
+                return;
+            }
+
+            renderAdmin();
+            return;
+        }
+
+        if (hash === "admin-login") {
+            if (!authReady) {
+                renderAuthLoading();
+                return;
+            }
+
+            if (isAdmin(currentUser)) {
+                window.location.hash = "#admin";
+                return;
+            }
+
+            renderAdminLogin();
             return;
         }
 
@@ -1327,24 +1578,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Show target view
         const targetView = document.getElementById(`view-${hash}`);
         if (targetView) {
-            // Apply flex if it's home or admin-login
-            if (hash === 'home' || hash === 'admin-login') {
+            // Apply flex if it's home
+            if (hash === 'home') {
                 targetView.style.display = 'flex';
-                if (hash === 'home') {
-                    const randomDirenc = Math.floor(Math.random() * 8) + 1;
-                    const heroBg = document.querySelector('.hero-bg-image');
-                    if (heroBg) {
-                        heroBg.style.setProperty('background-image', `url(./direnc${randomDirenc}.png)`, 'important');
-                    }
-                }
-                // Admin login sayfasına her girişte formu temizle
-                if (hash === 'admin-login') {
-                    const emailInput    = document.getElementById('admin-email');
-                    const passwordInput = document.getElementById('admin-password');
-                    const errorMsg      = document.getElementById('login-error');
-                    if (emailInput)    emailInput.value = '';
-                    if (passwordInput) passwordInput.value = '';
-                    if (errorMsg)      errorMsg.style.display = 'none';
+                const randomDirenc = Math.floor(Math.random() * 7) + 1;
+                const heroBg = document.querySelector('.hero-bg-image');
+                if (heroBg) {
+                    heroBg.style.setProperty('background-image', `url(./direnc${randomDirenc}.png)`, 'important');
                 }
             } else {
                 targetView.style.display = 'block';
@@ -1363,7 +1603,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         // Manage Navbar
-        if (hash === 'home' || hash === 'admin-login' || hash === 'admin') {
+        if (hash === 'home') {
             nav.style.display = 'none';
         } else {
             nav.style.display = 'flex';
@@ -1374,12 +1614,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         const activeLink = document.querySelector(`.nav-link[data-target="${hash}"]`);
         if (activeLink) activeLink.classList.add('active');
 
-        // Load specific data if entering admin
-        if (hash === 'admin') {
-            initAdmin();
-        } else {
-            renderAll();
-        }
+        // Always render regular data for other pages
+        renderAll();
         
         if (hash === 'cv') {
             setTimeout(initReveal, 100);
@@ -1480,28 +1716,75 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    document.getElementById('logout-btn').addEventListener('click', () => {
+    document.getElementById('logout-btn').addEventListener('click', async () => {
+        const badge = document.getElementById('msg-badge');
+        if (badge) {
+            badge.style.display = 'none';
+            badge.textContent = '';
+        }
+        
         if (auth) {
-            signOut(auth).then(() => {
-                window.location.hash = '#home';
-            }).catch((error) => {
+            try {
+                await signOut(auth);
+                isAdminLoggedIn = false;
+                currentUser = null;
+                window.location.hash = '#admin-login';
+                showToast('Admin oturumu kapatıldı.', 'info');
+            } catch (error) {
                 console.error("Çıkış hatası:", error);
-            });
+            }
         } else {
             // Firebase yoksa test modunda çıkış
             isAdminLoggedIn = false;
-            window.location.hash = '#home';
+            currentUser = null;
+            window.location.hash = '#admin-login';
+            showToast('Admin oturumu kapatıldı.', 'info');
             handleRoute();
         }
     });
 
     // ADMIN LOGIC
     function initAdmin() {
+        if (!authReady || !isAdmin(currentUser)) {
+            return;
+        }
         document.getElementById('hakkimda-text').value = appData.hakkimda;
         updateThemeInputs(loadSavedThemeColors());
+
+        ensureDetailedCV();
+        const cvData = getDetailedCVData();
+        tempSkills = typeof structuredClone === "function" ? structuredClone(cvData.yetenekler || []) : JSON.parse(JSON.stringify(cvData.yetenekler || []));
+        tempLanguages = typeof structuredClone === "function" ? structuredClone(cvData.diller || []) : JSON.parse(JSON.stringify(cvData.diller || []));
+        tempInterests = typeof structuredClone === "function" ? structuredClone(cvData.ilgiAlanlari || []) : JSON.parse(JSON.stringify(cvData.ilgiAlanlari || []));
+
         renderAdminLists();
+        initAdminKisisel();
+        initAdminTabs();
+
+        // Setup slider live event listeners for Skills and Languages
+        setupRangeSliders();
+
         if(window.renderAdminMessages) window.renderAdminMessages();
         if(window.updateMessageBadge) window.updateMessageBadge();
+    }
+
+    function setupRangeSliders() {
+        const skillLvl = document.getElementById('skill-level');
+        const skillLvlVal = document.getElementById('skill-level-value');
+        if (skillLvl && skillLvlVal) {
+            skillLvlVal.textContent = `${skillLvl.value}%`;
+            skillLvl.addEventListener('input', (e) => {
+                skillLvlVal.textContent = `${e.target.value}%`;
+            });
+        }
+        const langLvl = document.getElementById('language-level');
+        const langLvlVal = document.getElementById('language-level-value');
+        if (langLvl && langLvlVal) {
+            langLvlVal.textContent = `${langLvl.value}%`;
+            langLvl.addEventListener('input', (e) => {
+                langLvlVal.textContent = `${e.target.value}%`;
+            });
+        }
     }
 
     function renderAdminList(containerId, array, getTitle, editCallback, deleteCallback) {
@@ -1531,15 +1814,312 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     function renderAdminLists() {
-        renderAdminList('list-projeler', appData.projeler, i => i.title, editProje, (idx) => deleteItem('projeler', idx));
-        renderAdminList('list-basarilar', appData.basarilar, i => i.title, editBasari, (idx) => deleteItem('basarilar', idx));
-        renderAdminList('list-cv', appData.cv, i => i.title, editCV, (idx) => deleteItem('cv', idx));
-        renderAdminList('list-sertifikalar', appData.sertifikalar, i => i.title, editSertifika, (idx) => deleteItem('sertifikalar', idx));
+        renderAdminList('list-projeler', appData.projeler || [], i => i.title, editProje, (idx) => deleteItem('projeler', idx));
+        renderAdminList('list-basarilar', appData.basarilar || [], i => i.title, editBasari, (idx) => deleteItem('basarilar', idx));
+        
+        ensureDetailedCV();
+        renderAdminList('list-cv', appData.detailedCV.deneyimler || [], i => i.baslik, editCV, async (idx) => {
+            cyberConfirm('Bu deneyim kaydını silmek istediğine emin misin?', async () => {
+                appData.detailedCV.deneyimler.splice(idx, 1);
+                await saveGlobal();
+                showToast('Kayıt başarıyla silindi.', 'success');
+            }, () => showToast('Silme işlemi iptal edildi.', 'info'));
+        });
+        
+        renderAdminList('list-sertifikalar', appData.sertifikalar || [], i => i.title, editSertifika, (idx) => deleteItem('sertifikalar', idx));
+        renderAdminEgitimList();
+
+        // Render CV expanded sections
+        renderAdminSkillsEditor();
+        renderAdminLanguagesEditor();
+        renderAdminInterestsEditor();
     }
 
     async function saveGlobal() {
         await window.DataService.saveData(appData);
         renderAdminLists();
+        renderAll();
+    }
+
+    // ─── ADMIN: TEKNİK YETENEKLER ADMİN (CRUD) ──────────────────────────────
+    function renderAdminSkillsEditor() {
+        const container = document.getElementById('list-skills');
+        if (!container) return;
+        clearEl(container);
+
+        tempSkills.forEach((item, index) => {
+            const div = createEl('div', { className: 'item-row' });
+            
+            const textDiv = createEl('div');
+            const strong = createEl('strong', { className: 'theme-text', text: item.name });
+            const span = createEl('span', { text: ` — Seviye: ${item.level}%`, attrs: { style: 'color: var(--text-secondary); margin-left: 5px;' } });
+            textDiv.append(strong, span);
+            
+            const actionsDiv = createEl('div', { className: 'item-actions' });
+            const btnEdit = createEl('button', { className: 'btn', text: 'Düzenle', attrs: { type: 'button' } });
+            btnEdit.onclick = () => editSkill(index);
+            const btnDel = createEl('button', { className: 'btn btn-danger', text: 'Sil', attrs: { type: 'button' } });
+            btnDel.onclick = () => deleteSkill(index);
+
+            actionsDiv.append(btnEdit, btnDel);
+            div.append(textDiv, actionsDiv);
+            container.appendChild(div);
+        });
+    }
+
+    function editSkill(idx) {
+        const item = tempSkills[idx];
+        if (!item) return;
+        document.getElementById('skill-id').value = idx;
+        document.getElementById('skill-name').value = item.name;
+        document.getElementById('skill-level').value = item.level;
+        document.getElementById('skill-level-value').textContent = `${item.level}%`;
+        setEditMode('form-skills', 'skill-edit-status', 'skill-submit-btn', 'skill-cancel', true);
+        document.getElementById('skill-name').focus();
+    }
+
+    function deleteSkill(idx) {
+        cyberConfirm('Bu yeteneği listeden çıkarmak istediğine emin misin?', () => {
+            tempSkills.splice(idx, 1);
+            renderAdminSkillsEditor();
+            showToast('Yetenek listeden çıkarıldı. Değişiklikleri kaydetmek için "Teknik Yetenekleri Kaydet" butonuna basın.', 'info');
+        });
+    }
+
+    const formSkills = document.getElementById('form-skills');
+    if (formSkills) {
+        formSkills.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const idInput = document.getElementById('skill-id').value;
+            const name = normalizeInput(document.getElementById('skill-name').value, 60);
+            const levelVal = document.getElementById('skill-level').value;
+            const level = Math.min(100, Math.max(0, Number(levelVal) || 0));
+
+            if (!name) {
+                showToast('Yetenek adı boş olamaz.', 'warning');
+                return;
+            }
+
+            const item = { name, level };
+
+            if (idInput !== '') {
+                tempSkills[parseInt(idInput)] = item;
+                showToast('Yetenek listede güncellendi.', 'success');
+            } else {
+                tempSkills.push(item);
+                showToast('Yetenek listeye eklendi.', 'success');
+            }
+
+            formSkills.reset();
+            document.getElementById('skill-id').value = '';
+            document.getElementById('skill-level-value').textContent = '50%';
+            setEditMode('form-skills', 'skill-edit-status', 'skill-submit-btn', 'skill-cancel', false);
+            renderAdminSkillsEditor();
+        });
+    }
+
+    const btnSkillCancel = document.getElementById('skill-cancel');
+    if (btnSkillCancel) {
+        btnSkillCancel.onclick = () => {
+            if (formSkills) formSkills.reset();
+            document.getElementById('skill-id').value = '';
+            document.getElementById('skill-level-value').textContent = '50%';
+            setEditMode('form-skills', 'skill-edit-status', 'skill-submit-btn', 'skill-cancel', false);
+            showToast('Düzenleme iptal edildi.', 'info');
+        };
+    }
+
+    const btnSaveSkills = document.getElementById('btn-save-skills');
+    if (btnSaveSkills) {
+        btnSaveSkills.addEventListener('click', async () => {
+            ensureDetailedCV();
+            appData.detailedCV.yetenekler = typeof structuredClone === "function" ? structuredClone(tempSkills) : JSON.parse(JSON.stringify(tempSkills));
+            try {
+                await window.DataService.saveData(appData);
+                renderCV();
+                showToast('Teknik yetenekler güncellendi.', 'success');
+            } catch (err) {
+                console.error("Yetenek kaydetme hatası:", err);
+                showToast('Teknik yetenekler kaydedilemedi.', 'error');
+            }
+        });
+    }
+
+    // ─── ADMIN: DİLLER ADMİN (CRUD) ─────────────────────────────────────────
+    function renderAdminLanguagesEditor() {
+        const container = document.getElementById('list-languages');
+        if (!container) return;
+        clearEl(container);
+
+        tempLanguages.forEach((item, index) => {
+            const div = createEl('div', { className: 'item-row' });
+            
+            const textDiv = createEl('div');
+            const strong = createEl('strong', { className: 'theme-text', text: item.ad });
+            const span = createEl('span', { text: ` — Seviye: ${item.level}% (${item.label || ''})`, attrs: { style: 'color: var(--text-secondary); margin-left: 5px;' } });
+            textDiv.append(strong, span);
+            
+            const actionsDiv = createEl('div', { className: 'item-actions' });
+            const btnEdit = createEl('button', { className: 'btn', text: 'Düzenle', attrs: { type: 'button' } });
+            btnEdit.onclick = () => editLanguage(index);
+            const btnDel = createEl('button', { className: 'btn btn-danger', text: 'Sil', attrs: { type: 'button' } });
+            btnDel.onclick = () => deleteLanguage(index);
+
+            actionsDiv.append(btnEdit, btnDel);
+            div.append(textDiv, actionsDiv);
+            container.appendChild(div);
+        });
+    }
+
+    function editLanguage(idx) {
+        const item = tempLanguages[idx];
+        if (!item) return;
+        document.getElementById('language-id').value = idx;
+        document.getElementById('language-ad').value = item.ad;
+        document.getElementById('language-level').value = item.level;
+        document.getElementById('language-level-value').textContent = `${item.level}%`;
+        document.getElementById('language-label').value = item.label || '';
+        setEditMode('form-languages', 'language-edit-status', 'language-submit-btn', 'language-cancel', true);
+        document.getElementById('language-ad').focus();
+    }
+
+    function deleteLanguage(idx) {
+        cyberConfirm('Bu dili listeden çıkarmak istediğine emin misin?', () => {
+            tempLanguages.splice(idx, 1);
+            renderAdminLanguagesEditor();
+            showToast('Dil listeden çıkarıldı. Değişiklikleri kaydetmek için "Dilleri Kaydet" butonuna basın.', 'info');
+        });
+    }
+
+    const formLanguages = document.getElementById('form-languages');
+    if (formLanguages) {
+        formLanguages.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const idInput = document.getElementById('language-id').value;
+            const ad = normalizeInput(document.getElementById('language-ad').value, 40);
+            const levelVal = document.getElementById('language-level').value;
+            const level = Math.min(100, Math.max(0, Number(levelVal) || 0));
+            const label = normalizeInput(document.getElementById('language-label').value, 80);
+
+            if (!ad) {
+                showToast('Dil adı boş olamaz.', 'warning');
+                return;
+            }
+
+            const item = { ad, level, label };
+
+            if (idInput !== '') {
+                tempLanguages[parseInt(idInput)] = item;
+                showToast('Dil listede güncellendi.', 'success');
+            } else {
+                tempLanguages.push(item);
+                showToast('Dil listeye eklendi.', 'success');
+            }
+
+            formLanguages.reset();
+            document.getElementById('language-id').value = '';
+            document.getElementById('language-level-value').textContent = '50%';
+            setEditMode('form-languages', 'language-edit-status', 'language-submit-btn', 'language-cancel', false);
+            renderAdminLanguagesEditor();
+        });
+    }
+
+    const btnLanguageCancel = document.getElementById('language-cancel');
+    if (btnLanguageCancel) {
+        btnLanguageCancel.onclick = () => {
+            if (formLanguages) formLanguages.reset();
+            document.getElementById('language-id').value = '';
+            document.getElementById('language-level-value').textContent = '50%';
+            setEditMode('form-languages', 'language-edit-status', 'language-submit-btn', 'language-cancel', false);
+            showToast('Düzenleme iptal edildi.', 'info');
+        };
+    }
+
+    const btnSaveLanguages = document.getElementById('btn-save-languages');
+    if (btnSaveLanguages) {
+        btnSaveLanguages.addEventListener('click', async () => {
+            ensureDetailedCV();
+            appData.detailedCV.diller = typeof structuredClone === "function" ? structuredClone(tempLanguages) : JSON.parse(JSON.stringify(tempLanguages));
+            try {
+                await window.DataService.saveData(appData);
+                renderCV();
+                showToast('Dil bilgileri güncellendi.', 'success');
+            } catch (err) {
+                console.error("Dil kaydetme hatası:", err);
+                showToast('Dil bilgileri kaydedilemedi.', 'error');
+            }
+        });
+    }
+
+    // ─── ADMIN: İLGİ ALANLARI ADMİN (CRUD) ──────────────────────────────────
+    function renderAdminInterestsEditor() {
+        const container = document.getElementById('list-interests');
+        if (!container) return;
+        clearEl(container);
+
+        tempInterests.forEach((item, index) => {
+            const div = createEl('div', { className: 'item-row' });
+            
+            const textDiv = createEl('div');
+            const strong = createEl('strong', { className: 'theme-text', text: item });
+            textDiv.appendChild(strong);
+            
+            const actionsDiv = createEl('div', { className: 'item-actions' });
+            const btnDel = createEl('button', { className: 'btn btn-danger', text: 'Sil', attrs: { type: 'button' } });
+            btnDel.onclick = () => deleteInterest(index);
+
+            actionsDiv.appendChild(btnDel);
+            div.append(textDiv, actionsDiv);
+            container.appendChild(div);
+        });
+    }
+
+    function deleteInterest(idx) {
+        cyberConfirm('Bu ilgi alanını listeden çıkarmak istediğine emin misin?', () => {
+            tempInterests.splice(idx, 1);
+            renderAdminInterestsEditor();
+            showToast('İlgi alanı listeden çıkarıldı. Değişiklikleri kaydetmek için "İlgi Alanlarını Kaydet" butonuna basın.', 'info');
+        });
+    }
+
+    const formInterests = document.getElementById('form-interests');
+    if (formInterests) {
+        formInterests.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const name = normalizeInput(document.getElementById('interest-name').value, 80);
+
+            if (!name) {
+                showToast('İlgi alanı boş olamaz.', 'warning');
+                return;
+            }
+
+            if (tempInterests.some(item => item.toLowerCase() === name.toLowerCase())) {
+                showToast('Bu ilgi alanı zaten listede var.', 'warning');
+                return;
+            }
+
+            tempInterests.push(name);
+            showToast('İlgi alanı listeye eklendi.', 'success');
+
+            formInterests.reset();
+            renderAdminInterestsEditor();
+        });
+    }
+
+    const btnSaveInterests = document.getElementById('btn-save-interests');
+    if (btnSaveInterests) {
+        btnSaveInterests.addEventListener('click', async () => {
+            ensureDetailedCV();
+            appData.detailedCV.ilgiAlanlari = typeof structuredClone === "function" ? structuredClone(tempInterests) : JSON.parse(JSON.stringify(tempInterests));
+            try {
+                await window.DataService.saveData(appData);
+                renderCV();
+                showToast('İlgi alanları güncellendi.', 'success');
+            } catch (err) {
+                console.error("İlgi alanı kaydetme hatası:", err);
+                showToast('İlgi alanları kaydedilemedi.', 'error');
+            }
+        });
     }
 
     // ---- Cyber Confirm Modal ----
@@ -1606,6 +2186,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         cyberConfirm(
             'Bu kayd\u0131 silmek istedi\u011fine emin misin?',
             async () => {
+                if (!appData[collection]) appData[collection] = [];
                 appData[collection].splice(idx, 1);
                 await saveGlobal();
                 showToast('Kay\u0131t ba\u015far\u0131yla silindi.', 'success');
@@ -1701,6 +2282,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const techRaw = document.getElementById('proje-tech').value.trim();
         const tech    = techRaw ? techRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
         if (!title || !desc) { showToast('L\u00fctfen zorunlu alanlar\u0131 doldurun.', 'warning'); return; }
+        if (!appData.projeler) appData.projeler = [];
         if (idInput !== '') {
             appData.projeler[idInput] = { ...appData.projeler[idInput], title, desc, tech };
             await saveGlobal();
@@ -1740,6 +2322,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const desc    = document.getElementById('basari-desc').value.trim();
         const year    = document.getElementById('basari-year').value.trim();
         if (!title || !desc || !year) { showToast('L\u00fctfen zorunlu alanlar\u0131 doldurun.', 'warning'); return; }
+        if (!appData.basarilar) appData.basarilar = [];
         if (idInput !== '') {
             appData.basarilar[idInput] = { ...appData.basarilar[idInput], title, desc, year };
             await saveGlobal();
@@ -1774,19 +2357,25 @@ document.addEventListener('DOMContentLoaded', async () => {
     const formCV = document.getElementById('form-cv');
     formCV.addEventListener('submit', async (e) => {
         e.preventDefault();
+        ensureDetailedCV();
+        if (!appData.detailedCV.deneyimler) appData.detailedCV.deneyimler = [];
+        
         const idInput = document.getElementById('cv-id').value;
-        const title   = document.getElementById('cv-title').value.trim();
-        const desc    = document.getElementById('cv-desc').value.trim();
-        const date    = document.getElementById('cv-date').value.trim();
-        if (!title || !desc || !date) { showToast('L\u00fctfen zorunlu alanlar\u0131 doldurun.', 'warning'); return; }
+        const baslik  = document.getElementById('cv-title').value.trim();
+        const tip     = document.getElementById('cv-tip').value.trim();
+        const aciklama= document.getElementById('cv-desc').value.trim();
+        const tarih   = document.getElementById('cv-date').value.trim();
+        
+        if (!baslik || !aciklama || !tarih || !tip) { showToast('L\u00fctfen zorunlu alanlar\u0131 doldurun.', 'warning'); return; }
+        
         if (idInput !== '') {
-            appData.cv[idInput] = { ...appData.cv[idInput], title, desc, date };
+            appData.detailedCV.deneyimler[idInput] = { ...appData.detailedCV.deneyimler[idInput], tip, baslik, aciklama, tarih };
             await saveGlobal();
-            showToast('CV bilgisi ba\u015far\u0131yla g\u00fcncellendi.', 'success');
+            showToast('Deneyim bilgisi ba\u015far\u0131yla g\u00fcncellendi.', 'success');
         } else {
-            appData.cv.push({ id: Date.now(), title, desc, date });
+            appData.detailedCV.deneyimler.push({ tip, baslik, aciklama, tarih });
             await saveGlobal();
-            showToast('CV bilgisi ba\u015far\u0131yla eklendi.', 'success');
+            showToast('Deneyim bilgisi ba\u015far\u0131yla eklendi.', 'success');
         }
         formCV.reset();
         document.getElementById('cv-id').value = '';
@@ -1794,11 +2383,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
 
     function editCV(idx) {
-        const item = appData.cv[idx];
+        ensureDetailedCV();
+        const item = appData.detailedCV.deneyimler[idx];
+        if (!item) return;
         document.getElementById('cv-id').value    = idx;
-        document.getElementById('cv-title').value = item.title;
-        document.getElementById('cv-desc').value  = item.desc;
-        document.getElementById('cv-date').value  = item.date;
+        document.getElementById('cv-title').value = item.baslik || '';
+        document.getElementById('cv-tip').value   = item.tip || '';
+        document.getElementById('cv-desc').value  = item.aciklama || '';
+        document.getElementById('cv-date').value  = item.tarih || '';
         setEditMode('form-cv', 'cv-edit-status', 'cv-submit-btn', 'cv-cancel', true);
         document.getElementById('cv-title').focus();
     }
@@ -1818,6 +2410,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const issuer  = document.getElementById('sertifika-issuer').value.trim();
         const date    = document.getElementById('sertifika-date').value.trim();
         if (!title || !issuer || !date) { showToast('L\u00fctfen zorunlu alanlar\u0131 doldurun.', 'warning'); return; }
+        if (!appData.sertifikalar) appData.sertifikalar = [];
         if (idInput !== '') {
             appData.sertifikalar[idInput] = { ...appData.sertifikalar[idInput], title, issuer, date };
             await saveGlobal();
@@ -1845,116 +2438,312 @@ document.addEventListener('DOMContentLoaded', async () => {
         formSert.reset();
         document.getElementById('sertifika-id').value = '';
         setEditMode('form-sertifikalar', 'sertifika-edit-status', 'sertifika-submit-btn', 'sertifika-cancel', false);
-        showToast('D\u00fczenleme iptal edildi.', 'info');
+        showToast('Düzenleme iptal edildi.', 'info');
     };
 
-    // Admin Tabs Logic
-    document.querySelectorAll('.admin-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-            document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.admin-panel').forEach(p => p.classList.remove('active'));
-            tab.classList.add('active');
-            document.getElementById(tab.dataset.target).classList.add('active');
-        });
-    });
+    // ─── KİŞİSEL BİLGİLER ADMİN ─────────────────────────────────────────────
 
-    // --- MESSAGING SYSTEM ---
-    // DATA_MODE: 'local' = localStorage | 'firebase' = Firestore
-    const DATA_MODE = 'firebase';
+    function initAdminKisisel() {
+        ensureDetailedCV();
+        const cvData = getDetailedCVData();
+        const kisisel = cvData.kisisel || [];
 
-    // ---- localStorage implementations ----
-    function saveMessageToLocalStorage(msg) {
-        const msgs = getMessagesFromLocalStorage();
-        msgs.unshift(msg);
-        localStorage.setItem('portfolioMessages', JSON.stringify(msgs));
-    }
-    function getMessagesFromLocalStorage() {
-        try { return JSON.parse(localStorage.getItem('portfolioMessages') || '[]'); }
-        catch(e) { return []; }
-    }
-    function deleteMessageFromLocalStorage(id) {
-        const msgs = getMessagesFromLocalStorage().filter(m => m.id !== id);
-        localStorage.setItem('portfolioMessages', JSON.stringify(msgs));
-    }
-    function updateMessageStatusInLocalStorage(id, isRead) {
-        const msgs = getMessagesFromLocalStorage();
-        const msg  = msgs.find(m => m.id === id);
-        if (msg) { msg.okunduDurumu = isRead; localStorage.setItem('portfolioMessages', JSON.stringify(msgs)); }
+        const findByLabel = (label) => kisisel.find(k => k.label === label) || {};
+
+        const set = (id, val) => {
+            const el = document.getElementById(id);
+            if (el) el.value = val || '';
+        };
+
+        set('kisisel-adsoyad',        findByLabel('Ad Soyad').value);
+        set('kisisel-bolum',          findByLabel('Bölüm').value);
+        set('kisisel-universite',     findByLabel('Üniversite').value);
+        set('kisisel-konum',          findByLabel('Konum').value);
+        set('kisisel-eposta',         findByLabel('E-posta').value);
+        set('kisisel-telefon',        findByLabel('Telefon').value);
+        set('kisisel-linkedin-metin', findByLabel('LinkedIn').value);
+        set('kisisel-linkedin-url',   findByLabel('LinkedIn').link);
+        set('kisisel-github-metin',   findByLabel('GitHub').value);
+        set('kisisel-github-url',     findByLabel('GitHub').link);
     }
 
-    // ---- Firestore implementations ----
-    async function saveMessageToFirestore(message) {
-        try {
-            const db = window.firebaseDB;
-            const messageWithTimestamp = {
-                ...message,
-                createdAt: serverTimestamp()
+    const btnSaveKisisel = document.getElementById('btn-save-kisisel');
+    if (btnSaveKisisel) {
+        btnSaveKisisel.addEventListener('click', async () => {
+            ensureDetailedCV();
+
+            const get = (id) => normalizeInput(document.getElementById(id)?.value || '', 300);
+            const getUrl = (id) => {
+                const raw = (document.getElementById(id)?.value || '').trim();
+                if (!raw) return '';
+                try {
+                    const parsed = new URL(raw);
+                    if (['http:', 'https:'].includes(parsed.protocol)) return parsed.href;
+                } catch (_) {}
+                return raw; // allow relative or typed strings as-is
             };
-            await addDoc(collection(db, 'messages'), messageWithTimestamp);
-        } catch (err) {
-            console.error("Firestore message save error:", err);
-            saveMessageToLocalStorage(message);
-        }
+
+            const updated = [
+                { label: 'Ad Soyad',   value: get('kisisel-adsoyad'),        icon: 'fas fa-user' },
+                { label: 'Bölüm',      value: get('kisisel-bolum'),           icon: 'fas fa-graduation-cap' },
+                { label: 'Üniversite', value: get('kisisel-universite'),      icon: 'fas fa-university' },
+                { label: 'Konum',      value: get('kisisel-konum'),           icon: 'fas fa-map-marker-alt' },
+                { label: 'E-posta',    value: get('kisisel-eposta'),          icon: 'fas fa-envelope' },
+                { label: 'Telefon',    value: get('kisisel-telefon'),         icon: 'fas fa-phone' },
+                { label: 'LinkedIn',   value: get('kisisel-linkedin-metin'),  icon: 'fab fa-linkedin', link: getUrl('kisisel-linkedin-url') },
+                { label: 'GitHub',     value: get('kisisel-github-metin'),    icon: 'fab fa-github',   link: getUrl('kisisel-github-url') }
+            ];
+
+            appData.detailedCV.kisisel = updated;
+
+            try {
+                await window.DataService.saveData(appData);
+                renderCV();
+                showToast('Kişisel bilgiler güncellendi.', 'success');
+            } catch (err) {
+                console.error('Kişisel bilgi kayıt hatası:', err);
+                showToast('Kişisel bilgiler kaydedilemedi.', 'error');
+            }
+        });
     }
-    async function getMessagesFromFirestore() {
-        try {
-            const db = window.firebaseDB;
-            const q = query(collection(db, 'messages'), orderBy('createdAt', 'desc'));
-            const snap = await getDocs(q);
-            return snap.docs.map(d => {
-                const data = d.data();
-                return {
-                    id: d.id,
-                    adSoyad: data.adSoyad,
-                    email: data.email,
-                    konu: data.konu,
-                    mesaj: data.mesaj,
-                    tarih: data.tarih,
-                    saat: data.saat,
-                    okunduDurumu: data.okunduDurumu
-                };
+
+    // ─── EĞİTİM BİLGİLERİ ADMİN (CRUD) ─────────────────────────────────────
+
+    function renderAdminEgitimList() {
+        ensureDetailedCV();
+        const container = document.getElementById('list-egitim');
+        if (!container) return;
+        clearEl(container);
+
+        const egitimList = appData.detailedCV.egitim || [];
+        egitimList.forEach((item, index) => {
+            const div = createEl('div', { className: 'item-row' });
+
+            const textDiv = createEl('div');
+            const strong = createEl('strong', { className: 'theme-text', text: item.okul || '' });
+            const sub = createEl('span', {
+                text: ` — ${item.bolum || ''} (${item.tarih || ''})`,
+                attrs: { style: 'color: var(--text-secondary); font-size: 0.9rem;' }
             });
+            textDiv.append(strong, sub);
+
+            const actionsDiv = createEl('div', { className: 'item-actions' });
+            const btnEdit = createEl('button', { className: 'btn', text: 'Düzenle' });
+            btnEdit.onclick = () => editEgitim(index);
+            const btnDel = createEl('button', { className: 'btn btn-danger', text: 'Sil' });
+            btnDel.onclick = () => deleteEgitim(index);
+
+            actionsDiv.append(btnEdit, btnDel);
+            div.append(textDiv, actionsDiv);
+            container.appendChild(div);
+        });
+    }
+
+    function editEgitim(idx) {
+        ensureDetailedCV();
+        const item = appData.detailedCV.egitim[idx];
+        if (!item) return;
+        document.getElementById('egitim-id').value       = idx;
+        document.getElementById('egitim-okul').value     = item.okul     || '';
+        document.getElementById('egitim-bolum').value    = item.bolum    || '';
+        document.getElementById('egitim-derece').value   = item.derece   || '';
+        document.getElementById('egitim-tarih').value    = item.tarih    || '';
+        document.getElementById('egitim-aciklama').value = item.aciklama || '';
+        setEditMode('form-egitim', 'egitim-edit-status', 'egitim-submit-btn', 'egitim-cancel', true);
+        document.getElementById('egitim-okul').focus();
+    }
+
+    async function deleteEgitim(idx) {
+        cyberConfirm(
+            'Bu eğitim kaydını silmek istediğine emin misin?',
+            async () => {
+                ensureDetailedCV();
+                appData.detailedCV.egitim.splice(idx, 1);
+                try {
+                    await window.DataService.saveData(appData);
+                    renderAdminEgitimList();
+                    renderCV();
+                    showToast('Eğitim kaydı silindi.', 'success');
+                } catch (err) {
+                    console.error('Eğitim silme hatası:', err);
+                    showToast('Eğitim kaydı silinemedi.', 'error');
+                }
+            },
+            () => showToast('Silme işlemi iptal edildi.', 'info')
+        );
+    }
+
+    const formEgitim = document.getElementById('form-egitim');
+    if (formEgitim) {
+        formEgitim.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            ensureDetailedCV();
+
+            const idInput  = document.getElementById('egitim-id').value;
+            const okul     = normalizeInput(document.getElementById('egitim-okul').value.trim(), 200);
+            const bolum    = normalizeInput(document.getElementById('egitim-bolum').value.trim(), 200);
+            const derece   = normalizeInput(document.getElementById('egitim-derece').value.trim(), 100);
+            const tarih    = normalizeInput(document.getElementById('egitim-tarih').value.trim(), 100);
+            const aciklama = normalizeInput(document.getElementById('egitim-aciklama').value.trim(), 500);
+
+            if (!okul || !tarih) {
+                showToast('Okul ve Tarih alanları zorunludur.', 'warning');
+                return;
+            }
+
+            const record = { okul, bolum, derece, tarih, aciklama };
+
+            if (idInput !== '') {
+                appData.detailedCV.egitim[parseInt(idInput)] = record;
+            } else {
+                appData.detailedCV.egitim.push(record);
+            }
+
+            try {
+                await window.DataService.saveData(appData);
+                renderAdminEgitimList();
+                renderCV();
+                formEgitim.reset();
+                document.getElementById('egitim-id').value = '';
+                setEditMode('form-egitim', 'egitim-edit-status', 'egitim-submit-btn', 'egitim-cancel', false);
+                showToast('Eğitim bilgileri güncellendi.', 'success');
+            } catch (err) {
+                console.error('Eğitim kayıt hatası:', err);
+                showToast('Eğitim bilgileri kaydedilemedi.', 'error');
+            }
+        });
+    }
+
+    const btnEgitimCancel = document.getElementById('egitim-cancel');
+    if (btnEgitimCancel) {
+        btnEgitimCancel.onclick = () => {
+            if (formEgitim) formEgitim.reset();
+            document.getElementById('egitim-id').value = '';
+            setEditMode('form-egitim', 'egitim-edit-status', 'egitim-submit-btn', 'egitim-cancel', false);
+            showToast('Düzenleme iptal edildi.', 'info');
+        };
+    }
+
+    // Admin Tabs Logic
+    function initAdminTabs() {
+        const tabs = document.querySelectorAll('.admin-tab');
+        const panels = document.querySelectorAll('.admin-panel');
+
+        if (!tabs.length || !panels.length) return;
+
+        function activateAdminPanel(targetId) {
+            tabs.forEach(tab => {
+                const isActive = tab.dataset.target === targetId;
+                tab.classList.toggle('active', isActive);
+                tab.setAttribute('aria-selected', String(isActive));
+            });
+
+            panels.forEach(panel => {
+                const isActive = panel.id === targetId;
+                panel.classList.toggle('active', isActive);
+                panel.hidden = !isActive;
+            });
+            
+            if (targetId === 'panel-mesajlar' && window.renderAdminMessages) {
+                window.renderAdminMessages();
+            }
+        }
+
+        tabs.forEach(tab => {
+            if (tab.dataset.tabReady === 'true') return;
+            tab.dataset.tabReady = 'true';
+
+            tab.addEventListener('click', () => {
+                const targetId = tab.dataset.target;
+                const targetPanel = document.getElementById(targetId);
+
+                if (!targetId || !targetPanel) {
+                    console.warn('Admin panel target bulunamadı:', targetId);
+                    return;
+                }
+
+                activateAdminPanel(targetId);
+            });
+        });
+
+        panels.forEach(panel => {
+            panel.setAttribute('role', 'tabpanel');
+        });
+
+        const defaultTarget = document.querySelector('.admin-tab.active')?.dataset.target || tabs[0]?.dataset.target || 'panel-hakkimda';
+        activateAdminPanel(defaultTarget);
+    }
+
+    // --- MESSAGING SYSTEM (FIRESTORE ONLY) ---
+    async function saveContactMessage(message) {
+        const { collection, addDoc, serverTimestamp } = window.firestoreFns || {};
+
+        if (!window.firebaseDB || !collection || !addDoc || !serverTimestamp) {
+            throw new Error("Firestore mesaj gönderme servisi hazır değil.");
+        }
+
+        const messageWithTimestamp = {
+            ...message,
+            createdAt: serverTimestamp()
+        };
+
+        await addDoc(collection(window.firebaseDB, "messages"), messageWithTimestamp);
+    }
+
+    async function getContactMessages() {
+        if (!authReady || !isAdmin(currentUser)) {
+            return [];
+        }
+        try {
+            const { collection, getDocs, query, orderBy } = window.firestoreFns || {};
+            if (!window.firebaseDB || !collection || !getDocs || !query || !orderBy) {
+                throw new Error("Firestore mesaj okuma servisi hazır değil.");
+            }
+            const q = query(
+                collection(window.firebaseDB, "messages"),
+                orderBy("createdAt", "desc")
+            );
+            const snapshot = await getDocs(q);
+            return snapshot.docs.map(docSnap => ({
+                firestoreId: docSnap.id,
+                ...docSnap.data()
+            }));
         } catch (err) {
             console.error("Firestore message fetch error:", err);
-            return getMessagesFromLocalStorage();
-        }
-    }
-    async function deleteMessageFromFirestore(id) {
-        try {
-            const db = window.firebaseDB;
-            await deleteDoc(doc(db, 'messages', id));
-        } catch (err) {
-            console.error("Firestore message delete error:", err);
-            deleteMessageFromLocalStorage(id);
-        }
-    }
-    async function updateMessageStatusInFirestore(id, isRead) {
-        try {
-            const db = window.firebaseDB;
-            await updateDoc(doc(db, 'messages', id), { okunduDurumu: isRead });
-        } catch (err) {
-            console.error("Firestore message status update error:", err);
-            updateMessageStatusInLocalStorage(id, isRead);
+            showToast("Mesajlar Firestore'dan alınamadı.", "error");
+            return [];
         }
     }
 
-    // ---- Public API ----
-    function saveContactMessage(msg) {
-        if (DATA_MODE === 'firebase') return saveMessageToFirestore(msg);
-        return saveMessageToLocalStorage(msg);
+    async function deleteContactMessage(id) {
+        if (!authReady || !isAdmin(currentUser)) return;
+        try {
+            const { doc, deleteDoc } = window.firestoreFns;
+            await deleteDoc(doc(window.firebaseDB, "messages", id));
+        } catch (err) {
+            console.error("Firestore message delete error:", err);
+            showToast("Mesaj silinemedi.", "error");
+            throw err;
+        }
     }
-    function getContactMessages() {
-        if (DATA_MODE === 'firebase') return getMessagesFromFirestore();
-        return getMessagesFromLocalStorage();
+
+    async function updateContactMessageStatus(id, isRead) {
+        if (!authReady || !isAdmin(currentUser)) return;
+        try {
+            const { doc, updateDoc } = window.firestoreFns;
+            await updateDoc(doc(window.firebaseDB, "messages", id), { okunduDurumu: isRead });
+        } catch (err) {
+            console.error("Firestore message status update error:", err);
+            showToast("Mesaj durumu güncellenemedi.", "error");
+            throw err;
+        }
     }
-    function deleteContactMessage(id) {
-        if (DATA_MODE === 'firebase') return deleteMessageFromFirestore(id);
-        return deleteMessageFromLocalStorage(id);
-    }
-    function updateContactMessageStatus(id, isRead) {
-        if (DATA_MODE === 'firebase') return updateMessageStatusInFirestore(id, isRead);
-        return updateMessageStatusInLocalStorage(id, isRead);
-    }
+
+    window.clearOldLocalMessages = function() {
+        localStorage.removeItem("contactMessages");
+        localStorage.removeItem("messages");
+        console.log("Eski localStorage mesajları temizlendi.");
+    };
 
     // ---- escapeHTML utility ----
     function escapeHTML(str) {
@@ -2052,15 +2841,28 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     window.updateMessageBadge = async function() {
+        if (!ADMIN_ENABLED) return;
         const badge = document.getElementById('msg-badge');
         if (!badge) return;
-        const msgs = await getContactMessages();
-        const unreadCount = Array.isArray(msgs) ? msgs.filter(m => !m.okunduDurumu).length : 0;
-        if (unreadCount > 0) {
-            badge.style.display = 'inline-block';
-            badge.textContent = unreadCount;
-        } else {
+        if (!authReady || !isAdmin(currentUser)) {
             badge.style.display = 'none';
+            badge.textContent = '';
+            return;
+        }
+        try {
+            const msgs = await getContactMessages();
+            const unreadCount = Array.isArray(msgs) ? msgs.filter(m => !m.okunduDurumu).length : 0;
+            if (unreadCount > 0) {
+                badge.style.display = 'inline-block';
+                badge.textContent = String(unreadCount);
+            } else {
+                badge.style.display = 'none';
+                badge.textContent = '';
+            }
+        } catch (error) {
+            console.error("Message badge update error:", error);
+            badge.style.display = 'none';
+            badge.textContent = '';
         }
     }
 
@@ -2095,10 +2897,36 @@ document.addEventListener('DOMContentLoaded', async () => {
         const container = document.getElementById('admin-messages-list');
         if (!container) return;
         
-        // Clear container safely
-        container.textContent = '';
+        if (!authReady || !isAdmin(currentUser)) {
+            container.textContent = '';
+            const emptyDiv = document.createElement('div');
+            emptyDiv.className = 'msg-empty-state';
+            
+            const iconDiv = document.createElement('div');
+            iconDiv.className = 'msg-empty-icon';
+            const icon = document.createElement('i');
+            icon.className = 'fas fa-lock';
+            iconDiv.appendChild(icon);
+            
+            const titleDiv = document.createElement('div');
+            titleDiv.className = 'msg-empty-title';
+            titleDiv.textContent = 'YETKİSİZ ERİŞİM';
+            
+            const descDiv = document.createElement('div');
+            descDiv.className = 'msg-empty-desc';
+            descDiv.textContent = 'Mesajları görüntülemek için admin girişi gerekli.';
+            
+            emptyDiv.appendChild(iconDiv);
+            emptyDiv.appendChild(titleDiv);
+            emptyDiv.appendChild(descDiv);
+            container.appendChild(emptyDiv);
+            return;
+        }
         
         const msgs = await getContactMessages();
+        
+        // Clear container safely right before rendering to prevent race conditions
+        container.textContent = '';
 
         if (!msgs || msgs.length === 0) {
             const emptyDiv = document.createElement('div');
@@ -2116,7 +2944,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             const descDiv = document.createElement('div');
             descDiv.className = 'msg-empty-desc';
-            descDiv.textContent = 'Hen\u00fcz gelen sinyal yok. \u0130leti\u015fim formundan g\u00f6nderilen mesajlar burada g\u00f6r\u00fcnecek.';
+            descDiv.textContent = 'Mesaj bulunamadı veya Firestore\'dan alınamadı.';
             
             emptyDiv.appendChild(iconDiv);
             emptyDiv.appendChild(titleDiv);
@@ -2164,6 +2992,26 @@ document.addEventListener('DOMContentLoaded', async () => {
             emailLine.appendChild(atIcon);
             emailLine.appendChild(document.createTextNode(' ' + (m.email || '')));
             
+            // Tech Info Line
+            const techLine = document.createElement('div');
+            techLine.className = 'message-email-line';
+            techLine.style.fontSize = '0.75rem';
+            techLine.style.opacity = '0.6';
+            techLine.style.marginTop = '4px';
+            const srcIcon = document.createElement('i');
+            srcIcon.className = 'fas fa-network-wired';
+            techLine.appendChild(srcIcon);
+            techLine.appendChild(document.createTextNode(` Kaynak: ${m.source || 'Bilinmiyor'} | Dil: ${m.language || 'tr-TR'}`));
+            
+            if (m.userAgent) {
+                const uaIcon = document.createElement('i');
+                uaIcon.className = 'fas fa-laptop-code';
+                uaIcon.style.marginLeft = '10px';
+                techLine.appendChild(uaIcon);
+                const shortUa = m.userAgent.length > 30 ? m.userAgent.substring(0, 30) + '...' : m.userAgent;
+                techLine.appendChild(document.createTextNode(` UA: ${shortUa}`));
+            }
+            
             // Message Body
             const body = document.createElement('div');
             body.className = 'message-body';
@@ -2175,20 +3023,21 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             // Read/Unread Button
             const toggleBtn = document.createElement('button');
+            const targetId = m.firestoreId || m.id;
             if (m.okunduDurumu) {
                 toggleBtn.className = 'btn';
                 const eyeSlashIcon = document.createElement('i');
                 eyeSlashIcon.className = 'fas fa-eye-slash';
                 toggleBtn.appendChild(eyeSlashIcon);
                 toggleBtn.appendChild(document.createTextNode(' Okunmad\u0131'));
-                toggleBtn.addEventListener('click', () => markMessageAsUnread(m.id));
+                toggleBtn.addEventListener('click', () => markMessageAsUnread(targetId));
             } else {
                 toggleBtn.className = 'btn btn-primary';
                 const eyeIcon = document.createElement('i');
                 eyeIcon.className = 'fas fa-eye';
                 toggleBtn.appendChild(eyeIcon);
                 toggleBtn.appendChild(document.createTextNode(' Okundu'));
-                toggleBtn.addEventListener('click', () => markMessageAsRead(m.id));
+                toggleBtn.addEventListener('click', () => markMessageAsRead(targetId));
             }
             
             // Copy Email Button
@@ -2216,7 +3065,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             deleteIcon.className = 'fas fa-trash';
             deleteBtn.appendChild(deleteIcon);
             deleteBtn.appendChild(document.createTextNode(' Sil'));
-            deleteBtn.addEventListener('click', () => deleteMessage(m.id));
+            deleteBtn.addEventListener('click', () => deleteMessage(targetId));
             
             actions.appendChild(toggleBtn);
             actions.appendChild(copyEmailBtn);
@@ -2225,6 +3074,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             
             card.appendChild(header);
             card.appendChild(emailLine);
+            card.appendChild(techLine);
             card.appendChild(body);
             card.appendChild(actions);
             
@@ -2232,15 +3082,63 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    // ─────────────────────────────────────────────────────────────────────
+    // GÜVENLİK NOTU:
+    // Frontend spam koruması tek başına tam güvenlik değildir.
+    // Daha güçlü koruma için ileride Firebase App Check, reCAPTCHA veya Cloud Functions ile IP bazlı rate limit eklenmelidir.
+    // ─────────────────────────────────────────────────────────────────────
+
     // Handle Contact Form Submit
+    let contactFormOpenedAt = Date.now();
     const iletisimForm = document.getElementById('iletisim-form');
     if (iletisimForm) {
         iletisimForm.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const name = document.getElementById('contact-name').value.trim();
-            const email = document.getElementById('contact-email').value.trim();
-            const subject = document.getElementById('contact-subject').value.trim();
-            const message = document.getElementById('contact-message').value.trim();
+
+            // 1. Honeypot kontrolü
+            const honeypot = document.getElementById('contact-website')?.value || "";
+            if (honeypot.trim() !== "") {
+                showToast("Mesaj gönderilemedi.", "error");
+                return;
+            }
+
+            // 2. Form açılış zamanı kontrolü
+            if (Date.now() - contactFormOpenedAt < 3000) {
+                showToast("Lütfen formu göndermeden önce birkaç saniye bekle.", "warning");
+                return;
+            }
+
+            // 3. 60 saniye cooldown kontrolü
+            const lastSent = Number(localStorage.getItem("contact_last_sent_at") || 0);
+            const nowTime = Date.now();
+            if (nowTime - lastSent < 60000) {
+                showToast("Çok hızlı mesaj gönderiyorsun. Lütfen biraz bekle.", "warning");
+                return;
+            }
+
+            // 4. Günlük 5 mesaj limiti kontrolü
+            const today = new Date().toISOString().slice(0, 10);
+            const savedDate = localStorage.getItem("contact_daily_date");
+            let dailyCount = Number(localStorage.getItem("contact_daily_count") || 0);
+            if (savedDate !== today) {
+                localStorage.setItem("contact_daily_date", today);
+                localStorage.setItem("contact_daily_count", "0");
+                dailyCount = 0;
+            }
+            if (dailyCount >= 5) {
+                showToast("Bugünlük mesaj gönderme limitine ulaştın.", "warning");
+                return;
+            }
+
+            const nameRaw = document.getElementById('contact-name').value;
+            const emailRaw = document.getElementById('contact-email').value;
+            const subjectRaw = document.getElementById('contact-subject').value;
+            const messageRaw = document.getElementById('contact-message').value;
+
+            const name = normalizeInput(nameRaw, 80);
+            const email = normalizeInput(emailRaw, 120);
+            const subject = normalizeInput(subjectRaw, 120);
+            const message = normalizeInput(messageRaw, 2000);
 
             if (!name) {
                 showToast('Lütfen adınızı ve soyadınızı girin.', 'error');
@@ -2268,31 +3166,55 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
 
-            const now = new Date();
-            const newMsg = {
-                id: Date.now(),
-                adSoyad: name,
-                email: email,
-                konu: subject,
-                mesaj: message,
-                tarih: now.toLocaleDateString('tr-TR'),
-                saat: now.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }),
-                okunduDurumu: false
-            };
-
-            await saveContactMessage(newMsg);
-            await window.updateMessageBadge(); 
-            if(window.renderAdminMessages) {
-                await window.renderAdminMessages(); 
+            const submitButton = iletisimForm.querySelector('button[type="submit"]');
+            if (submitButton) {
+                submitButton.disabled = true;
+                submitButton.dataset.originalText = submitButton.textContent;
+                submitButton.textContent = "Sinyal gönderiliyor...";
             }
-            
-            iletisimForm.reset();
-            showToast('Sinyal başarıyla iletildi!', 'success');
+
+            try {
+                const newMsg = {
+                    id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
+                    adSoyad: name,
+                    email: email.toLowerCase(),
+                    konu: subject,
+                    mesaj: message,
+                    tarih: new Date().toLocaleDateString('tr-TR'),
+                    saat: new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }),
+                    okunduDurumu: false,
+                    source: "contact-form",
+                    userAgent: navigator.userAgent,
+                    pageUrl: window.location.href,
+                    language: navigator.language || "tr-TR",
+                    createdAtClient: new Date().toISOString()
+                };
+
+                await saveContactMessage(newMsg);
+                if (authReady && isAdmin(currentUser)) {
+                    await window.updateMessageBadge(); 
+                    if(window.renderAdminMessages) {
+                        await window.renderAdminMessages(); 
+                    }
+                }
+
+                localStorage.setItem("contact_last_sent_at", String(Date.now()));
+                localStorage.setItem("contact_daily_count", String(dailyCount + 1));
+                
+                iletisimForm.reset();
+                contactFormOpenedAt = Date.now();
+                showToast('Sinyal başarıyla iletildi.', 'success');
+            } catch (err) {
+                console.error("Mesaj gönderim hatası:", err);
+                showToast('Sinyal iletimi başarısız. Lütfen internet bağlantını kontrol edip tekrar dene.', 'error');
+            } finally {
+                if (submitButton) {
+                    submitButton.disabled = false;
+                    submitButton.textContent = submitButton.dataset.originalText || "Gönder";
+                }
+            }
         });
     }
-
-    // Initialize badge
-    window.updateMessageBadge().catch(console.error);
 
     // ─── Mobile Drawer Navigation ───────────────────────────────────────────
     const hamburger      = document.querySelector('.hamburger');
@@ -2356,6 +3278,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             closeDrawer();
         }
     });
+
+    // Ekran boyutu büyüdüğünde (desktop limitini aşınca) drawer'ı otomatik kapat
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768 && navLinks && navLinks.classList.contains('active')) {
+            closeDrawer();
+        }
+    });
     // ─────────────────────────────────────────────────────────────────────────
 
     // --- GLOBAL KEYBOARD SHORTCUTS ---
@@ -2364,7 +3293,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         // (Direkt #admin açılmaz; giriş yapılmamışsa korunan rotaya geçilemez)
         if (e.ctrlKey && e.shiftKey && (e.key === 'a' || e.key === 'A')) {
             e.preventDefault();
-            window.location.hash = '#admin-login';
+            if (ADMIN_ENABLED) {
+                window.location.hash = '#admin-login';
+            } else {
+                showToast("Admin paneli geçici olarak kapalı.", "info");
+            }
         }
     });
 
@@ -2398,4 +3331,38 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
     });
+
+    // --- CYBER DIGITAL CLOCK CORE ---
+    function initDigitalClock() {
+        const timeEl = document.getElementById("digital-clock-time");
+        const dateEl = document.getElementById("digital-clock-date");
+
+        if (!timeEl || !dateEl) return;
+
+        function updateClock() {
+            const now = new Date();
+
+            const time = now.toLocaleTimeString("tr-TR", {
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit"
+            });
+
+            const date = now.toLocaleDateString("tr-TR", {
+                day: "2-digit",
+                month: "long",
+                year: "numeric",
+                weekday: "long"
+            });
+
+            timeEl.textContent = time;
+            dateEl.textContent = date;
+        }
+
+        updateClock();
+        setInterval(updateClock, 1000);
+    }
+
+    // Initialize digital clock
+    initDigitalClock();
 });

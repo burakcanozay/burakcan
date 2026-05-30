@@ -88,7 +88,7 @@
       "image": "assets/og-image.png",
       "description": "Elektrik elektronik mühendisliği alanında projeler geliştiren, Arduino, Proteus ve gömülü sistemler konusunda deneyimli öğrenci mühendis.",
       "sameAs": [
-        "https://github.com/burakcan190757",
+        "https://github.com/burakcanozay",
         "https://www.linkedin.com/in/burakcanozay"
       ],
       "knowsAbout": [
@@ -166,10 +166,7 @@
                 <div class="hero-bg-image" aria-hidden="true"></div>
                 <div class="energy-overlay" aria-hidden="true"></div>
 
-                <div class="hud-label top-left" aria-hidden="true">POWER GRID ONLINE</div>
                 <div class="hud-label top-right" aria-hidden="true">PORTFOLIO CORE v1.0</div>
-                <div class="hud-label bottom-left" aria-hidden="true">PCB TRACE ACTIVE</div>
-                <div class="hud-label bottom-right" aria-hidden="true">EEE STUDENT PROFILE</div>
 
                 <svg class="svg-circuit" aria-hidden="true" focusable="false" viewBox="0 0 100 100"
                     preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
@@ -283,6 +280,15 @@
                                     class="status-val highlight">PORTFOLIO</span></div>
                         </div>
                     </div>
+                </div>
+
+                <div class="digital-clock-widget" aria-label="Dijital saat">
+                    <div class="clock-top-line">
+                        <span class="clock-led" aria-hidden="true"></span>
+                        <span class="clock-label">SYSTEM TIME</span>
+                    </div>
+                    <div class="clock-time" id="digital-clock-time">00:00:00</div>
+                    <div class="clock-date" id="digital-clock-date">--.--.----</div>
                 </div>
 
                 <div class="hero-nodes">
@@ -530,7 +536,7 @@
                             Mühendisliği Öğrencisi</h2>
                         <p class="cv-desc" id="cv-hero-desc">Yükleniyor...</p>
                         <div class="cv-hero-buttons">
-                            <a href="#" class="btn btn-primary" id="btn-cv-download" target="_blank"><i
+                            <a href="burakcan_ozay_cv.pdf" download class="btn btn-primary" id="btn-cv-download"><i
                                     class="fas fa-file-download" aria-hidden="true"></i> CV İndir</a>
                             <a href="#iletisim" class="btn"><i class="fas fa-paper-plane" aria-hidden="true"></i>
                                 İletişime Geç</a>
@@ -652,14 +658,17 @@
                         <h3><i class="fas fa-address-card" aria-hidden="true"></i> Bağlantı Bilgileri</h3>
                         <p style="margin-bottom:10px;"><i class="fas fa-envelope" aria-hidden="true"></i>
                             <strong>Email:</strong>
-                            burakcanozay@example.com</p>
+                            <a href="mailto:burakcan5775@gmail.com" class="theme-text">burakcan5775@gmail.com</a>
+                        </p>
                         <p style="margin-bottom:10px;"><i class="fas fa-map-marker-alt" aria-hidden="true"></i>
                             <strong>Konum:</strong>
                             Türkiye
                         </p>
-                        <p style="margin-bottom:10px;"><i class="fab fa-linkedin" aria-hidden="true"></i> <a href="#"
-                                class="theme-text">linkedin.com/in/burakcanozay</a></p>
-                        <p style="margin-bottom:10px;"><i class="fab fa-github" aria-hidden="true"></i> <a href="#"
+                        <p style="margin-bottom:10px;"><i class="fab fa-linkedin" aria-hidden="true"></i> <a
+                                href="https://www.linkedin.com/in/burakcanozay" target="_blank"
+                                rel="noopener noreferrer" class="theme-text">linkedin.com/in/burakcanozay</a></p>
+                        <p style="margin-bottom:10px;"><i class="fab fa-github" aria-hidden="true"></i> <a
+                                href="https://github.com/burakcanozay" target="_blank" rel="noopener noreferrer"
                                 class="theme-text">github.com/burakcanozay</a></p>
                     </div>
                     <div class="form-container" style="margin: 0; max-width: 100%;">
@@ -668,6 +677,8 @@
                             Sinyal
                             Gönder</h3>
                         <form id="iletisim-form">
+                            <input type="text" id="contact-website" name="website" class="hp-field" autocomplete="off"
+                                tabindex="-1" aria-hidden="true">
                             <div class="form-group">
                                 <label for="contact-name">Ad Soyad</label>
                                 <input type="text" id="contact-name" class="form-control" placeholder="Adınız Soyadınız"
@@ -703,7 +714,8 @@
                     style="background: red; box-shadow: 0 0 10px red; margin: 0 auto 1rem auto; width: 15px; height: 15px;">
                 </div>
                 <h2 style="color: red; margin-bottom: 0.5rem; font-family: var(--font-mono);">RESTRICTED AREA</h2>
-                <p style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 1.8rem; font-family: var(--font-mono); line-height: 1.5; border: 1px solid rgba(255,51,102,0.25); border-radius: 4px; padding: 0.6rem 0.8rem; background: rgba(255,51,102,0.05);">
+                <p
+                    style="font-size: 0.78rem; color: var(--text-secondary); margin-bottom: 1.8rem; font-family: var(--font-mono); line-height: 1.5; border: 1px solid rgba(255,51,102,0.25); border-radius: 4px; padding: 0.6rem 0.8rem; background: rgba(255,51,102,0.05);">
                     <i class="fas fa-shield-halved" aria-hidden="true" style="color:#ff3366; margin-right: 4px;"></i>
                     Bu alan yalnızca yetkili admin kullanımı içindir.<br>
                     Giriş <strong style="color: var(--theme-color);">Firebase Authentication</strong> ile doğrulanır.
@@ -731,8 +743,7 @@
 
                 <!-- Ana Sayfaya Dönüş -->
                 <div style="margin-top: 1.8rem; padding-top: 1.2rem; border-top: 1px solid rgba(0,243,255,0.1);">
-                    <a href="#home" class="btn" id="btn-back-to-home"
-                        aria-label="Ana sayfaya geri dön"
+                    <a href="#home" class="btn" id="btn-back-to-home" aria-label="Ana sayfaya geri dön"
                         style="display: inline-flex; align-items: center; gap: 0.5rem; font-family: var(--font-mono); font-size: 0.85rem; letter-spacing: 0.05em; opacity: 0.75; transition: opacity 0.2s, box-shadow 0.2s;">
                         <i class="fas fa-arrow-left" aria-hidden="true"></i>
                         SYS_HOME'A DÖN
@@ -755,15 +766,17 @@
                         class="fas fa-sign-out-alt" aria-hidden="true"></i> Çıkış</button>
             </div>
 
-            <div class="admin-tabs">
-                <button class="admin-tab active" data-target="panel-hakkimda">Hakkımda</button>
-                <button class="admin-tab" data-target="panel-projeler">Projeler</button>
-                <button class="admin-tab" data-target="panel-basarilar">Başarılar</button>
-                <button class="admin-tab" data-target="panel-cv">CV & Eğitim</button>
-                <button class="admin-tab" data-target="panel-sertifikalar">Sertifikalar</button>
-                <button class="admin-tab" data-target="panel-ayarlar">Tema Ayarları</button>
-                <button class="admin-tab" data-target="panel-mesajlar" aria-label="Mesaj Kutusu">Mesaj Kutusu <span
-                        id="msg-badge" class="message-badge" style="display:none;"></span></button>
+            <div class="admin-tabs" role="tablist">
+                <button type="button" role="tab" class="admin-tab active" data-target="panel-hakkimda">Hakkımda</button>
+                <button type="button" role="tab" class="admin-tab" data-target="panel-projeler">Projeler</button>
+                <button type="button" role="tab" class="admin-tab" data-target="panel-basarilar">Başarılar</button>
+                <button type="button" role="tab" class="admin-tab" data-target="panel-cv">CV & Eğitim</button>
+                <button type="button" role="tab" class="admin-tab"
+                    data-target="panel-sertifikalar">Sertifikalar</button>
+                <button type="button" role="tab" class="admin-tab" data-target="panel-ayarlar">Tema Ayarları</button>
+                <button type="button" role="tab" class="admin-tab" data-target="panel-mesajlar"
+                    aria-label="Mesaj Kutusu">Mesaj Kutusu <span id="msg-badge" class="message-badge"
+                        style="display:none;"></span></button>
             </div>
 
             <!-- Panels will be managed dynamically by js -->
@@ -862,30 +875,36 @@
             <div id="panel-cv" class="admin-panel">
                 <div class="grid-container">
                     <div class="form-container" style="margin: 0; max-width: 100%;">
-                        <h3 class="theme-text" style="margin-bottom: 1rem;"><i class="fas fa-plus"
-                                aria-hidden="true"></i> CV Deneyimi Ekle
+                        <h3 class="theme-text" style="margin-bottom: 1rem;"><i class="fas fa-briefcase"
+                                aria-hidden="true"></i> Deneyim &amp; Çalışmalar Ekle / Düzenle
                         </h3>
                         <form id="form-cv">
                             <input type="hidden" id="cv-id">
                             <div class="form-edit-status" id="cv-edit-status" style="display:none;" aria-live="polite">
-                                <i class="fas fa-pen-to-square" aria-hidden="true"></i> Düzenleme modu aktif</div>
+                                <i class="fas fa-pen-to-square" aria-hidden="true"></i> Düzenleme modu aktif
+                            </div>
                             <div class="form-group">
-                                <label for="cv-title">Başlık</label>
+                                <label for="cv-title">Deneyim / Çalışma Başlığı</label>
                                 <input type="text" id="cv-title" class="form-control" placeholder="Başlık" required
                                     style="margin-bottom:1rem;">
                             </div>
                             <div class="form-group">
-                                <label for="cv-desc">Kurum / Açıklama</label>
+                                <label for="cv-tip">Tür / Kategori</label>
+                                <input type="text" id="cv-tip" class="form-control" placeholder="Örn: Staj, Kişisel Çalışma, Kulüp"
+                                    required style="margin-bottom:1rem;">
+                            </div>
+                            <div class="form-group">
+                                <label for="cv-desc">Kurum / Açıklama (Detaylar)</label>
                                 <textarea id="cv-desc" class="form-control" placeholder="Kurum / Açıklama" required
                                     style="min-height: 100px; margin-bottom:1rem;"></textarea>
                             </div>
                             <div class="form-group">
-                                <label for="cv-date">Tarih</label>
-                                <input type="text" id="cv-date" class="form-control" placeholder="Tarih" required
+                                <label for="cv-date">Tarih / Dönem</label>
+                                <input type="text" id="cv-date" class="form-control" placeholder="Örn: 2024 - 2025" required
                                     style="margin-bottom:1rem;">
                             </div>
                             <button type="submit" id="cv-submit-btn" class="btn btn-primary"
-                                aria-label="CV girdisini kaydet"><i class="fas fa-save" aria-hidden="true"></i>
+                                aria-label="Deneyim bilgisini kaydet"><i class="fas fa-save" aria-hidden="true"></i>
                                 Kaydet</button>
                             <button type="button" id="cv-cancel" class="btn" aria-label="Düzenlemeyi iptal et"
                                 style="display:none; margin-left: 10px;">İptal</button>
@@ -895,6 +914,214 @@
                         style="margin-top: 0; border: none; background: transparent; padding: 0;">
                         <div id="list-cv"></div>
                     </div>
+                </div>
+
+                <!-- ═══ ADMIN: KİŞİSEL BİLGİLER ═══ -->
+                <div class="form-container" style="max-width: 100%; margin-top: 2rem;">
+                    <h3 class="theme-text" style="margin-bottom: 1rem;">
+                        <i class="fas fa-id-card-clip" aria-hidden="true"></i> Kişisel Bilgileri Düzenle
+                    </h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                        <div class="form-group">
+                            <label for="kisisel-adsoyad">Ad Soyad</label>
+                            <input type="text" id="kisisel-adsoyad" class="form-control" placeholder="Ad Soyad"
+                                style="margin-bottom:1rem;">
+                        </div>
+                        <div class="form-group">
+                            <label for="kisisel-bolum">Bölüm</label>
+                            <input type="text" id="kisisel-bolum" class="form-control" placeholder="Bölüm"
+                                style="margin-bottom:1rem;">
+                        </div>
+                        <div class="form-group">
+                            <label for="kisisel-universite">Üniversite</label>
+                            <input type="text" id="kisisel-universite" class="form-control" placeholder="Üniversite"
+                                style="margin-bottom:1rem;">
+                        </div>
+                        <div class="form-group">
+                            <label for="kisisel-konum">Konum</label>
+                            <input type="text" id="kisisel-konum" class="form-control" placeholder="Konum"
+                                style="margin-bottom:1rem;">
+                        </div>
+                        <div class="form-group">
+                            <label for="kisisel-eposta">E-posta</label>
+                            <input type="email" id="kisisel-eposta" class="form-control" placeholder="E-posta"
+                                style="margin-bottom:1rem;">
+                        </div>
+                        <div class="form-group">
+                            <label for="kisisel-telefon">Telefon</label>
+                            <input type="text" id="kisisel-telefon" class="form-control" placeholder="Telefon"
+                                style="margin-bottom:1rem;">
+                        </div>
+                        <div class="form-group">
+                            <label for="kisisel-linkedin-metin">LinkedIn Görünen Metin</label>
+                            <input type="text" id="kisisel-linkedin-metin" class="form-control"
+                                placeholder="linkedin.com/in/..." style="margin-bottom:1rem;">
+                        </div>
+                        <div class="form-group">
+                            <label for="kisisel-linkedin-url">LinkedIn URL</label>
+                            <input type="url" id="kisisel-linkedin-url" class="form-control"
+                                placeholder="https://linkedin.com/in/..." style="margin-bottom:1rem;">
+                        </div>
+                        <div class="form-group">
+                            <label for="kisisel-github-metin">GitHub Görünen Metin</label>
+                            <input type="text" id="kisisel-github-metin" class="form-control"
+                                placeholder="github.com/..." style="margin-bottom:1rem;">
+                        </div>
+                        <div class="form-group">
+                            <label for="kisisel-github-url">GitHub URL</label>
+                            <input type="url" id="kisisel-github-url" class="form-control"
+                                placeholder="https://github.com/..." style="margin-bottom:1rem;">
+                        </div>
+                    </div>
+                    <button type="button" id="btn-save-kisisel" class="btn btn-primary"
+                        aria-label="Kişisel bilgileri kaydet">
+                        <i class="fas fa-save" aria-hidden="true"></i> Kişisel Bilgileri Kaydet
+                    </button>
+                </div>
+
+                <!-- ═══ ADMIN: EĞİTİM BİLGİLERİ ═══ -->
+                <div class="form-container" style="max-width: 100%; margin-top: 2rem;">
+                    <h3 class="theme-text" style="margin-bottom: 1rem;">
+                        <i class="fas fa-graduation-cap" aria-hidden="true"></i> Eğitim Bilgileri
+                    </h3>
+                    <form id="form-egitim" style="margin-bottom: 1.5rem;">
+                        <input type="hidden" id="egitim-id">
+                        <div class="form-edit-status" id="egitim-edit-status" style="display:none;" aria-live="polite">
+                            <i class="fas fa-pen-to-square" aria-hidden="true"></i> Düzenleme modu aktif
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                            <div class="form-group">
+                                <label for="egitim-okul">Okul / Üniversite</label>
+                                <input type="text" id="egitim-okul" class="form-control" placeholder="Okul / Üniversite"
+                                    required style="margin-bottom:1rem;">
+                            </div>
+                            <div class="form-group">
+                                <label for="egitim-bolum">Bölüm</label>
+                                <input type="text" id="egitim-bolum" class="form-control" placeholder="Bölüm"
+                                    style="margin-bottom:1rem;">
+                            </div>
+                            <div class="form-group">
+                                <label for="egitim-derece">Derece</label>
+                                <input type="text" id="egitim-derece" class="form-control"
+                                    placeholder="Lisans / Ön Lisans vb." style="margin-bottom:1rem;">
+                            </div>
+                            <div class="form-group">
+                                <label for="egitim-tarih">Tarih</label>
+                                <input type="text" id="egitim-tarih" class="form-control" placeholder="2023 - Günümüz"
+                                    required style="margin-bottom:1rem;">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="egitim-aciklama">Açıklama</label>
+                            <textarea id="egitim-aciklama" class="form-control" placeholder="Açıklama"
+                                style="min-height:80px; margin-bottom:1rem;"></textarea>
+                        </div>
+                        <button type="submit" id="egitim-submit-btn" class="btn btn-primary"
+                            aria-label="Eğitim bilgisi kaydet">
+                            <i class="fas fa-save" aria-hidden="true"></i> Kaydet
+                        </button>
+                        <button type="button" id="egitim-cancel" class="btn" aria-label="Düzenlemeyi iptal et"
+                            style="display:none; margin-left:10px;">İptal</button>
+                    </form>
+                    <div id="list-egitim"></div>
+                </div>
+
+                <!-- ═══ ADMIN: TEKNİK YETENEKLER ═══ -->
+                <div class="form-container" style="max-width: 100%; margin-top: 2rem;">
+                    <h3 class="theme-text" style="margin-bottom: 1rem;">
+                        <i class="fas fa-wave-square" aria-hidden="true"></i> Teknik Yetenekler
+                    </h3>
+                    <form id="form-skills" style="margin-bottom: 1.5rem;">
+                        <input type="hidden" id="skill-id">
+                        <div class="form-edit-status" id="skill-edit-status" style="display:none;" aria-live="polite">
+                            <i class="fas fa-pen-to-square" aria-hidden="true"></i> Düzenleme modu aktif
+                        </div>
+                        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem; align-items: end;">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="skill-name">Yetenek Adı</label>
+                                <input type="text" id="skill-name" class="form-control" placeholder="Örn: Proteus, C++" style="margin-bottom:1rem;">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <label for="skill-level">Seviye</label>
+                                    <span id="skill-level-value" style="color: var(--theme-color); font-family: var(--font-mono);">50%</span>
+                                </div>
+                                <input type="range" id="skill-level" min="0" max="100" value="50" style="width: 100%; margin-bottom:1.2rem;">
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-top: 1.5rem;">
+                            <button type="submit" id="skill-submit-btn" class="btn btn-primary" aria-label="Yetenek Ekle/Güncelle">
+                                <i class="fas fa-plus" aria-hidden="true"></i> Listeye Ekle
+                            </button>
+                            <button type="button" id="skill-cancel" class="btn" aria-label="Düzenlemeyi iptal et" style="display:none;">İptal</button>
+                            <button type="button" id="btn-save-skills" class="btn btn-primary" style="margin-left: auto;" aria-label="Teknik Yetenekleri Kaydet">
+                                <i class="fas fa-save" aria-hidden="true"></i> Teknik Yetenekleri Kaydet
+                            </button>
+                        </div>
+                    </form>
+                    <div id="list-skills" class="item-list"></div>
+                </div>
+
+                <!-- ═══ ADMIN: DİLLER ═══ -->
+                <div class="form-container" style="max-width: 100%; margin-top: 2rem;">
+                    <h3 class="theme-text" style="margin-bottom: 1rem;">
+                        <i class="fas fa-language" aria-hidden="true"></i> Diller
+                    </h3>
+                    <form id="form-languages" style="margin-bottom: 1.5rem;">
+                        <input type="hidden" id="language-id">
+                        <div class="form-edit-status" id="language-edit-status" style="display:none;" aria-live="polite">
+                            <i class="fas fa-pen-to-square" aria-hidden="true"></i> Düzenleme modu aktif
+                        </div>
+                        <div style="display: grid; grid-template-columns: 2fr 1fr 2fr; gap: 1rem; align-items: end;">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="language-ad">Dil Adı</label>
+                                <input type="text" id="language-ad" class="form-control" placeholder="Örn: İngilizce" style="margin-bottom:1rem;">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                                    <label for="language-level">Seviye</label>
+                                    <span id="language-level-value" style="color: var(--theme-color); font-family: var(--font-mono);">50%</span>
+                                </div>
+                                <input type="range" id="language-level" min="0" max="100" value="50" style="width: 100%; margin-bottom:1.2rem;">
+                            </div>
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label for="language-label">Açıklama / Seviye Etiketi</label>
+                                <input type="text" id="language-label" class="form-control" placeholder="Örn: B2 - Orta Üstü" style="margin-bottom:1rem;">
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-top: 1.5rem;">
+                            <button type="submit" id="language-submit-btn" class="btn btn-primary" aria-label="Dil Ekle/Güncelle">
+                                <i class="fas fa-plus" aria-hidden="true"></i> Listeye Ekle
+                            </button>
+                            <button type="button" id="language-cancel" class="btn" aria-label="Düzenlemeyi iptal et" style="display:none;">İptal</button>
+                            <button type="button" id="btn-save-languages" class="btn btn-primary" style="margin-left: auto;" aria-label="Dilleri Kaydet">
+                                <i class="fas fa-save" aria-hidden="true"></i> Dilleri Kaydet
+                            </button>
+                        </div>
+                    </form>
+                    <div id="list-languages" class="item-list"></div>
+                </div>
+
+                <!-- ═══ ADMIN: İLGİ ALANLARI ═══ -->
+                <div class="form-container" style="max-width: 100%; margin-top: 2rem;">
+                    <h3 class="theme-text" style="margin-bottom: 1rem;">
+                        <i class="fas fa-compass" aria-hidden="true"></i> İlgi Alanları
+                    </h3>
+                    <form id="form-interests" style="margin-bottom: 1.5rem;">
+                        <div class="form-group" style="margin-bottom: 0;">
+                            <label for="interest-name">Yeni İlgi Alanı</label>
+                            <input type="text" id="interest-name" class="form-control" placeholder="Örn: Mobil Robotik, Gömülü Sistemler" style="margin-bottom:1rem;">
+                        </div>
+                        <div style="display: flex; gap: 10px; margin-top: 1.5rem;">
+                            <button type="submit" id="interest-submit-btn" class="btn btn-primary" aria-label="İlgi Alanı Ekle">
+                                <i class="fas fa-plus" aria-hidden="true"></i> Listeye Ekle
+                            </button>
+                            <button type="button" id="btn-save-interests" class="btn btn-primary" style="margin-left: auto;" aria-label="İlgi Alanlarını Kaydet">
+                                <i class="fas fa-save" aria-hidden="true"></i> İlgi Alanlarını Kaydet
+                            </button>
+                        </div>
+                    </form>
+                    <div id="list-interests" class="item-list"></div>
                 </div>
             </div>
 

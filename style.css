@@ -1283,11 +1283,11 @@ body::before {
 }
 
 .admin-panel {
-  display: none;
+  display: none !important;
 }
 
 .admin-panel.active {
-  display: block;
+  display: block !important;
 }
 
 .item-row {
@@ -1342,32 +1342,7 @@ body::before {
 }
 
 @media screen and (max-width: 768px) {
-  .hamburger {
-    display: block;
-  }
-
-  .nav-links {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    width: 100%;
-    flex-direction: column;
-    background: var(--panel-bg);
-    padding: 2rem;
-    gap: 1.5rem;
-    border-bottom: 1px solid var(--border-color);
-    transform: translateY(-100%);
-    opacity: 0;
-    pointer-events: none;
-    transition: all 0.3s ease;
-    z-index: -1;
-  }
-
-  .nav-links.active {
-    transform: translateY(0);
-    opacity: 1;
-    pointer-events: auto;
-  }
+  /* Hamburger görünürlüğü — drawer stili alt blokta (3434+) tanımlanır */
 
   .svg-circuit {
     display: none;
@@ -3412,7 +3387,7 @@ body.boot-complete .svg-circuit {
   visibility: hidden;
   pointer-events: none;
   transition: opacity 0.3s ease, visibility 0.3s ease;
-  z-index: 998;
+  z-index: 1000;
 }
 
 .drawer-overlay.active {
@@ -3450,7 +3425,7 @@ body.boot-complete .svg-circuit {
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000;
+    z-index: 1002;
     width: 42px;
     height: 42px;
     border: 1px solid var(--border-color);
@@ -3480,7 +3455,8 @@ body.boot-complete .svg-circuit {
     -webkit-backdrop-filter: blur(18px);
     border-left: 1px solid var(--border-color);
     box-shadow: -20px 0 50px rgba(0, 0, 0, 0.65);
-    z-index: 999;
+    z-index: 1001;
+    left: auto;
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
@@ -3544,12 +3520,20 @@ body.boot-complete .svg-circuit {
   body.boot-complete .svg-circuit {
     animation: circuitBootIn 1s ease forwards;
     animation-delay: 0.15s;
-    opacity: 0; /* animasyon to değeri 0.22 ile override'lanacak */
+    opacity: 0;
+    /* animasyon to değeri 0.22 ile override'lanacak */
   }
 
   @keyframes circuitBootInMobile {
-    from { opacity: 0; filter: blur(4px); }
-    to   { opacity: 0.22; filter: blur(0); }
+    from {
+      opacity: 0;
+      filter: blur(4px);
+    }
+
+    to {
+      opacity: 0.22;
+      filter: blur(0);
+    }
   }
 
   body.boot-complete .svg-circuit {
@@ -3611,6 +3595,7 @@ body.boot-complete .svg-circuit {
       filter: blur(10px);
       transform: scale(0.94);
     }
+
     to {
       opacity: 1;
       filter: blur(0);
@@ -3621,12 +3606,19 @@ body.boot-complete .svg-circuit {
   /* Chip float animasyonunu mobilde daha hafif yap */
   body.boot-complete .central-chip {
     animation: chipBootInMobile 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards,
-               chipFloatMobile 6s ease-in-out 0.85s infinite !important;
+      chipFloatMobile 6s ease-in-out 0.85s infinite !important;
   }
 
   @keyframes chipFloatMobile {
-    0%, 100% { transform: scale(1) translateY(0); }
-    50%       { transform: scale(1) translateY(-4px); }
+
+    0%,
+    100% {
+      transform: scale(1) translateY(0);
+    }
+
+    50% {
+      transform: scale(1) translateY(-4px);
+    }
   }
 
   .central-chip h1 {
@@ -3679,9 +3671,23 @@ body.boot-complete .svg-circuit {
   }
 
   @keyframes nodeBootInMobile {
-    0%   { opacity: 0; filter: blur(6px); transform: translateY(12px) scale(0.95); }
-    60%  { opacity: 1; filter: blur(1px); transform: translateY(-2px) scale(1.01); }
-    100% { opacity: 1; filter: blur(0);   transform: translateY(0) scale(1); }
+    0% {
+      opacity: 0;
+      filter: blur(6px);
+      transform: translateY(12px) scale(0.95);
+    }
+
+    60% {
+      opacity: 1;
+      filter: blur(1px);
+      transform: translateY(-2px) scale(1.01);
+    }
+
+    100% {
+      opacity: 1;
+      filter: blur(0);
+      transform: translateY(0) scale(1);
+    }
   }
 
   /* Hover & touch efektleri — desktop translate override olmadan */
@@ -3754,8 +3760,15 @@ body.boot-complete .svg-circuit {
   }
 
   @keyframes circuitBootInMobile600 {
-    from { opacity: 0; filter: blur(4px); }
-    to   { opacity: 0.1; filter: blur(0.5px); }
+    from {
+      opacity: 0;
+      filter: blur(4px);
+    }
+
+    to {
+      opacity: 0.1;
+      filter: blur(0.5px);
+    }
   }
 
   .central-chip h1 {
@@ -3777,4 +3790,305 @@ body.boot-complete .svg-circuit {
   .navbar {
     padding: 0.9rem 1rem;
   }
+}
+
+.hp-field {
+  position: absolute;
+  left: -9999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ============================================================
+   AUTH LOADING PANEL
+   ============================================================ */
+.auth-loading-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  background: var(--panel-bg);
+  border: 1px solid var(--theme-color);
+  border-radius: 8px;
+  margin: 4rem auto;
+  max-width: 500px;
+  text-align: center;
+  box-shadow: 0 0 20px rgba(0, 243, 255, 0.1);
+  animation: authGlowPulse 2s infinite alternate;
+}
+
+.auth-loading-panel h2 {
+  color: var(--theme-color);
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  letter-spacing: 2px;
+}
+
+.auth-loading-panel p {
+  color: var(--text-secondary);
+  font-size: 1rem;
+}
+
+@keyframes authGlowPulse {
+  0% {
+    box-shadow: 0 0 10px rgba(0, 243, 255, 0.1);
+    border-color: rgba(0, 243, 255, 0.3);
+  }
+
+  100% {
+    box-shadow: 0 0 30px rgba(0, 243, 255, 0.4);
+    border-color: rgba(0, 243, 255, 0.8);
+  }
+}
+
+/* Achievements Empty State */
+.empty-basarilar {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem 1.5rem;
+  background: rgba(11, 19, 30, 0.3);
+  border: 1px dashed rgba(0, 243, 255, 0.15);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  opacity: 0.5;
+  transition: opacity 0.3s ease;
+  box-shadow: inset 0 0 10px rgba(0, 243, 255, 0.02);
+}
+
+.empty-basarilar:hover {
+  opacity: 0.8;
+}
+
+.empty-basarilar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(0, 243, 255, 0.3), transparent);
+}
+
+.empty-basarilar-led {
+  width: 6px;
+  height: 6px;
+  background-color: var(--danger-color);
+  border-radius: 50%;
+  box-shadow: 0 0 6px var(--danger-color);
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  opacity: 0.6;
+  animation: ledPulse 3s infinite;
+}
+
+.empty-basarilar-icon {
+  font-size: 2rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+  opacity: 0.5;
+}
+
+.empty-basarilar-title {
+  font-family: var(--font-mono);
+  color: var(--theme-color);
+  font-size: 1.05rem;
+  margin-bottom: 0.5rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.empty-basarilar-desc {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.5;
+  max-width: 450px;
+  margin: 0 auto;
+  opacity: 0.8;
+}
+
+/* ==========================================================================
+   CYBER DIGITAL CLOCK WIDGET
+   ========================================================================== */
+.digital-clock-widget {
+  position: absolute;
+  right: 30px;
+  bottom: 30px;
+  z-index: 12;
+  min-width: 210px;
+  padding: 0.9rem 1rem;
+  border: 1px solid rgba(0, 243, 255, 0.22);
+  border-radius: 10px;
+  background: rgba(5, 10, 15, 0.72);
+  backdrop-filter: blur(14px);
+  box-shadow:
+    0 0 24px rgba(0, 243, 255, 0.12),
+    inset 0 0 18px rgba(0, 243, 255, 0.04);
+  font-family: var(--font-mono);
+  pointer-events: none;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(12px);
+  filter: blur(6px);
+  transition: opacity 0.5s ease, transform 0.5s ease, filter 0.5s ease;
+}
+
+.digital-clock-widget::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(0deg,
+      transparent,
+      transparent 3px,
+      rgba(0, 243, 255, 0.035) 4px);
+  pointer-events: none;
+}
+
+.clock-top-line {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 0.45rem;
+  color: var(--text-secondary);
+  font-size: 0.68rem;
+  letter-spacing: 1.5px;
+}
+
+.clock-led {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--neon-green);
+  box-shadow: 0 0 10px var(--neon-green);
+  animation: clockLedPulse 1.8s ease-in-out infinite;
+}
+
+.clock-time {
+  position: relative;
+  color: var(--theme-color);
+  font-size: 1.7rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-shadow: 0 0 12px rgba(0, 243, 255, 0.5);
+}
+
+.clock-date {
+  position: relative;
+  margin-top: 0.25rem;
+  color: var(--neon-green);
+  font-size: 0.78rem;
+  letter-spacing: 1px;
+  opacity: 0.9;
+}
+
+body.boot-complete .digital-clock-widget {
+  animation: clockBootIn 0.75s ease forwards;
+  animation-delay: 0.7s;
+}
+
+@keyframes clockLedPulse {
+
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.45;
+    transform: scale(0.82);
+  }
+}
+
+@keyframes clockBootIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+    filter: blur(6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .digital-clock-widget {
+    position: relative;
+    right: auto;
+    bottom: auto;
+    width: min(90vw, 360px);
+    margin: 1rem auto 0;
+    z-index: 12;
+    pointer-events: none;
+  }
+
+  .clock-time {
+    font-size: 1.45rem;
+    text-align: center;
+  }
+
+  .clock-date {
+    text-align: center;
+    font-size: 0.72rem;
+  }
+
+  .clock-top-line {
+    justify-content: center;
+  }
+}
+
+/* ============================================================
+   İletişim Sayfası — Ortalanmış & Dengeli Düzen
+   ============================================================ */
+#view-iletisim .container {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 0.5rem 2rem 3rem 2rem;
+}
+
+#view-iletisim .page-header {
+  margin-bottom: 0.5rem;
+}
+
+#view-iletisim .grid-container {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) minmax(320px, 1fr);
+  gap: 2rem;
+  justify-content: center;
+  align-items: stretch;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+@media screen and (min-width: 1024px) {
+  #view-iletisim .grid-container {
+    transform: translateX(40px);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  #view-iletisim .grid-container {
+    grid-template-columns: 1fr;
+    max-width: 420px;
+    transform: none;
+  }
+}
+
+html.admin-disabled .sys-admin-link {
+  display: none !important;
 }
