@@ -251,14 +251,13 @@ function hidePreloader() {
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-
+  try {
     const views = document.querySelectorAll('.view');
     const nav = document.getElementById('main-nav');
     let appData;
-    try {
-        appData = await window.DataService.getData();
-    } catch (err) {
-        console.error("Data loading error, falling back to local fallback:", err);
+    
+    if (!window.DataService) {
+        console.error("DataService bulunamadı. js/data.js yüklenmemiş olabilir.");
         appData = {
             hakkimda: "Elektrik Elektronik Mühendisliği öğrencisiyim. Teknolojiye, gömülü sistemlere ve devre tasarımına büyük bir ilgi duyuyorum. Yenilikçi projeler geliştirmek ve mühendislik alanında kendimi sürekli olarak yenilemek en büyük hedefim.",
             projeler: [],
@@ -266,6 +265,19 @@ document.addEventListener('DOMContentLoaded', async () => {
             cv: [],
             sertifikalar: []
         };
+    } else {
+        try {
+            appData = await window.DataService.getData();
+        } catch (err) {
+            console.error("Data loading error, falling back to local fallback:", err);
+            appData = {
+                hakkimda: "Elektrik Elektronik Mühendisliği öğrencisiyim. Teknolojiye, gömülü sistemlere ve devre tasarımına büyük bir ilgi duyuyorum. Yenilikçi projeler geliştirmek ve mühendislik alanında kendimi sürekli olarak yenilemek en büyük hedefim.",
+                projeler: [],
+                basarilar: [],
+                cv: [],
+                sertifikalar: []
+            };
+        }
     }
 
     // Dinamik Terminal Animasyonu (İmleç Hatası Çözümü)
@@ -3365,4 +3377,34 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Initialize digital clock
     initDigitalClock();
+  } catch (criticalError) {
+    console.error("DOMContentLoaded içinde kritik hata:", criticalError);
+    const preloader = document.getElementById("preloader");
+    if (preloader) {
+        preloader.classList.add("hidden");
+        setTimeout(() => preloader.remove(), 1200);
+    }
+    document.body.classList.add("boot-complete");
+    const nav = document.getElementById("main-nav");
+    if (nav) nav.style.display = "flex";
+    
+    const views = document.querySelectorAll('.view');
+    views.forEach(v => v.classList.remove('active'));
+    const homeView = document.getElementById('view-home');
+    if (homeView) homeView.classList.add('active');
+  }
+});
+
+window.addEventListener("load", () => {
+  setTimeout(() => {
+    const preloader = document.getElementById("preloader");
+    if (preloader && !document.body.classList.contains("boot-complete")) {
+      preloader.classList.add("hidden");
+      document.body.classList.add("boot-complete");
+      const nav = document.getElementById("main-nav");
+      if (nav) nav.style.display = "flex";
+      setTimeout(() => preloader.remove(), 1200);
+      console.warn("Preloader fallback çalıştı. JS başlangıcında hata olabilir.");
+    }
+  }, 4000);
 });
