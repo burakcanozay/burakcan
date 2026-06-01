@@ -182,21 +182,42 @@ const Storage = {
         if (!data.detailedCV) {
             data.detailedCV = cloneDetailedCVData();
         }
+
         if (this.provider === 'firestore') {
             try {
                 const db = window.firebaseDB;
                 const { doc, setDoc } = window.firestoreFns || {};
+
                 if (!db || !doc || !setDoc) {
-                    throw new Error("Firestore is not initialized yet. Falling back to local storage.");
+                    throw new Error("Firestore başlatılmamış. Firebase yapılandırmasını kontrol et.");
                 }
+
                 const docRef = doc(db, "portfolio", "main");
                 await setDoc(docRef, data);
+                return true;
             } catch (err) {
-                console.error("Firestore write error, falling back to localStorage:", err);
-                localStorage.setItem('portfolioData', JSON.stringify(data));
+                console.error("Firestore write error:", err);
+
+                // Firestore Rules / izin hatası özel mesajı
+                if (
+                    err.code === 'permission-denied' ||
+                    err.message?.includes('permission') ||
+                    err.message?.includes('PERMISSION_DENIED')
+                ) {
+                    const rulesErr = new Error(
+                        "Firestore yazma izni yok. Admin hesabınla giriş yaptığından emin ol."
+                    );
+                    rulesErr.code = 'permission-denied';
+                    throw rulesErr;
+                }
+
+                // Diğer Firestore hataları — localStorage'a DÜŞME, hatayı fırlat
+                throw err;
             }
         } else {
+            // local provider: localStorage kullanımı normal
             localStorage.setItem('portfolioData', JSON.stringify(data));
+            return true;
         }
     }
 };

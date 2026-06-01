@@ -1910,9 +1910,30 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     async function saveGlobal() {
-        await window.DataService.saveData(appData);
-        renderAdminLists();
-        renderAll();
+        try {
+            await window.DataService.saveData(appData);
+            renderAdminLists();
+            renderAll();
+        } catch (err) {
+            console.error("Firestore veri kaydetme hatası:", err);
+            const isPermission =
+                err.code === 'permission-denied' ||
+                err.message?.includes('izin') ||
+                err.message?.includes('permission') ||
+                err.message?.includes('PERMISSION_DENIED');
+            if (isPermission) {
+                showToast(
+                    "Firestore yazma izni yok. Admin hesab\u0131nla giri\u015f yapt\u0131\u011f\u0131ndan emin ol.",
+                    "error"
+                );
+            } else {
+                showToast(
+                    "Veriler Firestore'a kaydedilemedi. L\u00fctfen ba\u011flant\u0131n\u0131 ve yetkilerini kontrol et.",
+                    "error"
+                );
+            }
+            throw err; // caller'lar hata olu\u015ftu\u011funu anlasın
+        }
     }
 
     // ─── ADMIN: TEKNİK YETENEKLER ADMİN (CRUD) ──────────────────────────────
@@ -2273,8 +2294,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     document.getElementById('form-hakkimda').addEventListener('submit', async (e) => {
         e.preventDefault();
         appData.hakkimda = document.getElementById('hakkimda-text').value;
-        await saveGlobal();
-        showToast('Hakkımda bilgisi başarıyla kaydedildi.', 'success');
+        try {
+            await saveGlobal();
+            showToast('Hakkımda bilgisi başarıyla kaydedildi.', 'success');
+        } catch (err) {
+            // Hata toast'ı saveGlobal() tarafından gösterildi
+        }
     });
 
     // Real-time live color preview
@@ -2357,18 +2382,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         const tech    = techRaw ? techRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
         if (!title || !desc) { showToast('L\u00fctfen zorunlu alanlar\u0131 doldurun.', 'warning'); return; }
         if (!appData.projeler) appData.projeler = [];
-        if (idInput !== '') {
-            appData.projeler[idInput] = { ...appData.projeler[idInput], title, desc, tech };
-            await saveGlobal();
-            showToast('Proje ba\u015far\u0131yla g\u00fcncellendi.', 'success');
-        } else {
-            appData.projeler.push({ id: Date.now(), title, desc, tech });
-            await saveGlobal();
-            showToast('Yeni proje ba\u015far\u0131yla eklendi.', 'success');
+        try {
+            if (idInput !== '') {
+                appData.projeler[idInput] = { ...appData.projeler[idInput], title, desc, tech };
+                await saveGlobal();
+                showToast('Proje ba\u015far\u0131yla g\u00fcncellendi.', 'success');
+            } else {
+                appData.projeler.push({ id: Date.now(), title, desc, tech });
+                await saveGlobal();
+                showToast('Yeni proje ba\u015far\u0131yla eklendi.', 'success');
+            }
+            formProje.reset();
+            document.getElementById('proje-id').value = '';
+            setEditMode('form-projeler', 'proje-edit-status', 'proje-submit-btn', 'proje-cancel', false);
+        } catch (err) {
+            // Hata toast'ı saveGlobal() tarafından gösterildi
         }
-        formProje.reset();
-        document.getElementById('proje-id').value = '';
-        setEditMode('form-projeler', 'proje-edit-status', 'proje-submit-btn', 'proje-cancel', false);
     });
 
     function editProje(idx) {
@@ -2397,18 +2426,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         const year    = document.getElementById('basari-year').value.trim();
         if (!title || !desc || !year) { showToast('L\u00fctfen zorunlu alanlar\u0131 doldurun.', 'warning'); return; }
         if (!appData.basarilar) appData.basarilar = [];
-        if (idInput !== '') {
-            appData.basarilar[idInput] = { ...appData.basarilar[idInput], title, desc, year };
-            await saveGlobal();
-            showToast('Ba\u015far\u0131 kayd\u0131 ba\u015far\u0131yla g\u00fcncellendi.', 'success');
-        } else {
-            appData.basarilar.push({ id: Date.now(), title, desc, year });
-            await saveGlobal();
-            showToast('Yeni ba\u015far\u0131 ba\u015far\u0131yla eklendi.', 'success');
+        try {
+            if (idInput !== '') {
+                appData.basarilar[idInput] = { ...appData.basarilar[idInput], title, desc, year };
+                await saveGlobal();
+                showToast('Ba\u015far\u0131 kayd\u0131 ba\u015far\u0131yla g\u00fcncellendi.', 'success');
+            } else {
+                appData.basarilar.push({ id: Date.now(), title, desc, year });
+                await saveGlobal();
+                showToast('Yeni ba\u015far\u0131 ba\u015far\u0131yla eklendi.', 'success');
+            }
+            formBasari.reset();
+            document.getElementById('basari-id').value = '';
+            setEditMode('form-basarilar', 'basari-edit-status', 'basari-submit-btn', 'basari-cancel', false);
+        } catch (err) {
+            // Hata toast'ı saveGlobal() tarafından gösterildi
         }
-        formBasari.reset();
-        document.getElementById('basari-id').value = '';
-        setEditMode('form-basarilar', 'basari-edit-status', 'basari-submit-btn', 'basari-cancel', false);
     });
 
     function editBasari(idx) {
@@ -2442,18 +2475,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         
         if (!baslik || !aciklama || !tarih || !tip) { showToast('L\u00fctfen zorunlu alanlar\u0131 doldurun.', 'warning'); return; }
         
-        if (idInput !== '') {
-            appData.detailedCV.deneyimler[idInput] = { ...appData.detailedCV.deneyimler[idInput], tip, baslik, aciklama, tarih };
-            await saveGlobal();
-            showToast('Deneyim bilgisi ba\u015far\u0131yla g\u00fcncellendi.', 'success');
-        } else {
-            appData.detailedCV.deneyimler.push({ tip, baslik, aciklama, tarih });
-            await saveGlobal();
-            showToast('Deneyim bilgisi ba\u015far\u0131yla eklendi.', 'success');
+        try {
+            if (idInput !== '') {
+                appData.detailedCV.deneyimler[idInput] = { ...appData.detailedCV.deneyimler[idInput], tip, baslik, aciklama, tarih };
+                await saveGlobal();
+                showToast('Deneyim bilgisi ba\u015far\u0131yla g\u00fcncellendi.', 'success');
+            } else {
+                appData.detailedCV.deneyimler.push({ tip, baslik, aciklama, tarih });
+                await saveGlobal();
+                showToast('Deneyim bilgisi ba\u015far\u0131yla eklendi.', 'success');
+            }
+            formCV.reset();
+            document.getElementById('cv-id').value = '';
+            setEditMode('form-cv', 'cv-edit-status', 'cv-submit-btn', 'cv-cancel', false);
+        } catch (err) {
+            // Hata toast'ı saveGlobal() tarafından gösterildi
         }
-        formCV.reset();
-        document.getElementById('cv-id').value = '';
-        setEditMode('form-cv', 'cv-edit-status', 'cv-submit-btn', 'cv-cancel', false);
     });
 
     function editCV(idx) {
@@ -2485,18 +2522,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         const date    = document.getElementById('sertifika-date').value.trim();
         if (!title || !issuer || !date) { showToast('L\u00fctfen zorunlu alanlar\u0131 doldurun.', 'warning'); return; }
         if (!appData.sertifikalar) appData.sertifikalar = [];
-        if (idInput !== '') {
-            appData.sertifikalar[idInput] = { ...appData.sertifikalar[idInput], title, issuer, date };
-            await saveGlobal();
-            showToast('Sertifika ba\u015far\u0131yla g\u00fcncellendi.', 'success');
-        } else {
-            appData.sertifikalar.push({ id: Date.now(), title, issuer, date });
-            await saveGlobal();
-            showToast('Yeni sertifika ba\u015far\u0131yla eklendi.', 'success');
+        try {
+            if (idInput !== '') {
+                appData.sertifikalar[idInput] = { ...appData.sertifikalar[idInput], title, issuer, date };
+                await saveGlobal();
+                showToast('Sertifika ba\u015far\u0131yla g\u00fcncellendi.', 'success');
+            } else {
+                appData.sertifikalar.push({ id: Date.now(), title, issuer, date });
+                await saveGlobal();
+                showToast('Yeni sertifika ba\u015far\u0131yla eklendi.', 'success');
+            }
+            formSert.reset();
+            document.getElementById('sertifika-id').value = '';
+            setEditMode('form-sertifikalar', 'sertifika-edit-status', 'sertifika-submit-btn', 'sertifika-cancel', false);
+        } catch (err) {
+            // Hata toast'ı saveGlobal() tarafından gösterildi
         }
-        formSert.reset();
-        document.getElementById('sertifika-id').value = '';
-        setEditMode('form-sertifikalar', 'sertifika-edit-status', 'sertifika-submit-btn', 'sertifika-cancel', false);
     });
 
     function editSertifika(idx) {
