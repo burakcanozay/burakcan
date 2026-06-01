@@ -237,18 +237,82 @@ function hidePreloader() {
         if (progress < 1) {
             requestAnimationFrame(update);
         } else {
-            setTimeout(() => {
-                preloader.classList.add("hidden");
-                document.body.classList.add("boot-complete");
+            try {
                 setTimeout(() => {
-                    preloader.remove();
-                }, 1300); // Wait for the 1.2s transition to finish
-            }, 300);
+                    const hash = window.location.hash.substring(1) || "home";
+                    const navEl = document.getElementById("main-nav");
+                    if (navEl) {
+                        navEl.style.display = hash === "home" ? "none" : "flex";
+                    }
+                    preloader.classList.add("hidden");
+                    document.body.classList.add("boot-complete");
+                    setTimeout(() => {
+                        preloader.remove();
+                    }, 1300); // Wait for the 1.2s transition to finish
+                }, 300);
+            } catch (animErr) {
+                console.warn("hidePreloader animation error:", animErr);
+                forceClosePreloader("hidePreloader-error");
+            }
         }
     }
 
     requestAnimationFrame(update);
 }
+
+// ─── FORCE CLOSE PRELOADER (Güvenli Fallback) ───────────────────────────────
+function forceClosePreloader(reason) {
+    if (document.body.classList.contains("boot-complete")) return; // Zaten kapandı
+    reason = reason || "fallback";
+
+    document.body.classList.add("boot-complete");
+
+    const preloader = document.getElementById("preloader");
+    const nav = document.getElementById("main-nav");
+    const hash = window.location.hash.substring(1) || "home";
+
+    if (nav) {
+        nav.style.display = hash === "home" ? "none" : "flex";
+    }
+
+    const homeView = document.getElementById("view-home");
+    if (homeView && !document.querySelector(".view.active")) {
+        homeView.style.display = "flex";
+        homeView.classList.add("active", "fade-in");
+    }
+
+    if (preloader) {
+        preloader.classList.add("hidden");
+        setTimeout(() => { preloader.remove(); }, 800);
+    }
+
+    console.warn("[Preloader] Force closed:", reason);
+}
+
+// ─── DATA SERVICE TIMEOUT WRAPPER ────────────────────────────────────────────
+async function getDataWithTimeout() {
+    const fallbackData = {
+        hakkimda: "Elektrik Elektronik M\u00fchendisli\u011fi \u00f6\u011frencisiyim. Teknolojiye, g\u00f6m\u00fcl\u00fc sistemlere ve devre tasar\u0131m\u0131na b\u00fcy\u00fck bir ilgi duyuyorum. Yenilik\u00e7i projeler geli\u015ftirmek ve m\u00fchendislik alan\u0131nda kendimi s\u00fcrekli olarak yenilemek en b\u00fcy\u00fck hedefim.",
+        projeler: [],
+        basarilar: [],
+        cv: [],
+        sertifikalar: []
+    };
+
+    if (!window.DataService) return fallbackData;
+
+    return await Promise.race([
+        window.DataService.getData(),
+        new Promise(resolve => setTimeout(() => resolve(fallbackData), 3500))
+    ]);
+}
+
+// ─── WINDOW LOAD FALLBACK (4s) ────────────────────────────────────────────────
+window.addEventListener("load", () => {
+    setTimeout(() => {
+        forceClosePreloader("window-load-fallback");
+    }, 4000);
+});
 
 document.addEventListener('DOMContentLoaded', async () => {
   try {
@@ -267,11 +331,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         };
     } else {
         try {
-            appData = await window.DataService.getData();
+            appData = await getDataWithTimeout();
         } catch (err) {
             console.error("Data loading error, falling back to local fallback:", err);
             appData = {
-                hakkimda: "Elektrik Elektronik Mühendisliği öğrencisiyim. Teknolojiye, gömülü sistemlere ve devre tasarımına büyük bir ilgi duyuyorum. Yenilikçi projeler geliştirmek ve mühendislik alanında kendimi sürekli olarak yenilemek en büyük hedefim.",
+                hakkimda: "Elektrik Elektronik M\u00fchendisli\u011fi \u00f6\u011frencisiyim. Teknolojiye, g\u00f6m\u00fcl\u00fc sistemlere ve devre tasar\u0131m\u0131na b\u00fcy\u00fck bir ilgi duyuyorum. Yenilik\u00e7i projeler geli\u015ftirmek ve m\u00fchendislik alan\u0131nda kendimi s\u00fcrekli olarak yenilemek en b\u00fcy\u00fck hedefim.",
                 projeler: [],
                 basarilar: [],
                 cv: [],
@@ -1390,11 +1454,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
 
-        // 10. CV Notları
-        const notlarContent = document.getElementById('cv-notlar-content');
-        if (notlarContent) {
-            notlarContent.textContent = cvData.notlar;
-        }
     }
 
     function renderSertifikalar() {
@@ -1641,8 +1700,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         handleRoute(); // initial call
     } catch (err) {
         console.error("Initial routing error:", err);
+        forceClosePreloader("initial-route-error");
     } finally {
-        hidePreloader();
+        if (!document.body.classList.contains("boot-complete")) {
+            hidePreloader();
+        }
     }
 
     // ADMIN LOGIN
@@ -3378,33 +3440,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Initialize digital clock
     initDigitalClock();
   } catch (criticalError) {
-    console.error("DOMContentLoaded içinde kritik hata:", criticalError);
-    const preloader = document.getElementById("preloader");
-    if (preloader) {
-        preloader.classList.add("hidden");
-        setTimeout(() => preloader.remove(), 1200);
-    }
-    document.body.classList.add("boot-complete");
-    const nav = document.getElementById("main-nav");
-    if (nav) nav.style.display = "flex";
-    
-    const views = document.querySelectorAll('.view');
-    views.forEach(v => v.classList.remove('active'));
-    const homeView = document.getElementById('view-home');
-    if (homeView) homeView.classList.add('active');
+    console.error("DOMContentLoaded i\u00e7inde kritik hata:", criticalError);
+    forceClosePreloader("app-boot-error");
   }
-});
-
-window.addEventListener("load", () => {
-  setTimeout(() => {
-    const preloader = document.getElementById("preloader");
-    if (preloader && !document.body.classList.contains("boot-complete")) {
-      preloader.classList.add("hidden");
-      document.body.classList.add("boot-complete");
-      const nav = document.getElementById("main-nav");
-      if (nav) nav.style.display = "flex";
-      setTimeout(() => preloader.remove(), 1200);
-      console.warn("Preloader fallback çalıştı. JS başlangıcında hata olabilir.");
-    }
-  }, 4000);
 });

@@ -92,8 +92,7 @@ window.DetailedCVData = {
         "Yenilenebilir Enerji",
         "Mobil Robotik",
         "Web Geliştirme (Front-end)"
-    ],
-    notlar: "Sistem Notu: Bu dijital CV kontrol paneli, Elektrik-Elektronik mühendisliğinde donanım (hardware) ve gömülü yazılım (firmware) birikimini bir araya getiren bir vizyonla tasarlanmıştır. Sistem güncellemeleri ve ek modüller düzenli olarak entegre edilmektedir."
+    ]
 };
 
 // ============================================================
@@ -218,7 +217,6 @@ function _backfillDetailedCV(data) {
         data.detailedCV.deneyimler    = data.detailedCV.deneyimler    || clone.deneyimler    || [];
         data.detailedCV.diller        = data.detailedCV.diller        || clone.diller        || [];
         data.detailedCV.ilgiAlanlari  = data.detailedCV.ilgiAlanlari  || clone.ilgiAlanlari  || [];
-        data.detailedCV.notlar        = data.detailedCV.notlar        || clone.notlar        || "";
     }
 
     // Auto-migration for old data
