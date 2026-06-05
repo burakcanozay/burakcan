@@ -16,8 +16,7 @@ import {
     orderBy
 } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
-// Firebase Configuration
-const ADMIN_ENABLED = false;
+const ADMIN_ENABLED = true;
 if (!ADMIN_ENABLED) {
     document.documentElement.classList.add("admin-disabled");
 }
@@ -32,7 +31,7 @@ const firebaseConfig = {
 };
 
 let app, auth, analytics, db;
-// Firebase başlatılıyor...
+
 app = initializeApp(firebaseConfig);
 auth = getAuth(app);
 analytics = getAnalytics(app);
@@ -57,9 +56,9 @@ function applyThemeColors(colors) {
     for (const [key, value] of Object.entries(colors)) {
         let cssValue = value;
         if (key === '--card-bg' && value.startsWith('#') && value.length === 7) {
-            cssValue = value + 'd9'; // 85% opacity
+            cssValue = value + 'd9';
         } else if (key === '--border-color' && value.startsWith('#') && value.length === 7) {
-            cssValue = value + '1a'; // 10% opacity
+            cssValue = value + '1a';
         }
         document.documentElement.style.setProperty(key, cssValue);
     }
@@ -74,7 +73,7 @@ function loadSavedThemeColors() {
             console.error('Theme parsing error, reverting to default', e);
         }
     }
-    // Backward compatibility for old simple theme color
+
     const oldTheme = localStorage.getItem('site_theme');
     if (oldTheme) {
         const theme = { ...DEFAULT_THEME };
@@ -113,10 +112,8 @@ function revertToSavedTheme() {
     updateThemeInputs(saved);
 }
 
-// Initial Theme Loading immediately before DOM content loads
 applyThemeColors(loadSavedThemeColors());
 
-// --- XSS SECURITY UTILITIES ---
 function escapeHTML(str) {
     return String(str ?? "")
         .replaceAll("&", "&amp;")
@@ -173,6 +170,36 @@ function normalizeInput(value, maxLength = 1000) {
     return String(value ?? "").trim().slice(0, maxLength);
 }
 
+function isAllowedEmail(email) {
+    const cleanEmail = String(email || "").trim().toLowerCase();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
+
+    if (!emailRegex.test(cleanEmail)) return false;
+
+    const domain = cleanEmail.split("@")[1];
+
+    const allowedExactDomains = [
+        "gmail.com",
+        "hotmail.com",
+        "outlook.com",
+        "icloud.com",
+        "yahoo.com",
+        "yandex.com",
+        "proton.me",
+        "protonmail.com"
+    ];
+
+    const allowedSuffixes = [
+        ".edu.tr",
+        ".com.tr",
+        ".org.tr",
+        ".net.tr"
+    ];
+
+    return allowedExactDomains.includes(domain) ||
+        allowedSuffixes.some(suffix => domain.endsWith(suffix));
+}
+
 function hidePreloader() {
     const preloader = document.getElementById("preloader");
     if (!preloader) {
@@ -192,7 +219,7 @@ function hidePreloader() {
     const status5 = document.getElementById("status-5");
 
     const startTime = Date.now();
-    const duration = 1800; // 1.8 seconds
+    const duration = 1800;
 
     function update() {
         const elapsed = Date.now() - startTime;
@@ -202,7 +229,6 @@ function hidePreloader() {
         if (percentEl) percentEl.textContent = `${percent}%`;
         if (barFill) barFill.style.width = `${percent}%`;
 
-        // Status indicator transitions based on progress percentage
         if (percent >= 20 && status1 && status1.classList.contains("waiting")) {
             status1.textContent = "[  OK  ]";
             status1.classList.replace("waiting", "success");
@@ -224,7 +250,6 @@ function hidePreloader() {
             status5.classList.replace("waiting", "success");
         }
 
-        // Fluctuate V_CORE and increase TEMP
         if (voltEl) {
             const v = (5.00 + (Math.sin(elapsed / 100) * 0.04) + (Math.random() * 0.01)).toFixed(2);
             voltEl.textContent = `${v}V`;
@@ -248,7 +273,7 @@ function hidePreloader() {
                     document.body.classList.add("boot-complete");
                     setTimeout(() => {
                         preloader.remove();
-                    }, 1300); // Wait for the 1.2s transition to finish
+                    }, 1300);
                 }, 300);
             } catch (animErr) {
                 console.warn("hidePreloader animation error:", animErr);
@@ -260,9 +285,8 @@ function hidePreloader() {
     requestAnimationFrame(update);
 }
 
-// ─── FORCE CLOSE PRELOADER (Güvenli Fallback) ───────────────────────────────
 function forceClosePreloader(reason) {
-    if (document.body.classList.contains("boot-complete")) return; // Zaten kapandı
+    if (document.body.classList.contains("boot-complete")) return;
     reason = reason || "fallback";
 
     document.body.classList.add("boot-complete");
@@ -289,7 +313,6 @@ function forceClosePreloader(reason) {
     console.warn("[Preloader] Force closed:", reason);
 }
 
-// ─── DATA SERVICE TIMEOUT WRAPPER ────────────────────────────────────────────
 async function getDataWithTimeout() {
     const fallbackData = {
         hakkimda: "Elektrik Elektronik M\u00fchendisli\u011fi \u00f6\u011frencisiyim. Teknolojiye, g\u00f6m\u00fcl\u00fc sistemlere ve devre tasar\u0131m\u0131na b\u00fcy\u00fck bir ilgi duyuyorum. Yenilik\u00e7i projeler geli\u015ftirmek ve m\u00fchendislik alan\u0131nda kendimi s\u00fcrekli olarak yenilemek en b\u00fcy\u00fck hedefim.",
@@ -307,7 +330,6 @@ async function getDataWithTimeout() {
     ]);
 }
 
-// ─── WINDOW LOAD FALLBACK (4s) ────────────────────────────────────────────────
 window.addEventListener("load", () => {
     setTimeout(() => {
         forceClosePreloader("window-load-fallback");
@@ -344,7 +366,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
 
-        // Dinamik Terminal Animasyonu (İmleç Hatası Çözümü)
         document.querySelectorAll('.terminal-text').forEach(el => {
             const len = el.textContent.trim().length;
             el.style.setProperty('--term-width', `${len}ch`);
@@ -355,22 +376,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         let authReady = false;
         let currentUser = null;
 
-        // Temporary states for new CV sections (Skills, Languages, Interests)
         let tempSkills = [];
         let tempLanguages = [];
         let tempInterests = [];
 
-        // ─────────────────────────────────────────────────────────────────────
-        // ADMIN GÜVENLİK NOTU:
-        // Bu dosyadaki admin route koruması yalnızca FRONTEND güvenliğidir.
-        // Gerçek güvenlik Firestore Security Rules ile sağlanmalıdır.
-        //
-        // Önerilen Firestore Rules mantığı:
-        //   - portfolio koleksiyonu: read → herkese açık, write → sadece admin email
-        //   - messages koleksiyonu:  create → herkese açık, read/update/delete → sadece admin email
-        //
-        // Firebase Console → Firestore Database → Rules bölümünden ayarlayabilirsiniz.
-        // ─────────────────────────────────────────────────────────────────────
         const ADMIN_EMAIL = "burakcan190757@hotmail.com";
 
         function isAdmin(user) {
@@ -381,7 +390,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             return authReady && isAdmin(currentUser);
         }
 
-        // Firebase Auth State Listener
         if (auth) {
             onAuthStateChanged(auth, (user) => {
                 currentUser = user;
@@ -423,7 +431,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.warn("Firebase Auth henüz yapılandırılmadı. Lütfen app.js başındaki firebaseConfig ayarlarını doldurun.");
         }
 
-        // Oscilloscope State Variables
         let oscAnimationId = null;
         let oscIsInitialized = false;
         let oscIsActive = false;
@@ -432,13 +439,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         let oscGlowEnabled = true;
         let oscTime = 0;
 
-        // RENDER FUNCTIONS
         function renderHakkimda() {
             document.getElementById('hakkimda-content').textContent = appData.hakkimda;
             setTimeout(initOscilloscope, 50);
         }
 
-        // --- PERSISTENCE: OSCILLOSCOPE SETTINGS ---
         function saveOscilloscopeSettings() {
             const settings = {
                 frequency: parseFloat(document.getElementById('scope-frequency')?.value || 10),
@@ -487,7 +492,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (settings.glowEnabled !== undefined) oscGlowEnabled = settings.glowEnabled;
                 if (settings.running !== undefined) oscRunning = settings.running;
 
-                // Update UI Button active states
                 const gridBtn = document.getElementById('scope-grid-toggle');
                 if (gridBtn) gridBtn.classList.toggle('btn-active', oscGridVisible);
 
@@ -511,7 +515,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     }
                 }
 
-                // Sync text labels
                 const freqValue = document.getElementById('scope-frequency-value');
                 const freqLabel = document.getElementById('scope-frequency-label');
                 if (freqValue && settings.frequency !== undefined) freqValue.textContent = `${settings.frequency} Hz`;
@@ -542,7 +545,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
 
-        // OSCILLOSCOPE INTERACTIVE CONTROLLER
         function initOscilloscope() {
             const canvas = document.getElementById('oscilloscope-canvas');
             if (!canvas) return;
@@ -552,7 +554,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
 
-            // Restore settings from localStorage first
             loadOscilloscopeSettings();
 
             const dpr = window.devicePixelRatio || 1;
@@ -563,19 +564,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             const ctx = canvas.getContext('2d');
             ctx.scale(dpr, dpr);
 
-            // Sliders
             const freqSlider = document.getElementById('scope-frequency');
             const ampSlider = document.getElementById('scope-amplitude');
             const offsetSlider = document.getElementById('scope-offset');
 
-            // Labels
             const freqValue = document.getElementById('scope-frequency-value');
             const freqLabel = document.getElementById('scope-frequency-label');
             const ampValue = document.getElementById('scope-amplitude-value');
             const ampLabel = document.getElementById('scope-amplitude-label');
             const offsetValue = document.getElementById('scope-offset-value');
 
-            // Select elements
             const timeSelect = document.getElementById('scope-time-div');
             const voltSelect = document.getElementById('scope-volt-div');
             const couplingSelect = document.getElementById('scope-coupling');
@@ -583,7 +581,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             const waveSelect = document.getElementById('scope-waveform');
             const channelSelect = document.getElementById('scope-channel');
 
-            // Dynamic update functions
             if (freqSlider) {
                 freqSlider.addEventListener('input', (e) => {
                     const val = e.target.value;
@@ -658,7 +655,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
             }
 
-            // Action Buttons
             const runStopBtn = document.getElementById('scope-run-stop');
             if (runStopBtn) {
                 runStopBtn.onclick = toggleRunStop;
@@ -691,7 +687,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const amp = parseFloat(ampSlider ? ampSlider.value : 1.0);
                 const couplingVal = couplingSelect ? couplingSelect.value : 'dc';
 
-                // Peak-to-Peak: 2 times the amplitude, GND sets signal height to 0
                 let vppVal = 2.0 * amp;
                 if (couplingVal === 'gnd') vppVal = 0.0;
 
@@ -699,14 +694,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (vppLabel) vppLabel.textContent = `Vpp: ${vppVal.toFixed(1)} V`;
             }
 
-            // Initialize state view labels
             updateVppMeasurement();
 
             oscIsInitialized = true;
             startOscilloscope();
         }
 
-        // Responsive resize handler
         function handleOscilloscopeResize() {
             const c = document.getElementById('oscilloscope-canvas');
             if (!c) return;
@@ -726,7 +719,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             oscIsActive = true;
 
-            // Trigger resize once to fit perfectly
             handleOscilloscopeResize();
 
             window.removeEventListener('resize', handleOscilloscopeResize);
@@ -752,7 +744,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             oscIsInitialized = false;
         }
 
-        // High fidelity physical wave function calculator
         function generateWaveform(type, t, freq, amp, offset) {
             let val = 0;
             const angle = 2 * Math.PI * freq * t;
@@ -774,22 +765,22 @@ document.addEventListener('DOMContentLoaded', async () => {
                     val = Math.sin(angle) + 0.45 * (Math.random() - 0.5);
                     break;
                 case 'pulse': {
-                    // Periodical heart pulse ECG simulation
+
                     const cycle = (t * freq) % 1;
                     if (cycle < 0.08) {
-                        // P-wave
+
                         val = 0.15 * Math.sin(Math.PI * cycle / 0.08);
                     } else if (cycle >= 0.1 && cycle < 0.13) {
-                        // Q-drop
+
                         val = -0.2 * Math.sin(Math.PI * (cycle - 0.1) / 0.03);
                     } else if (cycle >= 0.13 && cycle < 0.18) {
-                        // R-spike
+
                         val = 1.0 * Math.sin(Math.PI * (cycle - 0.13) / 0.05);
                     } else if (cycle >= 0.18 && cycle < 0.21) {
-                        // S-drop
+
                         val = -0.35 * Math.sin(Math.PI * (cycle - 0.21) / 0.03);
                     } else if (cycle >= 0.26 && cycle < 0.36) {
-                        // T-wave
+
                         val = 0.3 * Math.sin(Math.PI * (cycle - 0.26) / 0.1);
                     } else {
                         val = 0;
@@ -797,7 +788,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     break;
                 }
                 case 'clock': {
-                    // Square wave clock pulse with subtle rounded bandwidth limits
+
                     const cycle = (t * freq) % 1;
                     val = cycle < 0.5 ? 1 : -1;
                     const edge = 0.015;
@@ -809,7 +800,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     break;
                 }
                 case 'random':
-                    // Absolute static chaos parazit
+
                     val = Math.random() - 0.5;
                     break;
                 default:
@@ -819,7 +810,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             return val * amp + offset;
         }
 
-        // High performance CRT sweep drawing routine
         function drawOscilloscope() {
             if (!oscIsActive) return;
 
@@ -831,17 +821,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             const width = canvas.width / dpr;
             const height = canvas.height / dpr;
 
-            // Clear panel screen
             ctx.fillStyle = '#020908';
             ctx.fillRect(0, 0, width, height);
 
-            // Render analog CRT grid
             if (oscGridVisible) {
                 ctx.strokeStyle = 'rgba(0, 243, 255, 0.06)';
                 ctx.lineWidth = 1;
                 ctx.shadowBlur = 0;
 
-                // Columns
                 for (let i = 1; i < 10; i++) {
                     const x = (width / 10) * i;
                     ctx.beginPath();
@@ -850,7 +837,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     ctx.stroke();
                 }
 
-                // Rows
                 for (let i = 1; i < 8; i++) {
                     const y = (height / 8) * i;
                     ctx.beginPath();
@@ -859,14 +845,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                     ctx.stroke();
                 }
 
-                // Central axes calibration line
                 ctx.strokeStyle = 'rgba(0, 243, 255, 0.12)';
                 ctx.beginPath();
                 ctx.moveTo(0, height / 2); ctx.lineTo(width, height / 2);
                 ctx.moveTo(width / 2, 0); ctx.lineTo(width / 2, height);
                 ctx.stroke();
 
-                // Division sub-ticks
                 ctx.strokeStyle = 'rgba(0, 243, 255, 0.25)';
                 ctx.beginPath();
                 for (let x = 0; x < width; x += width / 50) {
@@ -880,7 +864,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 ctx.stroke();
             }
 
-            // Live options fetch
             const waveform = document.getElementById('scope-waveform')?.value || 'sine';
             const channel = document.getElementById('scope-channel')?.value || 'dual';
             const freq = parseFloat(document.getElementById('scope-frequency')?.value || 10);
@@ -890,17 +873,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             const voltDiv = parseFloat(document.getElementById('scope-volt-div')?.value || 1.0);
             const coupling = document.getElementById('scope-coupling')?.value || 'dc';
 
-            // Sweep speed constant mapping
             const timeScale = timeDiv * 0.035;
 
-            // Apply neon emission settings
             if (oscGlowEnabled) {
                 ctx.shadowBlur = 8;
             } else {
                 ctx.shadowBlur = 0;
             }
 
-            // Draw Channel 1 (Cyan Beam)
             if (channel === 'ch1' || channel === 'dual') {
                 ctx.strokeStyle = '#00f3ff';
                 ctx.shadowColor = '#00f3ff';
@@ -910,11 +890,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                     const t = (x / width) * timeScale + oscTime;
                     let yVal = generateWaveform(waveform, t, freq, amp, offset);
 
-                    // Coupling filter checks
                     if (coupling === 'ac') {
-                        yVal -= offset; // Filter offset (DC block)
+                        yVal -= offset;
                     } else if (coupling === 'gnd') {
-                        yVal = 0;       // Ground reference line
+                        yVal = 0;
                     }
 
                     const yScreen = (height / 2) - (yVal * (height / 6) / voltDiv);
@@ -924,17 +903,15 @@ document.addEventListener('DOMContentLoaded', async () => {
                 ctx.stroke();
             }
 
-            // Draw Channel 2 (Green Beam)
             if (channel === 'ch2' || channel === 'dual') {
                 ctx.strokeStyle = '#00ff66';
                 ctx.shadowColor = '#00ff66';
                 ctx.lineWidth = 2.5;
                 ctx.beginPath();
                 for (let x = 0; x < width; x++) {
-                    // Secondary beam phase offset
+
                     const t = (x / width) * timeScale + oscTime - (Math.PI / 4);
 
-                    // In dual mode, let CH2 run a slightly different wave type to show off dual display capabilities
                     const ch2Waveform = waveform === 'sine' ? 'triangle' : 'sine';
                     let yVal2 = generateWaveform(ch2Waveform, t, freq * 0.85, amp * 0.9, -offset * 0.5);
 
@@ -951,10 +928,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 ctx.stroke();
             }
 
-            // Reset blur attributes
             ctx.shadowBlur = 0;
 
-            // Flow signal sweep over timeline
             if (oscRunning) {
                 oscTime += 0.0015 * (freq / 10);
             }
@@ -962,7 +937,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             oscAnimationId = requestAnimationFrame(drawOscilloscope);
         }
 
-        // Toggle execution states
         function toggleRunStop() {
             oscRunning = !oscRunning;
             const btn = document.getElementById('scope-run-stop');
@@ -984,7 +958,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             saveOscilloscopeSettings();
         }
 
-        // Revert controls back to default configurations
         function resetOscilloscopeSettings() {
             const freqSlider = document.getElementById('scope-frequency');
             const ampSlider = document.getElementById('scope-amplitude');
@@ -1006,7 +979,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (triggerSelect) triggerSelect.value = 'auto';
             if (couplingSelect) couplingSelect.value = 'dc';
 
-            // Direct labels repaint
             const freqValue = document.getElementById('scope-frequency-value');
             const freqLabel = document.getElementById('scope-frequency-label');
             if (freqValue) freqValue.textContent = '10 Hz';
@@ -1134,12 +1106,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
 
-        // Scroll Reveal for CV Page
         const revealObserver = new IntersectionObserver((entries, observer) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     entry.target.classList.add('visible');
-                    observer.unobserve(entry.target); // Reveal only once
+                    observer.unobserve(entry.target);
                 }
             });
         }, {
@@ -1155,7 +1126,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
 
-        // ── Single source for detailed CV: Firestore appData.detailedCV takes priority ──
         function ensureDetailedCV() {
             if (!appData.detailedCV) {
                 try {
@@ -1193,7 +1163,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             const cvData = getDetailedCVData();
             if (!cvData) return;
 
-            // 1. CV Hero Header details
             const nameEl = document.getElementById('cv-hero-name');
             if (nameEl) nameEl.textContent = cvData.hero.name;
 
@@ -1221,7 +1190,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 btnDownload.setAttribute('download', '');
             }
 
-            // Avatar logic (if avatar is provided, render it)
             const avatarContainer = document.querySelector('.cv-avatar');
             if (avatarContainer && cvData.hero.avatar) {
                 clearEl(avatarContainer);
@@ -1235,7 +1203,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 avatarContainer.appendChild(img);
             }
 
-            // 2. Kişisel Bilgiler
             const kisiselContent = document.getElementById('cv-kisisel-content');
             if (kisiselContent) {
                 clearEl(kisiselContent);
@@ -1270,7 +1237,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
             }
 
-            // 3. Eğitim Bilgileri — önce detailedCV.egitim, fallback olarak appData.cv
             const egitimContent = document.getElementById('cv-egitim-content');
             if (egitimContent) {
                 clearEl(egitimContent);
@@ -1311,7 +1277,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             }
 
-            // 4. Teknik Yetenekler
             const skillsContent = document.getElementById('cv-skills-content');
             if (skillsContent) {
                 clearEl(skillsContent);
@@ -1336,7 +1301,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
             }
 
-            // 5. Proje Deneyimleri (Dynamically from appData.projeler, satisfying admin panel integration)
             const projelerContent = document.getElementById('cv-projeler-content');
             if (projelerContent) {
                 clearEl(projelerContent);
@@ -1370,7 +1334,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             }
 
-            // 6. Deneyim / Çalışmalar (From DetailedCVData)
             const deneyimContent = document.getElementById('cv-deneyim-content');
             if (deneyimContent) {
                 clearEl(deneyimContent);
@@ -1393,7 +1356,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
             }
 
-            // 7. Sertifikalar (Dynamically from appData.sertifikalar, satisfying admin panel integration)
             const sertifikalarContent = document.getElementById('cv-sertifikalar-content');
             if (sertifikalarContent) {
                 clearEl(sertifikalarContent);
@@ -1419,7 +1381,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             }
 
-            // 8. Diller
             const dillerContent = document.getElementById('cv-diller-content');
             if (dillerContent) {
                 clearEl(dillerContent);
@@ -1444,7 +1405,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
             }
 
-            // 9. İlgi Alanları
             const ilgiContent = document.getElementById('cv-ilgi-content');
             if (ilgiContent) {
                 clearEl(ilgiContent);
@@ -1500,7 +1460,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             adminView.style.display = 'block';
             adminView.classList.add('active', 'fade-in');
 
-            // Find or create the loading panel
             let loadingPanel = document.getElementById("admin-auth-loading");
             if (!loadingPanel) {
                 loadingPanel = createEl("div", {
@@ -1513,12 +1472,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 adminView.appendChild(loadingPanel);
             }
 
-            // Hide all other children of adminView
             Array.from(adminView.children).forEach(child => {
                 if (child.id === "admin-auth-loading") {
                     child.style.display = "block";
                 } else {
-                    // Keep track of original display if not already stored
+
                     if (!child.dataset.origDisplay) {
                         child.dataset.origDisplay = child.style.display || "block";
                     }
@@ -1542,13 +1500,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (adminView) {
                 adminView.style.display = 'block';
 
-                // Hide loading panel if it exists
                 const loadingPanel = document.getElementById("admin-auth-loading");
                 if (loadingPanel) {
                     loadingPanel.style.display = "none";
                 }
 
-                // Restore all other children of adminView
                 Array.from(adminView.children).forEach(child => {
                     if (child.id !== "admin-auth-loading") {
                         child.style.display = child.dataset.origDisplay || "";
@@ -1599,7 +1555,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             window.scrollTo(0, 0);
         }
 
-        // ROUTING
         function handleRoute() {
             let hash = window.location.hash.substring(1) || 'home';
 
@@ -1640,16 +1595,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 return;
             }
 
-            // Hide all views
             views.forEach(v => {
                 v.classList.remove('active', 'fade-in');
                 v.style.display = 'none';
             });
 
-            // Show target view
             const targetView = document.getElementById(`view-${hash}`);
             if (targetView) {
-                // Apply flex if it's home
+
                 if (hash === 'home') {
                     targetView.style.display = 'flex';
                     const randomDirenc = Math.floor(Math.random() * 7) + 1;
@@ -1661,31 +1614,26 @@ document.addEventListener('DOMContentLoaded', async () => {
                     targetView.style.display = 'block';
                 }
 
-                // Trigger reflow for animation
                 void targetView.offsetWidth;
                 targetView.classList.add('active', 'fade-in');
             }
 
-            // Manage oscilloscope activity based on routing
             if (hash === 'hakkimda') {
                 startOscilloscope();
             } else {
                 stopOscilloscope();
             }
 
-            // Manage Navbar
             if (hash === 'home') {
                 nav.style.display = 'none';
             } else {
                 nav.style.display = 'flex';
             }
 
-            // Active link highlight
             document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
             const activeLink = document.querySelector(`.nav-link[data-target="${hash}"]`);
             if (activeLink) activeLink.classList.add('active');
 
-            // Always render regular data for other pages
             renderAll();
 
             if (hash === 'cv') {
@@ -1697,7 +1645,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         window.addEventListener('hashchange', handleRoute);
         try {
-            handleRoute(); // initial call
+            handleRoute();
         } catch (err) {
             console.error("Initial routing error:", err);
             forceClosePreloader("initial-route-error");
@@ -1707,7 +1655,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         }
 
-        // ADMIN LOGIN
         const adminLoginForm = document.getElementById('admin-login-form');
         const adminEmailInput = document.getElementById('admin-email');
         const adminPasswordInput = document.getElementById('admin-password');
@@ -1727,7 +1674,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             });
 
-            // Kullanıcı yeni bir şey yazmaya başladığında hatayı gizle
             adminPasswordInput.addEventListener('input', () => {
                 const errorMsg = document.getElementById('login-error');
                 if (errorMsg) errorMsg.style.display = 'none';
@@ -1751,9 +1697,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     .then((userCredential) => {
                         errorMsg.style.display = 'none';
 
-                        // ── Email doğrulaması: sadece whitelisted admin kabul edilsin ──
                         if (!isAdmin(userCredential.user)) {
-                            // Firebase'de başka bir hesap giriş yaptı — hemen oturumu kapat
+
                             signOut(auth)
                                 .then(() => {
                                     showToast('Bu hesap admin yetkisine sahip değil.', 'error');
@@ -1764,7 +1709,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                             return;
                         }
 
-                        // Doğrulama başarılı — onAuthStateChanged yönlendirmeyi halleder
                         showToast('Kimlik doğrulandı. Hoş geldiniz!', 'success');
                     })
                     .catch((error) => {
@@ -1808,7 +1752,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     console.error("Çıkış hatası:", error);
                 }
             } else {
-                // Firebase yoksa test modunda çıkış
+
                 isAdminLoggedIn = false;
                 currentUser = null;
                 window.location.hash = '#admin-login';
@@ -1817,7 +1761,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
 
-        // ADMIN LOGIC
         function initAdmin() {
             if (!authReady || !isAdmin(currentUser)) {
                 return;
@@ -1835,7 +1778,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             initAdminKisisel();
             initAdminTabs();
 
-            // Setup slider live event listeners for Skills and Languages
             setupRangeSliders();
 
             if (window.renderAdminMessages) window.renderAdminMessages();
@@ -1903,7 +1845,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             renderAdminList('list-sertifikalar', appData.sertifikalar || [], i => i.title, editSertifika, (idx) => deleteItem('sertifikalar', idx));
             renderAdminEgitimList();
 
-            // Render CV expanded sections
             renderAdminSkillsEditor();
             renderAdminLanguagesEditor();
             renderAdminInterestsEditor();
@@ -1932,11 +1873,10 @@ document.addEventListener('DOMContentLoaded', async () => {
                         "error"
                     );
                 }
-                throw err; // caller'lar hata olu\u015ftu\u011funu anlasın
+                throw err;
             }
         }
 
-        // ─── ADMIN: TEKNİK YETENEKLER ADMİN (CRUD) ──────────────────────────────
         function renderAdminSkillsEditor() {
             const container = document.getElementById('list-skills');
             if (!container) return;
@@ -2040,7 +1980,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
 
-        // ─── ADMIN: DİLLER ADMİN (CRUD) ─────────────────────────────────────────
         function renderAdminLanguagesEditor() {
             const container = document.getElementById('list-languages');
             if (!container) return;
@@ -2146,7 +2085,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
 
-        // ─── ADMIN: İLGİ ALANLARI ADMİN (CRUD) ──────────────────────────────────
         function renderAdminInterestsEditor() {
             const container = document.getElementById('list-interests');
             if (!container) return;
@@ -2217,7 +2155,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
 
-        // ---- Cyber Confirm Modal ----
         let activeFocusElementBeforeModal = null;
         function cyberConfirm(text, onConfirm, onCancel) {
             const overlay = document.getElementById('confirm-modal-overlay');
@@ -2230,7 +2167,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             activeFocusElementBeforeModal = document.activeElement;
             overlay.style.display = '';
 
-            // Move focus to cancel button
             if (btnCx) btnCx.focus();
 
             const close = () => {
@@ -2250,7 +2186,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     if (onCancel) onCancel();
                 }
                 if (e.key === 'Tab') {
-                    // Focus trap / lock inside confirm modal (only btnCx and btnOk are focusable elements inside modal)
+
                     const focusable = [btnCx, btnOk].filter(Boolean);
                     if (focusable.length > 0) {
                         const first = focusable[0];
@@ -2290,7 +2226,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             );
         }
 
-        // Forms Setup
         document.getElementById('form-hakkimda').addEventListener('submit', async (e) => {
             e.preventDefault();
             appData.hakkimda = document.getElementById('hakkimda-text').value;
@@ -2298,26 +2233,24 @@ document.addEventListener('DOMContentLoaded', async () => {
                 await saveGlobal();
                 showToast('Hakkımda bilgisi başarıyla kaydedildi.', 'success');
             } catch (err) {
-                // Hata toast'ı saveGlobal() tarafından gösterildi
+
             }
         });
 
-        // Real-time live color preview
         document.querySelectorAll('.theme-card input[type="color"]').forEach(input => {
             input.addEventListener('input', (e) => {
                 const cssVar = e.target.dataset.var;
                 const value = e.target.value;
                 let cssValue = value;
                 if (cssVar === '--card-bg') {
-                    cssValue = value + 'd9'; // 85% opacity
+                    cssValue = value + 'd9';
                 } else if (cssVar === '--border-color') {
-                    cssValue = value + '1a'; // 10% opacity
+                    cssValue = value + '1a';
                 }
                 document.documentElement.style.setProperty(cssVar, cssValue);
             });
         });
 
-        // Save Theme Colors Button
         const btnSaveTheme = document.getElementById('btn-save-theme');
         if (btnSaveTheme) {
             btnSaveTheme.addEventListener('click', () => {
@@ -2330,7 +2263,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
 
-        // Revert to Last Saved Theme Colors Button
         const btnRevertTheme = document.getElementById('btn-revert-theme');
         if (btnRevertTheme) {
             btnRevertTheme.addEventListener('click', () => {
@@ -2339,7 +2271,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
 
-        // Reset to Default Theme Colors Button
         const btnDefaultTheme = document.getElementById('btn-default-theme');
         if (btnDefaultTheme) {
             btnDefaultTheme.addEventListener('click', () => {
@@ -2354,7 +2285,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
 
-        // --- Helper: form editing mode ---
         function setEditMode(formId, statusId, submitBtnId, cancelBtnId, active) {
             const status = document.getElementById(statusId);
             const submitBtn = document.getElementById(submitBtnId);
@@ -2371,7 +2301,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (cancelBtn) cancelBtn.style.display = active ? 'inline-flex' : 'none';
         }
 
-        // Projeler
         const formProje = document.getElementById('form-projeler');
         formProje.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -2396,7 +2325,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 document.getElementById('proje-id').value = '';
                 setEditMode('form-projeler', 'proje-edit-status', 'proje-submit-btn', 'proje-cancel', false);
             } catch (err) {
-                // Hata toast'ı saveGlobal() tarafından gösterildi
+
             }
         });
 
@@ -2416,7 +2345,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             showToast('D\u00fczenleme iptal edildi.', 'info');
         };
 
-        // Başarılar
         const formBasari = document.getElementById('form-basarilar');
         formBasari.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -2440,7 +2368,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 document.getElementById('basari-id').value = '';
                 setEditMode('form-basarilar', 'basari-edit-status', 'basari-submit-btn', 'basari-cancel', false);
             } catch (err) {
-                // Hata toast'ı saveGlobal() tarafından gösterildi
+
             }
         });
 
@@ -2460,7 +2388,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             showToast('D\u00fczenleme iptal edildi.', 'info');
         };
 
-        // CV
         const formCV = document.getElementById('form-cv');
         formCV.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -2489,7 +2416,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 document.getElementById('cv-id').value = '';
                 setEditMode('form-cv', 'cv-edit-status', 'cv-submit-btn', 'cv-cancel', false);
             } catch (err) {
-                // Hata toast'ı saveGlobal() tarafından gösterildi
+
             }
         });
 
@@ -2512,7 +2439,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             showToast('D\u00fczenleme iptal edildi.', 'info');
         };
 
-        // Sertifikalar
         const formSert = document.getElementById('form-sertifikalar');
         formSert.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -2536,7 +2462,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 document.getElementById('sertifika-id').value = '';
                 setEditMode('form-sertifikalar', 'sertifika-edit-status', 'sertifika-submit-btn', 'sertifika-cancel', false);
             } catch (err) {
-                // Hata toast'ı saveGlobal() tarafından gösterildi
+
             }
         });
 
@@ -2555,8 +2481,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             setEditMode('form-sertifikalar', 'sertifika-edit-status', 'sertifika-submit-btn', 'sertifika-cancel', false);
             showToast('Düzenleme iptal edildi.', 'info');
         };
-
-        // ─── KİŞİSEL BİLGİLER ADMİN ─────────────────────────────────────────────
 
         function initAdminKisisel() {
             ensureDetailedCV();
@@ -2595,7 +2519,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         const parsed = new URL(raw);
                         if (['http:', 'https:'].includes(parsed.protocol)) return parsed.href;
                     } catch (_) { }
-                    return raw; // allow relative or typed strings as-is
+                    return raw;
                 };
 
                 const updated = [
@@ -2621,8 +2545,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             });
         }
-
-        // ─── EĞİTİM BİLGİLERİ ADMİN (CRUD) ─────────────────────────────────────
 
         function renderAdminEgitimList() {
             ensureDetailedCV();
@@ -2739,7 +2661,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             };
         }
 
-        // Admin Tabs Logic
         function initAdminTabs() {
             const tabs = document.querySelectorAll('.admin-tab');
             const panels = document.querySelectorAll('.admin-panel');
@@ -2789,7 +2710,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             activateAdminPanel(defaultTarget);
         }
 
-        // --- MESSAGING SYSTEM (FIRESTORE ONLY) ---
         async function saveContactMessage(message) {
             const { collection, addDoc, serverTimestamp } = window.firestoreFns || {};
 
@@ -2860,15 +2780,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             console.log("Eski localStorage mesajları temizlendi.");
         };
 
-        // ---- escapeHTML utility ----
         function escapeHTML(str) {
             return String(str).replace(/[&<>'"]/g,
                 tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag));
         }
 
-        // ============================================================
-        // TOAST NOTIFICATION SYSTEM
-        // ============================================================
         const TOAST_ICONS = {
             success: 'fa-circle-check',
             error: 'fa-circle-xmark',
@@ -2891,50 +2807,41 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-            // Screen reader notifications role assignment
+
             toast.setAttribute('role', type === 'error' ? 'alert' : 'status');
 
             const iconClass = TOAST_ICONS[type] || TOAST_ICONS.info;
             const titleText = TOAST_TITLES[type] || 'BİLDİRİM';
 
-            // Icon span
             const iconSpan = createEl('span', { className: 'toast-icon', attrs: { 'aria-hidden': 'true' } });
             const icon = createEl('i', { className: `fas ${iconClass}` });
             iconSpan.appendChild(icon);
 
-            // Content div
             const contentDiv = createEl('div', { className: 'toast-content' });
             const titleDiv = createEl('div', { className: 'toast-title', text: titleText });
             const messageDiv = createEl('div', { className: 'toast-message', text: message });
             contentDiv.append(titleDiv, messageDiv);
 
-            // Close button
             const closeBtn = createEl('button', { className: 'toast-close', attrs: { 'aria-label': 'Kapat' } });
             const closeIcon = createEl('i', { className: 'fas fa-xmark', attrs: { 'aria-hidden': 'true' } });
             closeBtn.appendChild(closeIcon);
 
-            // Progress bar
             const progressDiv = createEl('div', {
                 className: 'toast-progress',
                 attrs: { style: `animation: toastProgress ${duration}ms linear forwards;` }
             });
 
-            // Append all
             toast.append(iconSpan, contentDiv, closeBtn, progressDiv);
             container.appendChild(toast);
 
-            // Trigger enter animation after paint
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => toast.classList.add('show'));
             });
 
-            // Close button listener
             closeBtn.addEventListener('click', () => dismissToast(toast));
 
-            // Auto-dismiss
             const timer = setTimeout(() => dismissToast(toast), duration);
 
-            // Pause on hover
             toast.addEventListener('mouseenter', () => clearTimeout(timer));
             toast.addEventListener('mouseleave', () => setTimeout(() => dismissToast(toast), 800));
         }
@@ -3040,7 +2947,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const msgs = await getContactMessages();
 
-            // Clear container safely right before rendering to prevent race conditions
             container.textContent = '';
 
             if (!msgs || msgs.length === 0) {
@@ -3072,7 +2978,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const card = document.createElement('div');
                 card.className = `message-card ${m.okunduDurumu ? 'read' : 'unread'}`;
 
-                // Message Header
                 const header = document.createElement('div');
                 header.className = 'message-header';
 
@@ -3099,7 +3004,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 header.appendChild(h4);
                 header.appendChild(meta);
 
-                // Email Line
                 const emailLine = document.createElement('div');
                 emailLine.className = 'message-email-line';
                 const atIcon = document.createElement('i');
@@ -3107,7 +3011,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 emailLine.appendChild(atIcon);
                 emailLine.appendChild(document.createTextNode(' ' + (m.email || '')));
 
-                // Tech Info Line
                 const techLine = document.createElement('div');
                 techLine.className = 'message-email-line';
                 techLine.style.fontSize = '0.75rem';
@@ -3127,16 +3030,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                     techLine.appendChild(document.createTextNode(` UA: ${shortUa}`));
                 }
 
-                // Message Body
                 const body = document.createElement('div');
                 body.className = 'message-body';
                 body.textContent = m.mesaj || '';
 
-                // Actions
                 const actions = document.createElement('div');
                 actions.className = 'message-actions';
 
-                // Read/Unread Button
                 const toggleBtn = document.createElement('button');
                 const targetId = m.firestoreId || m.id;
                 if (m.okunduDurumu) {
@@ -3155,7 +3055,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     toggleBtn.addEventListener('click', () => markMessageAsRead(targetId));
                 }
 
-                // Copy Email Button
                 const copyEmailBtn = document.createElement('button');
                 copyEmailBtn.className = 'btn';
                 const copyEmailIcon = document.createElement('i');
@@ -3164,7 +3063,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 copyEmailBtn.appendChild(document.createTextNode(' Email Kopyala'));
                 copyEmailBtn.addEventListener('click', () => copyToClipboard(m.email || '', 'email'));
 
-                // Copy Message Button
                 const copyMsgBtn = document.createElement('button');
                 copyMsgBtn.className = 'btn';
                 const copyMsgIcon = document.createElement('i');
@@ -3173,7 +3071,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                 copyMsgBtn.appendChild(document.createTextNode(' Mesaj\u0131 Kopyala'));
                 copyMsgBtn.addEventListener('click', () => copyToClipboard(m.mesaj || '', 'msg'));
 
-                // Delete Button
                 const deleteBtn = document.createElement('button');
                 deleteBtn.className = 'btn btn-danger';
                 const deleteIcon = document.createElement('i');
@@ -3197,33 +3094,23 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
 
-        // ─────────────────────────────────────────────────────────────────────
-        // GÜVENLİK NOTU:
-        // Frontend spam koruması tek başına tam güvenlik değildir.
-        // Daha güçlü koruma için ileride Firebase App Check, reCAPTCHA veya Cloud Functions ile IP bazlı rate limit eklenmelidir.
-        // ─────────────────────────────────────────────────────────────────────
-
-        // Handle Contact Form Submit
         let contactFormOpenedAt = Date.now();
         const iletisimForm = document.getElementById('iletisim-form');
         if (iletisimForm) {
             iletisimForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
 
-                // 1. Honeypot kontrolü
                 const honeypot = document.getElementById('contact-website')?.value || "";
                 if (honeypot.trim() !== "") {
                     showToast("Mesaj gönderilemedi.", "error");
                     return;
                 }
 
-                // 2. Form açılış zamanı kontrolü
                 if (Date.now() - contactFormOpenedAt < 3000) {
                     showToast("Lütfen formu göndermeden önce birkaç saniye bekle.", "warning");
                     return;
                 }
 
-                // 3. 60 saniye cooldown kontrolü
                 const lastSent = Number(localStorage.getItem("contact_last_sent_at") || 0);
                 const nowTime = Date.now();
                 if (nowTime - lastSent < 60000) {
@@ -3231,7 +3118,6 @@ document.addEventListener('DOMContentLoaded', async () => {
                     return;
                 }
 
-                // 4. Günlük 5 mesaj limiti kontrolü
                 const today = new Date().toISOString().slice(0, 10);
                 const savedDate = localStorage.getItem("contact_daily_date");
                 let dailyCount = Number(localStorage.getItem("contact_daily_count") || 0);
@@ -3263,9 +3149,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     showToast('Lütfen email adresinizi girin.', 'error');
                     return;
                 }
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(email)) {
-                    showToast('Lütfen geçerli bir email adresi girin.', 'error');
+                if (!isAllowedEmail(email)) {
+                    showToast("Lütfen Gmail, Hotmail, Outlook, iCloud veya kurumsal/okul e-postası gibi geçerli bir adres gir.", "warning");
                     return;
                 }
                 if (!subject) {
@@ -3331,7 +3216,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         }
 
-        // ─── Mobile Drawer Navigation ───────────────────────────────────────────
         const hamburger = document.querySelector('.hamburger');
         const navLinks = document.querySelector('.nav-links');
         const drawerOverlay = document.getElementById('drawer-overlay');
@@ -3380,32 +3264,26 @@ document.addEventListener('DOMContentLoaded', async () => {
             drawerOverlay.addEventListener('click', closeDrawer);
         }
 
-        // Nav linklerine tıklayınca drawer kapansın
         document.querySelectorAll('.nav-link').forEach(l => {
             l.addEventListener('click', () => {
                 closeDrawer();
             });
         });
 
-        // ESC tuşuyla drawer kapansın
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape' && navLinks && navLinks.classList.contains('active')) {
                 closeDrawer();
             }
         });
 
-        // Ekran boyutu büyüdüğünde (desktop limitini aşınca) drawer'ı otomatik kapat
         window.addEventListener('resize', () => {
             if (window.innerWidth > 768 && navLinks && navLinks.classList.contains('active')) {
                 closeDrawer();
             }
         });
-        // ─────────────────────────────────────────────────────────────────────────
 
-        // --- GLOBAL KEYBOARD SHORTCUTS ---
         document.addEventListener('keydown', (e) => {
-            // CTRL + SHIFT + A => ADMIN LOGIN sayfasına yönlendir
-            // (Direkt #admin açılmaz; giriş yapılmamışsa korunan rotaya geçilemez)
+
             if (e.ctrlKey && e.shiftKey && (e.key === 'a' || e.key === 'A')) {
                 e.preventDefault();
                 if (ADMIN_ENABLED) {
@@ -3416,7 +3294,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
 
-        // --- SVG TRACE HOVER LOGIC ---
         const heroNodes = document.querySelectorAll('.hero-node');
         heroNodes.forEach(node => {
             node.addEventListener('mouseenter', () => {
@@ -3435,7 +3312,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             });
         });
 
-        // --- PAGE VISIBILITY PERFORMANCE CONTROL ---
         document.addEventListener("visibilitychange", () => {
             if (document.hidden) {
                 stopOscilloscope();
@@ -3447,7 +3323,6 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
 
-        // --- CYBER DIGITAL CLOCK CORE ---
         function initDigitalClock() {
             const timeEl = document.getElementById("digital-clock-time");
             const dateEl = document.getElementById("digital-clock-date");
@@ -3478,10 +3353,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             setInterval(updateClock, 1000);
         }
 
-        // Initialize digital clock
         initDigitalClock();
     } catch (criticalError) {
         console.error("DOMContentLoaded i\u00e7inde kritik hata:", criticalError);
         forceClosePreloader("app-boot-error");
     }
 });
+

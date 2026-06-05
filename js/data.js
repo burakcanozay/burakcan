@@ -1,6 +1,4 @@
-// ============================================================
-// 1. Tema Varsayılanı
-// ============================================================
+
 const DEFAULT_THEME = {
     '--bg-color': '#050a0f',
     '--panel-bg': '#0b131e',
@@ -14,16 +12,13 @@ const DEFAULT_THEME = {
     '--circuit-color': '#00f3ff'
 };
 
-// ============================================================
-// 2. Detaylı CV Verisi (Storage'dan ÖNCE tanımlanıyor)
-// ============================================================
 window.DetailedCVData = {
     hero: {
         name: "Burakcan Özay",
         title: "Elektrik Elektronik Mühendisliği Öğrencisi",
         desc: "Gömülü sistemler, analog/dijital devre tasarımı ve C/C++ mikrodenetleyici programlama alanlarında kendimi geliştirmekteyim. Laboratuvar çalışmalarında ve otonom sistem projelerinde aktif rol alarak mühendislik teorisini pratiğe dönüştürmeyi hedefliyorum.",
-        avatar: "",      // Boş bırakılırsa varsayılan ikon gösterilir
-        downloadUrl: "burakcan_ozay_cv.pdf" // CV PDF indirme linki
+        avatar: "",
+        downloadUrl: "burakcan_ozay_cv.pdf"
     },
     kisisel: [
         { label: "Ad Soyad",    value: "Burakcan Özay",                       icon: "fas fa-user"           },
@@ -95,20 +90,14 @@ window.DetailedCVData = {
     ]
 };
 
-// ============================================================
-// 3. Güvenli derin kopya yardımcısı
-// ============================================================
 function cloneDetailedCVData() {
     return typeof structuredClone === "function"
         ? structuredClone(window.DetailedCVData)
         : JSON.parse(JSON.stringify(window.DetailedCVData));
 }
 
-// ============================================================
-// 4. Storage modülü
-// ============================================================
 const Storage = {
-    provider: 'firestore', // 'firestore' veya 'local'
+    provider: 'firestore',
 
     get theme() {
         return localStorage.getItem('site_theme') || '#00f3ff';
@@ -148,7 +137,7 @@ const Storage = {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
                     const filled = _backfillDetailedCV(data);
-                    // Update firestore if detailedCV was missing
+
                     if (!data.detailedCV) {
                         await setDoc(docRef, { detailedCV: filled.detailedCV }, { merge: true });
                     }
@@ -198,7 +187,6 @@ const Storage = {
             } catch (err) {
                 console.error("Firestore write error:", err);
 
-                // Firestore Rules / izin hatası özel mesajı
                 if (
                     err.code === 'permission-denied' ||
                     err.message?.includes('permission') ||
@@ -211,20 +199,16 @@ const Storage = {
                     throw rulesErr;
                 }
 
-                // Diğer Firestore hataları — localStorage'a DÜŞME, hatayı fırlat
                 throw err;
             }
         } else {
-            // local provider: localStorage kullanımı normal
+
             localStorage.setItem('portfolioData', JSON.stringify(data));
             return true;
         }
     }
 };
 
-// ============================================================
-// 5. Dahili: eksik detailedCV alanlarını tamamlayan yardımcı
-// ============================================================
 function _backfillDetailedCV(data) {
     const clone = cloneDetailedCVData();
 
@@ -240,12 +224,10 @@ function _backfillDetailedCV(data) {
         data.detailedCV.ilgiAlanlari  = data.detailedCV.ilgiAlanlari  || clone.ilgiAlanlari  || [];
     }
 
-    // Auto-migration for old data
     if (data.detailedCV.kisisel && Array.isArray(data.detailedCV.kisisel)) {
-        // Remove phone number
+
         data.detailedCV.kisisel = data.detailedCV.kisisel.filter(item => item.label !== "Telefon");
-        
-        // Update email
+
         data.detailedCV.kisisel = data.detailedCV.kisisel.map(item => {
             if (item.label === "E-posta") {
                 if (item.value === "burakcanozay@example.com") {
@@ -260,7 +242,5 @@ function _backfillDetailedCV(data) {
     return data;
 }
 
-// ============================================================
-// 6. Global erişim
-// ============================================================
 window.DataService = Storage;
+
