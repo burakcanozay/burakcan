@@ -30,12 +30,10 @@ body {
   flex-direction: column;
 }
 
-/* Utilities */
 .theme-text {
   color: var(--theme-color) !important;
 }
 
-/* PCB Grid Background */
 body::before {
   content: '';
   position: fixed;
@@ -49,7 +47,6 @@ body::before {
   z-index: -2;
 }
 
-/* Navbar */
 .navbar {
   display: flex;
   justify-content: space-between;
@@ -147,7 +144,6 @@ body::before {
   font-size: 1.5rem;
 }
 
-/* SPA Views */
 .view {
   display: none;
   opacity: 0;
@@ -159,7 +155,6 @@ body::before {
   opacity: 1;
 }
 
-/* Main Container */
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -167,7 +162,6 @@ body::before {
   flex: 1;
 }
 
-/* Hero Section */
 .hero {
   height: 100vh;
   width: 100vw;
@@ -260,7 +254,6 @@ body::before {
   opacity: 0;
 }
 
-/* Base Trace */
 .circuit-path.base {
   fill: none;
   stroke: rgba(0, 243, 255, 0.15);
@@ -269,7 +262,6 @@ body::before {
   transition: all 0.3s;
 }
 
-/* Animated Flow Trace */
 .circuit-path.anim {
   fill: none;
   stroke: var(--neon-green);
@@ -281,7 +273,6 @@ body::before {
   transition: all 0.3s;
 }
 
-/* Vias and Pads */
 .circuit-via {
   fill: #080c12;
   stroke: rgba(0, 243, 255, 0.3);
@@ -296,7 +287,6 @@ body::before {
   transition: all 0.3s;
 }
 
-/* Hover States (Active) */
 .trace-group.active .circuit-path.base {
   stroke: rgba(0, 243, 255, 0.8);
   stroke-width: 0.6px;
@@ -326,7 +316,6 @@ body::before {
   filter: url(#glow);
 }
 
-/* Cosmetic Traces (No active state) */
 .trace-group.cosmetic {
   opacity: 0.4;
 }
@@ -598,7 +587,6 @@ body::before {
   transform: translateY(0);
 }
 
-/* Hero Nodes Desktop Positions */
 .hero-nodes .hero-node:nth-child(1) {
   top: 20%;
   left: 25%;
@@ -660,7 +648,6 @@ body::before {
   display: inline;
 }
 
-/* Components */
 .page-header {
   margin-bottom: 3rem;
 }
@@ -708,7 +695,6 @@ body::before {
   }
 }
 
-/* Premium Interactive Oscilloscope Controls */
 .scope-system {
   display: grid;
   grid-template-columns: 1.5fr 1fr;
@@ -1116,7 +1102,6 @@ body::before {
   border: 1px solid var(--theme-color);
 }
 
-/* Timeline */
 .timeline {
   position: relative;
   max-width: 800px;
@@ -1184,7 +1169,6 @@ body::before {
   font-size: 0.9rem;
 }
 
-/* Forms */
 .form-container {
   background: var(--card-bg);
   padding: 2.5rem;
@@ -1257,7 +1241,6 @@ body::before {
   color: var(--bg-color);
 }
 
-/* Admin */
 .admin-tabs {
   display: flex;
   gap: 1rem;
@@ -1311,7 +1294,6 @@ body::before {
   font-size: 0.9rem;
 }
 
-/* Responsive */
 @media screen and (max-width: 992px) {
   .central-chip {
     padding: 3rem;
@@ -1342,7 +1324,6 @@ body::before {
 }
 
 @media screen and (max-width: 768px) {
-  /* Hamburger görünürlüğü — drawer stili alt blokta (3434+) tanımlanır */
 
   .svg-circuit {
     display: none;
@@ -1404,7 +1385,6 @@ body::before {
   }
 }
 
-/* Hacker/Restricted Area Custom Authenticate Button */
 .btn-cyber-auth {
   display: flex;
   align-items: center;
@@ -1468,7 +1448,6 @@ body::before {
   box-shadow: 0 0 15px var(--danger-color);
 }
 
-/* Theme Customization Grid */
 .theme-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -1528,9 +1507,6 @@ body::before {
   border-radius: 50%;
 }
 
-/* ==========================================================================
-   PREMIUM DIGITAL CV SYSTEM (MÜHENDİSLİK KONTROL PANELİ)
-   ========================================================================== */
 .cv-page {
   position: relative;
   min-height: 100vh;
@@ -1554,7 +1530,6 @@ body::before {
   pointer-events: none;
 }
 
-/* Background PCB circuitry decorative lines */
 .cv-bg-effects {
   position: absolute;
   top: 0;
@@ -1618,7 +1593,6 @@ body::before {
   transform: rotate(45deg);
 }
 
-/* 1. CV HERO SECTION */
 .cv-hero {
   background: linear-gradient(135deg, #070e17, #0b1522);
   border-bottom: 2px solid var(--border-color);
@@ -1648,7 +1622,6 @@ body::before {
   gap: 3rem;
 }
 
-/* Microchip-like profile card frame */
 .cv-avatar-container {
   position: relative;
   padding: 10px;
@@ -1658,7 +1631,6 @@ body::before {
   box-shadow: 0 0 20px rgba(0, 243, 255, 0.2);
 }
 
-/* Simulated microchip pins around the avatar */
 .cv-avatar-container::before {
   content: '';
   position: absolute;
@@ -1763,7 +1735,6 @@ body::before {
   gap: 1.2rem;
 }
 
-/* 2. CV GRID SYSTEM */
 .cv-grid {
   display: grid;
   grid-template-columns: 1fr 1.5fr;
@@ -1778,7 +1749,6 @@ body::before {
   gap: 2.5rem;
 }
 
-/* 3. CARD STYLING */
 .cv-section {
   margin-bottom: 0;
 }
@@ -1793,7 +1763,6 @@ body::before {
   transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-/* Simulated Microchip LED Indicator in upper corner */
 .cv-card-led {
   position: absolute;
   top: 15px;
@@ -1851,7 +1820,6 @@ body::before {
   letter-spacing: 1px;
 }
 
-/* 4. Kişisel Bilgiler */
 .cv-kisisel-list {
   display: flex;
   flex-direction: column;
@@ -1908,7 +1876,6 @@ body::before {
   text-shadow: 0 0 8px var(--neon-green);
 }
 
-/* 5. Teknik Yetenekler - Segmented Signal Meters */
 .cv-skills-list {
   display: flex;
   flex-direction: column;
@@ -1955,7 +1922,6 @@ body::before {
   box-shadow: 0 0 10px var(--theme-color);
 }
 
-/* Segmented overlay to look like hardware power level bars */
 .cv-skill-bar-outer::after {
   content: '';
   position: absolute;
@@ -1968,7 +1934,6 @@ body::before {
   pointer-events: none;
 }
 
-/* 6. Eğitim Bilgileri - Dikey Timeline */
 .cv-timeline-vertical {
   position: relative;
   padding-left: 2rem;
@@ -1994,7 +1959,6 @@ body::before {
   margin-bottom: 0;
 }
 
-/* Pin indicator */
 .cv-timeline-vertical-item::before {
   content: '';
   position: absolute;
@@ -2041,7 +2005,6 @@ body::before {
   font-size: 1rem;
 }
 
-/* 7. Projeler, Deneyimler, Sertifikalar Lists */
 .cv-entry-block {
   border-left: 2px solid rgba(255, 255, 255, 0.05);
   padding-left: 1.2rem;
@@ -2113,7 +2076,6 @@ body::before {
   text-shadow: 0 0 8px var(--neon-green);
 }
 
-/* 8. Diller List */
 .cv-diller-list {
   display: flex;
   flex-direction: column;
@@ -2156,7 +2118,6 @@ body::before {
   border-radius: 4px;
 }
 
-/* 9. İlgi Alanları - Gold/Cyan Tags */
 .cv-tags {
   display: flex;
   flex-wrap: wrap;
@@ -2181,7 +2142,6 @@ body::before {
   background: rgba(0, 243, 255, 0.03);
 }
 
-/* 10. Terminal-style CV Notları */
 .cv-notlar-box {
   background: #02060c;
   border: 1px solid var(--border-color);
@@ -2201,9 +2161,6 @@ body::before {
   font-weight: bold;
 }
 
-/* ==========================================================================
-   SCROLL REVEAL ANIMATIONS (OBSERVER-DRIVEN)
-   ========================================================================== */
 .cv-reveal {
   opacity: 0;
   transform: translateY(30px);
@@ -2215,12 +2172,10 @@ body::before {
   transform: translateY(0);
 }
 
-/* Stagger entries slightly by delaying transitions */
 .cv-reveal:nth-child(even) {
   transition-delay: 0.1s;
 }
 
-/* Mobile responsive layout */
 @media screen and (max-width: 992px) {
   .cv-hero-content {
     flex-direction: column;
@@ -2246,7 +2201,6 @@ body::before {
   }
 }
 
-/* --- TOAST NOTIFICATION SYSTEM --- */
 .toast-container,
 #toast-container {
   position: fixed;
@@ -2293,7 +2247,6 @@ body::before {
   animation: toastSlideOut 0.32s cubic-bezier(0.55, 0, 1, 0.45) forwards;
 }
 
-/* Type variants */
 .toast.success {
   border-left-color: #00ff66;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 18px rgba(0, 255, 102, 0.12);
@@ -2314,7 +2267,6 @@ body::before {
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 18px rgba(0, 243, 255, 0.12);
 }
 
-/* Icon */
 .toast-icon {
   font-size: 1.3rem;
   flex-shrink: 0;
@@ -2338,7 +2290,6 @@ body::before {
   color: #00f3ff;
 }
 
-/* Content */
 .toast-content {
   flex: 1;
   min-width: 0;
@@ -2380,7 +2331,6 @@ body::before {
   word-break: break-word;
 }
 
-/* Close button */
 .toast-close {
   background: none;
   border: none;
@@ -2401,7 +2351,6 @@ body::before {
   opacity: 1;
 }
 
-/* Progress bar */
 .toast-progress {
   position: absolute;
   bottom: 0;
@@ -2429,7 +2378,6 @@ body::before {
   color: #00f3ff;
 }
 
-/* Animations */
 @keyframes toastSlideIn {
   from {
     opacity: 0;
@@ -2464,7 +2412,6 @@ body::before {
   }
 }
 
-/* Legacy keyframes (backward compat) */
 @keyframes slideInRight {
   from {
     opacity: 0;
@@ -2489,7 +2436,6 @@ body::before {
   }
 }
 
-/* Mobile */
 @media (max-width: 600px) {
 
   .toast-container,
@@ -2590,7 +2536,6 @@ body::before {
   font-weight: bold;
 }
 
-/* --- ADMIN INBOX (ENHANCED) --- */
 .message-inbox {
   display: flex;
   flex-direction: column;
@@ -2722,7 +2667,6 @@ body::before {
   gap: 5px;
 }
 
-/* Empty state */
 .msg-empty-state {
   display: flex;
   flex-direction: column;
@@ -2754,7 +2698,6 @@ body::before {
   max-width: 300px;
 }
 
-/* --- CYBER CONFIRM MODAL --- */
 .confirm-modal-overlay {
   position: fixed;
   inset: 0;
@@ -2896,7 +2839,6 @@ body::before {
   box-shadow: 0 0 14px rgba(255, 51, 102, 0.3);
 }
 
-/* --- FORM EDIT STATUS INDICATOR --- */
 .form-edit-status {
   display: flex;
   align-items: center;
@@ -2916,7 +2858,6 @@ body::before {
   color: #ffcc00;
 }
 
-/* Accessibility Utility Class */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -2938,7 +2879,6 @@ body::before {
   letter-spacing: 0.5px;
 }
 
-/* --- PRELOADER STYLE --- */
 .preloader {
   position: fixed;
   inset: 0;
@@ -3008,7 +2948,6 @@ body::before {
   letter-spacing: 1px;
 }
 
-/* Glitch Text Effect */
 .glitch-text {
   position: relative;
 }
@@ -3148,7 +3087,6 @@ body::before {
   font-weight: bold;
 }
 
-/* Animations */
 @keyframes crtTurnOn {
   0% {
     transform: scale(0.9) rotate(-1deg);
@@ -3282,7 +3220,6 @@ body::before {
   }
 }
 
-/* --- POST-BOOT INTRO ANIMATIONS --- */
 body.boot-complete .hero-node {
   animation: nodeBootIn 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   pointer-events: auto;
@@ -3371,12 +3308,6 @@ body.boot-complete .svg-circuit {
   }
 }
 
-/* ============================================================
-   MOBILE DRAWER & RESPONSIVE OVERRIDES
-   Masaüstü tasarımı tamamen korunur; sadece ≤768px etkilenir.
-   ============================================================ */
-
-/* --- Drawer Overlay --- */
 .drawer-overlay {
   position: fixed;
   inset: 0;
@@ -3396,19 +3327,14 @@ body.boot-complete .svg-circuit {
   pointer-events: auto;
 }
 
-/* Drawer açıkken body scroll kilitle (sadece mobilde etkili) */
 @media screen and (max-width: 768px) {
   body.drawer-open {
     overflow: hidden;
   }
 }
 
-/* ============================================================
-   768px BREAKPOINT — Ana mobil ayarlar
-   ============================================================ */
 @media screen and (max-width: 768px) {
 
-  /* --- Navbar --- */
   .navbar {
     padding: 1rem 1.2rem;
     position: sticky;
@@ -3420,7 +3346,6 @@ body.boot-complete .svg-circuit {
     font-size: 1.2rem;
   }
 
-  /* --- Hamburger Butonu --- */
   .hamburger {
     display: flex;
     align-items: center;
@@ -3443,7 +3368,6 @@ body.boot-complete .svg-circuit {
     color: var(--theme-color);
   }
 
-  /* --- Nav Links → Sağdan Açılan Drawer --- */
   .nav-links {
     position: fixed;
     top: 0;
@@ -3465,7 +3389,7 @@ body.boot-complete .svg-circuit {
     opacity: 1;
     pointer-events: none;
     transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
-    /* Desktop'ta yatay olan gap'i sıfırla */
+
     list-style: none;
   }
 
@@ -3501,12 +3425,10 @@ body.boot-complete .svg-circuit {
     text-shadow: 0 0 8px var(--theme-color);
   }
 
-  /* Desktop'ta olan ::after underline drawer'da gereksiz */
   .nav-links a::after {
     display: none;
   }
 
-  /* --- SVG PCB Devre Yolları --- */
   .svg-circuit {
     width: 100%;
     height: 100%;
@@ -3516,12 +3438,11 @@ body.boot-complete .svg-circuit {
     pointer-events: none;
   }
 
-  /* Boot-complete animasyonu da mobilde daha hafif çıksın */
   body.boot-complete .svg-circuit {
     animation: circuitBootIn 1s ease forwards;
     animation-delay: 0.15s;
     opacity: 0;
-    /* animasyon to değeri 0.22 ile override'lanacak */
+
   }
 
   @keyframes circuitBootInMobile {
@@ -3559,7 +3480,6 @@ body.boot-complete .svg-circuit {
     opacity: 0.5;
   }
 
-  /* --- Hero Section --- */
   .hero {
     min-height: 100vh;
     height: auto;
@@ -3571,12 +3491,10 @@ body.boot-complete .svg-circuit {
     align-items: center;
   }
 
-  /* HUD label'ları mobilde gizle veya küçült */
   .hud-label {
     display: none;
   }
 
-  /* --- Central Chip --- */
   .central-chip {
     position: relative;
     top: auto;
@@ -3585,7 +3503,7 @@ body.boot-complete .svg-circuit {
     width: min(92vw, 420px);
     min-width: 0;
     margin: 0 auto;
-    /* Boot animasyonu transform'u override et */
+
     animation: chipBootInMobile 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards !important;
   }
 
@@ -3603,7 +3521,6 @@ body.boot-complete .svg-circuit {
     }
   }
 
-  /* Chip float animasyonunu mobilde daha hafif yap */
   body.boot-complete .central-chip {
     animation: chipBootInMobile 0.85s cubic-bezier(0.22, 1, 0.36, 1) forwards,
       chipFloatMobile 6s ease-in-out 0.85s infinite !important;
@@ -3634,7 +3551,6 @@ body.boot-complete .svg-circuit {
     padding: 2rem 1.5rem;
   }
 
-  /* --- Hero Nodes → Dikey liste --- */
   .hero-nodes {
     position: relative;
     z-index: 12;
@@ -3645,7 +3561,6 @@ body.boot-complete .svg-circuit {
     align-items: center;
   }
 
-  /* Tüm node'ların absolute pozisyonunu sıfırla */
   .hero-node {
     position: relative !important;
     top: auto !important;
@@ -3656,7 +3571,7 @@ body.boot-complete .svg-circuit {
     opacity: 0;
     filter: blur(0);
     pointer-events: none;
-    /* Desktop'taki translate(-50%,-50%) kaldırıldı */
+
   }
 
   .hero-node .node-led {
@@ -3664,7 +3579,6 @@ body.boot-complete .svg-circuit {
     right: 10px;
   }
 
-  /* Boot animasyonunu mobil için override et */
   body.boot-complete .hero-node {
     animation: nodeBootInMobile 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     pointer-events: auto;
@@ -3690,7 +3604,6 @@ body.boot-complete .svg-circuit {
     }
   }
 
-  /* Hover & touch efektleri — desktop translate override olmadan */
   body.boot-complete .hero-node:hover,
   .hero-node:hover {
     transform: translateY(-4px) !important;
@@ -3702,7 +3615,6 @@ body.boot-complete .svg-circuit {
     transform: scale(0.98) !important;
   }
 
-  /* Yatay layout: ikon sol, metin sağ */
   .hero-node {
     flex-direction: row;
     justify-content: flex-start;
@@ -3723,14 +3635,12 @@ body.boot-complete .svg-circuit {
     font-size: 0.6rem;
   }
 
-  /* Touch/keyboard erişilebilirlik */
   .hero-node:focus-visible {
     outline: 2px solid var(--theme-color);
     outline-offset: 4px;
     box-shadow: 0 0 18px rgba(0, 243, 255, 0.35);
   }
 
-  /* sys-admin link'i mobilde biraz ayarla */
   .sys-admin-link {
     position: relative;
     bottom: auto;
@@ -3743,12 +3653,8 @@ body.boot-complete .svg-circuit {
   }
 }
 
-/* ============================================================
-   600px BREAKPOINT — Çok küçük ekranlar
-   ============================================================ */
 @media screen and (max-width: 600px) {
 
-  /* SVG'yi daha da sil */
   .svg-circuit {
     opacity: 0.1;
     filter: blur(0.5px);
@@ -3802,9 +3708,6 @@ body.boot-complete .svg-circuit {
   pointer-events: none;
 }
 
-/* ============================================================
-   AUTH LOADING PANEL
-   ============================================================ */
 .auth-loading-panel {
   display: flex;
   flex-direction: column;
@@ -3846,7 +3749,6 @@ body.boot-complete .svg-circuit {
   }
 }
 
-/* Achievements Empty State */
 .empty-basarilar {
   grid-column: 1 / -1;
   display: flex;
@@ -3918,9 +3820,6 @@ body.boot-complete .svg-circuit {
   opacity: 0.8;
 }
 
-/* ==========================================================================
-   CYBER DIGITAL CLOCK WIDGET
-   ========================================================================== */
 .digital-clock-widget {
   position: absolute;
   right: 30px;
@@ -4052,9 +3951,6 @@ body.boot-complete .digital-clock-widget {
   }
 }
 
-/* ============================================================
-   İletişim Sayfası — Ortalanmış & Dengeli Düzen
-   ============================================================ */
 #view-iletisim .container {
   max-width: 980px;
   margin: 0 auto;
