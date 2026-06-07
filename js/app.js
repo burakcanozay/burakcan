@@ -16,7 +16,7 @@ import {
     orderBy
 } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
-const ADMIN_ENABLED = true;
+const ADMIN_ENABLED = false;
 if (!ADMIN_ENABLED) {
     document.documentElement.classList.add("admin-disabled");
 }
